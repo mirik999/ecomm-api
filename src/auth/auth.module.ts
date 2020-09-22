@@ -1,3 +1,4 @@
+import { Auth } from './auth.entity';
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
@@ -16,7 +17,7 @@ import { AuthResolver } from './auth.resolver';
         expiresIn: 7200,
       },
     }),
-    TypeOrmModule.forFeature([]),
+    TypeOrmModule.forFeature([Auth]),
   ],
   providers: [AuthService, AuthResolver],
   exports: [PassportModule],

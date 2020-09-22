@@ -6,11 +6,14 @@ export class AuthType {
   id: string;
 
   @Field()
-  userName: string;
+  fullName: string;
 
   @Field()
   email: string;
 
   @Field()
   password: string;
+
+  @Field()
+  accessToken: string;
 }

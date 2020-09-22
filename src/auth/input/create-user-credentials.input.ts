@@ -7,7 +7,7 @@ export class CreateUserCredentials {
   @MinLength(3)
   @MaxLength(24)
   @Field()
-  userName: string;
+  fullName: string;
 
   @IsString()
   @IsEmail()
@@ -16,7 +16,6 @@ export class CreateUserCredentials {
 
   @IsString()
   @MinLength(3)
-  @MaxLength(24)
   @Field()
   password: string;
 }
