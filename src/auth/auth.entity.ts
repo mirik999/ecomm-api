@@ -9,38 +9,11 @@ export class Auth {
   id: string;
 
   @Column()
-  name: string;
+  userName: string;
 
   @Column()
   email: string;
 
   @Column()
-  picture: {
-    data: {
-      height: number;
-      is_silhuete: boolean;
-      url: string;
-    };
-  };
-
-  @Column()
-  phone: string;
-
-  @Column()
-  birthDate: string;
-
-  @Column()
-  city: string;
-
-  @Column()
-  skills: string;
-
-  @Column()
-  experience: string;
-
-  @Column()
-  education: string;
-
-  @Column()
-  additionalInfo: string;
+  password: string;
 }
