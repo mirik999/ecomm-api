@@ -9,17 +9,17 @@ import { CreateUserCredentials } from './input/create-user-credentials.input';
 export class AuthResolver {
   constructor(private authService: AuthService) {}
 
-  @Query(returns => AuthType)
+  @Query(() => AuthType)
   getUsers() {}
 
-  @Mutation(returns => AuthType)
+  @Mutation(() => AuthType)
   async createUser(
     @Args('createUserCredentions') createUserCredentials: CreateUserCredentials,
   ): Promise<{ accessToken: string }> {
     return await this.authService.createUser(createUserCredentials);
   }
 
-  @Mutation(returns => AuthType)
+  @Mutation(() => AuthType)
   async userLogin(
     @Args('userLoginCredentials') userLoginCredentials: UserLoginCredentials,
   ): Promise<{ accessToken: string }> {

@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { GraphQLModule } from '@nestjs/graphql';
+import { ProfileModule } from './profile/profile.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { GraphQLModule } from '@nestjs/graphql';
       autoSchemaFile: true,
     }),
     AuthModule,
+    ProfileModule,
   ],
 })
 export class AppModule {}
