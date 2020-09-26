@@ -37,4 +37,7 @@ export class Profile extends BaseEntity {
 
   @Column()
   additionalInfo: string;
+
+  @Column()
+  user: string;
 }

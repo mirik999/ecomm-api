@@ -1,5 +1,6 @@
+import { ProfileModule } from './../profile/profile.module';
 import { Auth } from './auth.entity';
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -18,8 +19,9 @@ import { AuthResolver } from './auth.resolver';
       },
     }),
     TypeOrmModule.forFeature([Auth]),
+    forwardRef(() => ProfileModule),
   ],
   providers: [AuthService, AuthResolver],
-  exports: [PassportModule],
+  exports: [PassportModule, AuthService],
 })
 export class AuthModule {}

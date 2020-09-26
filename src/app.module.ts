@@ -1,3 +1,4 @@
+import { Profile } from './profile/profile.entity';
 import { Auth } from './auth/auth.entity';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -12,7 +13,7 @@ import { ProfileModule } from './profile/profile.module';
       url: 'mongodb://localhost/employeer',
       synchronize: true,
       useUnifiedTopology: true,
-      entities: [Auth],
+      entities: [Auth, Profile],
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: true,

@@ -23,7 +23,7 @@ export class AuthService {
 
   async createUser(
     createUserCredentials: CreateUserCredentials,
-  ): Promise<{ accessToken: string }> {
+  ): Promise<{ id: string; accessToken: string }> {
     const { fullName, email, password } = createUserCredentials;
     const user = new Auth();
     user.fullName = fullName;
@@ -33,7 +33,11 @@ export class AuthService {
 
     try {
       await user.save();
-      return this.generateToken(user.email);
+      const accessToken = (await this.generateToken(user.email)).accessToken;
+      return {
+        id: user.id,
+        accessToken: accessToken,
+      };
     } catch (err) {
       if (err.code === 11000) {
         throw new ConflictException('Email already exists');
