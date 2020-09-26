@@ -11,7 +11,6 @@ export class Profile extends BaseEntity {
   @ObjectIdColumn()
   _id: string;
 
-  @Column()
   @PrimaryColumn()
   id: string;
 
