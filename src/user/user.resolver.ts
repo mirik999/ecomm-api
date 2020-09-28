@@ -1,23 +1,23 @@
 import { ProfileService } from './../profile/profile.service';
 import { UserLoginCredentials } from './input/user-login.input';
-import { AuthService } from './auth.service';
+import { UserService } from './user.service';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { AuthType } from './auth.type';
+import { UserType } from './user.type';
 import { CreateUserCredentials } from './input/user-create.input';
 import { forwardRef, Inject } from '@nestjs/common';
 
 @Resolver()
 export class AuthResolver {
   constructor(
-    private authService: AuthService,
+    private authService: UserService,
     @Inject(forwardRef(() => ProfileService))
     private profileService: ProfileService,
   ) {}
 
-  @Query(() => AuthType)
+  @Query(() => UserType)
   getUsers() {}
 
-  @Mutation(() => AuthType)
+  @Mutation(() => UserType)
   async createUser(
     @Args('createUserCredentions') createUserCredentials: CreateUserCredentials,
   ): Promise<{ accessToken: string }> {
@@ -28,7 +28,7 @@ export class AuthResolver {
     return { accessToken };
   }
 
-  @Mutation(() => AuthType)
+  @Mutation(() => UserType)
   async userLogin(
     @Args('userLoginCredentials') userLoginCredentials: UserLoginCredentials,
   ): Promise<{ accessToken: string }> {

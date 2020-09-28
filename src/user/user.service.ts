@@ -1,7 +1,7 @@
-import { UserLoginCredentials } from './input/user-login-credentials.input';
+import { UserLoginCredentials } from './input/user-login.input';
 import { JwtPayload } from './utils/jwt.strategy';
-import { CreateUserCredentials } from './input/create-user-credentials.input';
-import { Auth } from './auth.entity';
+import { CreateUserCredentials } from './input/user-create.input';
+import { Auth } from './user.entity';
 import {
   ConflictException,
   Injectable,
