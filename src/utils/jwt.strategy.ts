@@ -1,12 +1,14 @@
-import { User } from '../user.entity';
+import { User } from '../user/user.entity';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, ExtractJwt } from 'passport-jwt';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Column, PrimaryColumn, Repository } from 'typeorm';
 
 export interface JwtPayload {
   email: string;
+  id: string;
+  fullName: string;
 }
 
 @Injectable()

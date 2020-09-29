@@ -1,21 +1,23 @@
-import { ProfileService } from './../profile/profile.service';
-import { UserLoginCredentials } from './input/user-login.input';
+import { ProfileService } from '../profile/profile.service';
+import { UserLoginCredentials } from './input/login-user.input';
 import { UserService } from './user.service';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UserType } from './user.type';
-import { CreateUserCredentials } from './input/user-create.input';
+import { CreateUserCredentials } from './input/create-user.input';
 import { forwardRef, Inject } from '@nestjs/common';
 
 @Resolver()
-export class AuthResolver {
+export class UserResolver {
   constructor(
     private authService: UserService,
     @Inject(forwardRef(() => ProfileService))
     private profileService: ProfileService,
   ) {}
 
-  @Query(() => UserType)
-  getUsers() {}
+  @Query(() => [UserType])
+  getUsers() {
+    return this.authService.getAll();
+  }
 
   @Mutation(() => UserType)
   async createUser(

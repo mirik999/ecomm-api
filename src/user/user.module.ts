@@ -1,11 +1,12 @@
-import { ProfileModule } from './../profile/profile.module';
-import { Auth } from './user.entity';
+import { ProfileModule } from '../profile/profile.module';
+import { User } from './user.entity';
 import { forwardRef, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserService } from './user.service';
-import { AuthResolver } from './auth.resolver';
+import { UserResolver } from './user.resolver';
+import { JwtStrategy } from '../utils/jwt.strategy';
 
 @Module({
   imports: [
@@ -18,10 +19,10 @@ import { AuthResolver } from './auth.resolver';
         expiresIn: 7200,
       },
     }),
-    TypeOrmModule.forFeature([Auth]),
+    TypeOrmModule.forFeature([User]),
     forwardRef(() => ProfileModule),
   ],
-  providers: [UserService, AuthResolver],
+  providers: [UserService, UserResolver],
   exports: [PassportModule, UserService],
 })
-export class AuthModule {}
+export class UserModule {}

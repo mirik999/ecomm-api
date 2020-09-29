@@ -15,13 +15,19 @@ export class Profile extends BaseEntity {
   id: string;
 
   @Column()
+  createdAt: string;
+
+  @Column({ default: false })
+  isDisabled: boolean;
+
+  @Column()
   birthDate: string;
 
   @Column()
   city: string;
 
   @Column()
-  phone: number;
+  phone: string;
 
   @Column()
   gender: string;
@@ -33,7 +39,7 @@ export class Profile extends BaseEntity {
   skills: string;
 
   @Column()
-  experriance: string;
+  experience: string;
 
   @Column()
   additionalInfo: string;

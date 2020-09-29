@@ -1,8 +1,8 @@
-import { ProfileType } from './../profile/profile.type';
+import { ProfileType } from '../profile/profile.type';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 
 @ObjectType('Auth')
-export class AuthType {
+export class UserType {
   @Field(type => ID)
   id: string;
 
@@ -17,7 +17,4 @@ export class AuthType {
 
   @Field()
   accessToken: string;
-
-  @Field(type => [ProfileType])
-  profile: string;
 }
