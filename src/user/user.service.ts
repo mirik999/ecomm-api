@@ -28,7 +28,7 @@ export class UserService {
 
   async createUser(
     createUserCredentials: CreateUserCredentials,
-  ): Promise<{ id: string; accessToken: string }> {
+  ): Promise<{ id: string; email: string; accessToken: string }> {
     const { fullName, email, password } = createUserCredentials;
     const user = new User();
     user.id = uuid();
@@ -47,6 +47,7 @@ export class UserService {
       const accessToken = (await this.generateToken(tokenCredentials)).accessToken;
       return {
         id: user.id,
+        email: user.email,
         accessToken: accessToken,
       };
     } catch (err) {

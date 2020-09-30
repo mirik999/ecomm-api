@@ -23,10 +23,10 @@ export class UserResolver {
   async createUser(
     @Args('createUserCredentions') createUserCredentials: CreateUserCredentials,
   ): Promise<{ accessToken: string }> {
-    const { accessToken, id } = await this.authService.createUser(
+    const { accessToken, id, email } = await this.authService.createUser(
       createUserCredentials,
     );
-    await this.profileService.createProfile(id);
+    await this.profileService.createProfile(id, email);
     return { accessToken };
   }
 
@@ -34,6 +34,7 @@ export class UserResolver {
   async userLogin(
     @Args('userLoginCredentials') userLoginCredentials: UserLoginCredentials,
   ): Promise<{ accessToken: string }> {
+    await this.profileService.getProfile(userLoginCredentials.email)
     return await this.authService.userLogin(userLoginCredentials);
   }
 }

@@ -6,6 +6,9 @@ export class ProfileType {
   id: string;
 
   @Field()
+  email: string;
+
+  @Field()
   isDisabled: boolean;
 
   @Field()

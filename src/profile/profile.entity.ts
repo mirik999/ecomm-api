@@ -15,6 +15,9 @@ export class Profile extends BaseEntity {
   id: string;
 
   @Column()
+  email: string;
+
+  @Column()
   createdAt: string;
 
   @Column({ default: false })

@@ -22,19 +22,25 @@ export class ProfileService {
     private authService: UserService,
   ) {}
 
-  async getProfile(user: JwtPayload): Promise<Profile> {
-    try {
-      return await this.profileRepository.findOne({ user: user.id });
-    } catch (err) {
-      throw new NotFoundException('Profile was not found');
-    }
+  async getProfile(email: string): Promise<Profile> {
+      const profile = await this.profileRepository.findOne({ where: { email }  });
+      if (profile) {
+        if (profile.isDisabled) {
+          throw new ConflictException('Profile is disabled');
+        } else {
+          return profile;
+        }
+      } else {
+        throw new NotFoundException("Profile not found");
+      }
   }
 
-  async createProfile(id: string): Promise<Profile> {
+  async createProfile(id: string, email: string): Promise<Profile> {
     try {
       const profile = new Profile();
       profile.id = uuid();
       profile.user = id;
+      profile.email = email;
       profile.createdAt = new Date().toString();
       profile.isDisabled = false;
       profile.birthDate = null;

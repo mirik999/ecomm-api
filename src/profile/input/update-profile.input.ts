@@ -5,6 +5,11 @@ import { IsBoolean, IsOptional, IsString, MaxLength } from 'class-validator';
 @InputType()
 export class UpdateProfileCredentials {
   @IsOptional()
+  @IsString()
+  @Field({ nullable: true })
+  email: string;
+
+  @IsOptional()
   @IsBoolean()
   @Field({ nullable: true })
   isDisabled: boolean;
