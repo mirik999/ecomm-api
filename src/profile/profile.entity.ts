@@ -20,7 +20,7 @@ export class Profile extends BaseEntity {
   @Column()
   fullName: string;
 
-  @Column({ default: false })
+  @Column()
   social: boolean;
 
   @Column()
@@ -32,7 +32,7 @@ export class Profile extends BaseEntity {
   @Column()
   createdAt: string;
 
-  @Column({ default: false })
+  @Column()
   isDisabled: boolean;
 
   @Column()
@@ -58,4 +58,7 @@ export class Profile extends BaseEntity {
 
   @Column()
   user: string;
+
+  @Column()
+  account: string;
 }

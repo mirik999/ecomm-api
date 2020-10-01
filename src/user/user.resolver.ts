@@ -24,6 +24,7 @@ export class UserResolver {
   async createUser(
     @Args('createUserCredentions') createUserCredentials: CreateUserCredentials,
   ): Promise<{ accessToken: string }> {
+    //create user
     const {
       accessToken,
       id,
@@ -32,8 +33,9 @@ export class UserResolver {
       social,
       socialId,
       picture,
+      account
     } = await this.authService.createUser(createUserCredentials);
-    console.log(email, fullName, social, socialId, picture);
+    //create profile
     await this.profileService.createProfile(
       id,
       email,
@@ -41,7 +43,9 @@ export class UserResolver {
       social,
       socialId,
       picture,
+      account
     );
+    //return token
     return { accessToken };
   }
 

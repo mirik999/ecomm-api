@@ -15,7 +15,7 @@ export class UpdateProfileCredentials {
 
   @IsOptional()
   @IsBoolean()
-  @Field({ defaultValue: false, nullable: true })
+  @Field({ nullable: true })
   social: boolean;
 
   @IsOptional()

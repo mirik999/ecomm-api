@@ -42,6 +42,7 @@ export class ProfileService {
     social: boolean,
     socialId: string,
     picture: string,
+    account: string,
   ): Promise<Profile> {
     try {
       const profile = new Profile();
@@ -49,18 +50,19 @@ export class ProfileService {
       profile.user = id;
       profile.email = email;
       profile.fullName = fullName;
-      profile.social = social || false;
-      profile.socialId = socialId;
-      profile.picture = picture;
       profile.createdAt = new Date().toString();
       profile.isDisabled = false;
-      profile.birthDate = null;
-      profile.city = null;
-      profile.phone = null;
-      profile.gender = null;
-      profile.skills = null;
-      profile.experience = null;
-      profile.additionalInfo = null;
+      profile.account = account;
+      profile.social = social || false;
+      profile.socialId = socialId || "";
+      profile.picture = picture || "";
+      profile.birthDate = "";
+      profile.city = "";
+      profile.phone = "";
+      profile.gender = "";
+      profile.skills = "";
+      profile.experience = "";
+      profile.additionalInfo = "";
       return this.profileRepository.save(profile);
     } catch (err) {
       throw new ConflictException('Cant create a profile');

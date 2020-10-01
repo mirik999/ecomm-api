@@ -49,4 +49,7 @@ export class ProfileType {
 
   @Field()
   user: string;
+
+  @Field()
+  account: string;
 }

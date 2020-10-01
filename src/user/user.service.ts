@@ -36,6 +36,7 @@ export class UserService {
     social: boolean;
     socialId: string;
     picture: string;
+    account: string;
   }> {
     const {
       email,
@@ -44,6 +45,7 @@ export class UserService {
       social,
       socialId,
       picture,
+      account
     } = createUserCredentials;
 
     const user = new User();
@@ -68,6 +70,7 @@ export class UserService {
         social,
         socialId,
         picture,
+        account
       };
     } catch (err) {
       if (err.code === 11000) {
