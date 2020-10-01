@@ -9,6 +9,18 @@ export class ProfileType {
   email: string;
 
   @Field()
+  fullName: string;
+
+  @Field()
+  social: boolean;
+
+  @Field()
+  socialId: string;
+
+  @Field()
+  picture: string;
+
+  @Field()
   isDisabled: boolean;
 
   @Field()
@@ -25,9 +37,6 @@ export class ProfileType {
 
   @Field()
   gender: string;
-
-  @Field()
-  picture: string;
 
   @Field()
   skills: string;

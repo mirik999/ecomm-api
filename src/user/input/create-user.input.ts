@@ -1,21 +1,50 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsBoolean,
+  IsEmail,
+  IsOptional,
+  IsString,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 
 @InputType()
 export class CreateUserCredentials {
+  @ApiProperty()
+  @IsString()
+  @IsEmail()
+  @Field()
+  email: string;
+
+  @ApiProperty()
+  @IsString()
+  @MinLength(3)
+  @Field()
+  password: string;
+
+  @ApiProperty()
   @IsString()
   @MinLength(3)
   @MaxLength(24)
   @Field()
   fullName: string;
 
+  @ApiProperty()
+  @IsOptional()
   @IsString()
-  @IsEmail()
-  @Field()
-  email: string;
+  @Field({ nullable: true })
+  socialId: string;
 
+  @ApiProperty()
+  @IsOptional()
+  @IsBoolean()
+  @Field({ nullable: true })
+  social: boolean;
+
+  @ApiProperty()
+  @IsOptional()
   @IsString()
-  @MinLength(3)
-  @Field()
-  password: string;
+  @Field({ nullable: true })
+  picture: string;
 }

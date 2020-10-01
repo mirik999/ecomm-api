@@ -8,7 +8,6 @@ import { Column, PrimaryColumn, Repository } from 'typeorm';
 export interface JwtPayload {
   email: string;
   id: string;
-  fullName: string;
 }
 
 @Injectable()

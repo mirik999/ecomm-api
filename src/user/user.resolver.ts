@@ -5,6 +5,7 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UserType } from './user.type';
 import { CreateUserCredentials } from './input/create-user.input';
 import { forwardRef, Inject } from '@nestjs/common';
+import { ApiQuery, ApiTags } from '@nestjs/swagger';
 
 @Resolver()
 export class UserResolver {
@@ -23,10 +24,24 @@ export class UserResolver {
   async createUser(
     @Args('createUserCredentions') createUserCredentials: CreateUserCredentials,
   ): Promise<{ accessToken: string }> {
-    const { accessToken, id, email } = await this.authService.createUser(
-      createUserCredentials,
+    const {
+      accessToken,
+      id,
+      email,
+      fullName,
+      social,
+      socialId,
+      picture,
+    } = await this.authService.createUser(createUserCredentials);
+    console.log(email, fullName, social, socialId, picture);
+    await this.profileService.createProfile(
+      id,
+      email,
+      fullName,
+      social,
+      socialId,
+      picture,
     );
-    await this.profileService.createProfile(id, email);
     return { accessToken };
   }
 
@@ -34,7 +49,7 @@ export class UserResolver {
   async userLogin(
     @Args('userLoginCredentials') userLoginCredentials: UserLoginCredentials,
   ): Promise<{ accessToken: string }> {
-    await this.profileService.getProfile(userLoginCredentials.email)
+    await this.profileService.getProfile(userLoginCredentials.email);
     return await this.authService.userLogin(userLoginCredentials);
   }
 }

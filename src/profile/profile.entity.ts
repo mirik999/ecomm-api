@@ -18,6 +18,18 @@ export class Profile extends BaseEntity {
   email: string;
 
   @Column()
+  fullName: string;
+
+  @Column({ default: false })
+  social: boolean;
+
+  @Column()
+  socialId: string;
+
+  @Column()
+  picture: string;
+
+  @Column()
   createdAt: string;
 
   @Column({ default: false })
@@ -34,9 +46,6 @@ export class Profile extends BaseEntity {
 
   @Column()
   gender: string;
-
-  @Column()
-  picture: string;
 
   @Column()
   skills: string;

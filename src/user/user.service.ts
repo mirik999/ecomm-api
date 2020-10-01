@@ -28,11 +28,26 @@ export class UserService {
 
   async createUser(
     createUserCredentials: CreateUserCredentials,
-  ): Promise<{ id: string; email: string; accessToken: string }> {
-    const { fullName, email, password } = createUserCredentials;
+  ): Promise<{
+    id: string;
+    email: string;
+    fullName: string;
+    accessToken: string;
+    social: boolean;
+    socialId: string;
+    picture: string;
+  }> {
+    const {
+      email,
+      password,
+      fullName,
+      social,
+      socialId,
+      picture,
+    } = createUserCredentials;
+
     const user = new User();
     user.id = uuid();
-    user.fullName = fullName;
     user.email = email;
     user.salt = await bcrypt.genSalt();
     user.password = await this.hashPassword(password, user.salt);
@@ -42,13 +57,17 @@ export class UserService {
       const tokenCredentials = {
         id: user.id,
         email: user.email,
-        fullName: user.fullName
-      }
-      const accessToken = (await this.generateToken(tokenCredentials)).accessToken;
+      };
+      const accessToken = (await this.generateToken(tokenCredentials))
+        .accessToken;
       return {
         id: user.id,
         email: user.email,
-        accessToken: accessToken,
+        accessToken,
+        fullName,
+        social,
+        socialId,
+        picture,
       };
     } catch (err) {
       if (err.code === 11000) {
@@ -81,14 +100,15 @@ export class UserService {
       return {
         id: user.id,
         email: user.email,
-        fullName: user.fullName
-      }
+      };
     } else {
       return null;
     }
   }
 
-  private async generateToken(user: JwtPayload): Promise<{ accessToken: string }> {
+  private async generateToken(
+    user: JwtPayload,
+  ): Promise<{ accessToken: string }> {
     const accessToken = await this.jwtService.sign(user);
 
     return { accessToken };
