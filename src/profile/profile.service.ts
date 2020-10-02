@@ -54,15 +54,15 @@ export class ProfileService {
       profile.isDisabled = false;
       profile.account = account;
       profile.social = social || false;
-      profile.socialId = socialId || "";
-      profile.picture = picture || "";
-      profile.birthDate = "";
-      profile.city = "";
-      profile.phone = "";
-      profile.gender = "";
-      profile.skills = "";
-      profile.experience = "";
-      profile.additionalInfo = "";
+      profile.socialId = socialId || '';
+      profile.picture = picture || '';
+      profile.birthDate = '';
+      profile.city = '';
+      profile.phone = '';
+      profile.gender = '';
+      profile.skills = '';
+      profile.experience = '';
+      profile.additionalInfo = '';
       return this.profileRepository.save(profile);
     } catch (err) {
       throw new ConflictException('Cant create a profile');

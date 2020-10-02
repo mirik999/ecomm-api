@@ -43,6 +43,6 @@ export class CreateUserCredentials {
 
   @IsOptional()
   @IsString()
-  @Field({ nullable: true })
+  @Field()
   account: string;
 }
