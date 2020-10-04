@@ -24,6 +24,7 @@ export class UserResolver {
   async createUser(
     @Args('createUserCredentions') createUserCredentials: CreateUserCredentials,
   ): Promise<{ accessToken: string }> {
+    console.log('asd', createUserCredentials)
     const {
       accessToken,
       id,
