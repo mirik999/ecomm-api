@@ -22,7 +22,7 @@ export class UserResolver {
 
   @Mutation(() => UserType)
   async createUser(
-    @Args('createUserCredentions') createUserCredentials: CreateUserCredentials,
+    @Args('createUserCredentials') createUserCredentials: CreateUserCredentials,
   ): Promise<{ accessToken: string }> {
     console.log('asd', createUserCredentials)
     const {
