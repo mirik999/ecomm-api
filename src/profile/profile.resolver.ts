@@ -12,7 +12,6 @@ export class ProfileResolver {
 
   @Query(() => ProfileType)
   getProfile(@User() user: JwtPayload): Promise<Profile> {
-    console.log('profile.resolver', user.email)
     return this.profileService.getProfile(user.email);
   }
 

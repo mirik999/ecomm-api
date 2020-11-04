@@ -1,5 +1,6 @@
 import {
   BaseEntity,
+  BeforeInsert,
   Column,
   Entity,
   ObjectIdColumn,
@@ -8,6 +9,12 @@ import {
 
 @Entity()
 export class Profile extends BaseEntity {
+
+  @BeforeInsert()
+  nameToUpperCase() {
+    this.email = this.email.toLowerCase()
+  }
+
   @ObjectIdColumn()
   _id: string;
 

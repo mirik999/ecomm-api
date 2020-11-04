@@ -24,10 +24,12 @@ export class ProfileService {
 
   async getProfile(email: string): Promise<Profile> {
     const profile = await this.profileRepository.findOne({ where: { email } });
+    console.log('wtg', email)
     if (profile) {
       if (profile.isDisabled) {
         throw new ConflictException('Profile is disabled');
       } else {
+        console.log('profile found', profile);
         return profile;
       }
     } else {
