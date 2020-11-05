@@ -15,6 +15,12 @@ export class ProfileResolver {
     return this.profileService.getProfile(user.email);
   }
 
+  @Query(() => [ProfileType])
+  getProfiles(@User() user: JwtPayload): Promise<Profile[]> {
+    console.log('aur')
+    return this.profileService.getProfiles();
+  }
+
   @Query(() => ProfileType)
   disableProfile(@User() user: JwtPayload): Promise<Profile> {
     return this.profileService.disableProfile(user)

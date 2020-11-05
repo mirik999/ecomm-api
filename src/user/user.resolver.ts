@@ -24,7 +24,6 @@ export class UserResolver {
   async createUser(
     @Args('createUserCredentials') createUserCredentials: CreateUserCredentials,
   ): Promise<{ accessToken: string }> {
-    console.log('create', createUserCredentials)
     const {
       accessToken,
       id,
@@ -52,7 +51,6 @@ export class UserResolver {
   async userLogin(
     @Args('userLoginCredentials') userLoginCredentials: UserLoginCredentials,
   ): Promise<{ accessToken: string }> {
-    console.log('login', userLoginCredentials)
     await this.profileService.getProfile(userLoginCredentials.email);
     return await this.authService.userLogin(userLoginCredentials);
   }
