@@ -85,7 +85,6 @@ export class UserService {
     userLoginCredentials: UserLoginCredentials,
   ): Promise<{ accessToken: string }> {
     const user = await this.validateUserPassword(userLoginCredentials);
-    console.log('user valid', user)
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
@@ -98,17 +97,13 @@ export class UserService {
   ): Promise<JwtPayload> {
     const { email, password } = userLoginCredentials;
     const user = await this.userRepository.findOne({ where : { email }  });
-    console.log('user cred', userLoginCredentials);
-    console.log('user self', user)
 
     if (user && (await (await user).validatePassword(password))) {
-      console.log('aue')
       return {
         id: user.id,
         email: user.email,
       };
     } else {
-      console.log('aue null')
       return null;
     }
   }

@@ -64,7 +64,7 @@ export class ProfileService {
       profile.account = account;
       profile.social = social || false;
       profile.socialId = socialId || '';
-      profile.picture = picture || '';
+      profile.picture = picture || 'https://res.cloudinary.com/mirik-development-group/image/upload/v1604756046/blank-profile-picture-973460_640_pribu1.png';
       profile.birthDate = '';
       profile.city = '';
       profile.phone = '';
@@ -83,7 +83,7 @@ export class ProfileService {
     updateProfileCredentials: UpdateProfileCredentials,
   ): Promise<Profile> {
     try {
-      const profile = await this.profileRepository.findOne({ user: user.id });
+      const profile = await this.profileRepository.findOne({ email: user.email });
       for (let key in updateProfileCredentials) {
         profile[key] = updateProfileCredentials[key];
       }
