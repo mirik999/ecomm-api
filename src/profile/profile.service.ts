@@ -83,7 +83,7 @@ export class ProfileService {
     updateProfileCredentials: UpdateProfileCredentials,
   ): Promise<Profile> {
     try {
-      const profile = await this.profileRepository.findOne({ email: user.email });
+      const profile = await this.profileRepository.findOne({  email: user.email });
       for (let key in updateProfileCredentials) {
         profile[key] = updateProfileCredentials[key];
       }
