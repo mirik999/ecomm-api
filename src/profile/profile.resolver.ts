@@ -11,7 +11,7 @@ export class ProfileResolver {
   constructor(private profileService: ProfileService) {}
 
   @Query(() => ProfileType)
-  getProfile(@User() user: JwtPayload): Promise<Profile> {
+  async getProfile(@User() user: JwtPayload): Promise<Profile> {
     return this.profileService.getProfile(user.email);
   }
 
@@ -30,6 +30,7 @@ export class ProfileResolver {
     @Args('updateProfileCredentials') updateProfileCredentials: UpdateProfileCredentials,
     @User() user: JwtPayload
   ): Promise<Profile> {
+    console.log(updateProfileCredentials)
     return this.profileService.updateProfile(user, updateProfileCredentials)
   }
 }
