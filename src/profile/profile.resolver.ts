@@ -16,21 +16,24 @@ export class ProfileResolver {
   }
 
   @Query(() => [ProfileType])
-  getProfiles(@User() user: JwtPayload): Promise<Profile[]> {
-    return this.profileService.getProfiles();
+  getProfiles(
+    @User() user: JwtPayload,
+    @Args('type') type: string,
+  ): Promise<Profile[]> {
+    return this.profileService.getProfiles(type);
   }
 
   @Query(() => ProfileType)
   disableProfile(@User() user: JwtPayload): Promise<Profile> {
-    return this.profileService.disableProfile(user)
+    return this.profileService.disableProfile(user);
   }
 
   @Mutation(() => ProfileType)
   updateProfile(
-    @Args('updateProfileCredentials') updateProfileCredentials: UpdateProfileCredentials,
-    @User() user: JwtPayload
+    @Args('updateProfileCredentials')
+    updateProfileCredentials: UpdateProfileCredentials,
+    @User() user: JwtPayload,
   ): Promise<Profile> {
-    console.log(updateProfileCredentials)
-    return this.profileService.updateProfile(user, updateProfileCredentials)
+    return this.profileService.updateProfile(user, updateProfileCredentials);
   }
 }

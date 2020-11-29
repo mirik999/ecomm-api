@@ -2,7 +2,7 @@ import { Field, ID, ObjectType } from '@nestjs/graphql';
 
 @ObjectType('Profile')
 export class ProfileType {
-  @Field(type => ID)
+  @Field((type) => ID)
   id: string;
 
   @Field()
@@ -39,10 +39,22 @@ export class ProfileType {
   gender: string;
 
   @Field()
+  profession: string;
+
+  @Field()
+  salary: string;
+
+  @Field()
   skills: string;
 
   @Field()
   experience: string;
+
+  @Field()
+  jobDescription: string;
+
+  @Field()
+  education: string;
 
   @Field()
   additionalInfo: string;

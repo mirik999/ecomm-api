@@ -1,5 +1,11 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsBoolean, IsOptional, IsString, MaxLength } from 'class-validator';
+import {
+  IsBoolean,
+  IsNumber,
+  IsOptional,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 
 @InputType()
 export class UpdateProfileCredentials {
@@ -63,16 +69,40 @@ export class UpdateProfileCredentials {
   gender: string;
 
   @IsOptional()
+  @MaxLength(30)
+  @IsString()
+  @Field({ nullable: true })
+  profession: string;
+
+  @IsOptional()
+  @MaxLength(5)
+  @IsString()
+  @Field({ nullable: true })
+  salary: string;
+
+  @IsOptional()
   @MaxLength(500)
   @IsString()
   @Field({ nullable: true })
   skills: string;
 
   @IsOptional()
-  @MaxLength(500)
+  @MaxLength(20)
   @IsString()
   @Field({ nullable: true })
   experience: string;
+
+  @IsOptional()
+  @MaxLength(500)
+  @IsString()
+  @Field({ nullable: true })
+  jobDescription: string;
+
+  @IsOptional()
+  @MaxLength(500)
+  @IsString()
+  @Field({ nullable: true })
+  education: string;
 
   @IsOptional()
   @MaxLength(500)

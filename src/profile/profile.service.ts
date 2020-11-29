@@ -35,8 +35,13 @@ export class ProfileService {
     }
   }
 
-  async getProfiles(): Promise<Profile[]> {
-    const profiles = await this.profileRepository.find({ where: { isDisabled: false } });
+  async getProfiles(type: string): Promise<Profile[]> {
+    const profiles = await this.profileRepository.find({
+      where: {
+        isDisabled: false,
+        account: type,
+      },
+    });
     if (profiles.length) {
       return profiles;
     } else {
@@ -64,13 +69,19 @@ export class ProfileService {
       profile.account = account;
       profile.social = social || false;
       profile.socialId = socialId || '';
-      profile.picture = picture || 'https://res.cloudinary.com/mirik-development-group/image/upload/v1604756046/blank-profile-picture-973460_640_pribu1.png';
+      profile.picture =
+        picture ||
+        'https://res.cloudinary.com/mirik-development-group/image/upload/v1604756046/blank-profile-picture-973460_640_pribu1.png';
       profile.birthDate = '';
       profile.city = '';
       profile.phone = '';
       profile.gender = '';
+      profile.profession = '';
+      profile.salary = '';
       profile.skills = '';
       profile.experience = '';
+      profile.jobDescription = '';
+      profile.education = '';
       profile.additionalInfo = '';
       return this.profileRepository.save(profile);
     } catch (err) {
@@ -83,7 +94,9 @@ export class ProfileService {
     updateProfileCredentials: UpdateProfileCredentials,
   ): Promise<Profile> {
     try {
-      const profile = await this.profileRepository.findOne({  email: user.email });
+      const profile = await this.profileRepository.findOne({
+        email: user.email,
+      });
       for (let key in updateProfileCredentials) {
         profile[key] = updateProfileCredentials[key];
       }

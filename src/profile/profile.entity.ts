@@ -9,10 +9,9 @@ import {
 
 @Entity()
 export class Profile extends BaseEntity {
-
   @BeforeInsert()
   nameToUpperCase() {
-    this.email = this.email.toLowerCase()
+    this.email = this.email.toLowerCase();
   }
 
   @ObjectIdColumn()
@@ -55,13 +54,25 @@ export class Profile extends BaseEntity {
   gender: string;
 
   @Column()
+  profession: string;
+
+  @Column()
+  salary: string;
+
+  @Column()
   skills: string;
 
   @Column()
   experience: string;
 
   @Column()
+  jobDescription: string;
+
+  @Column()
   additionalInfo: string;
+
+  @Column()
+  education: string;
 
   @Column()
   user: string;
