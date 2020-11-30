@@ -77,7 +77,7 @@ export class ProfileService {
       profile.phone = '';
       profile.gender = '';
       profile.profession = '';
-      profile.salary = '';
+      profile.salary = '0';
       profile.skills = '';
       profile.experience = '';
       profile.jobDescription = '';
