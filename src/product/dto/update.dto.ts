@@ -1,43 +1,39 @@
 import { Field, InputType } from '@nestjs/graphql';
 import {
+  IsArray,
   IsBoolean,
   IsNumber,
   IsOptional,
   IsString,
-  MaxLength,
 } from 'class-validator';
 
 @InputType()
-export class UpdateProfileCredentials {
+export class UpdateProductDto {
   @IsOptional()
   @IsString()
   @Field({ nullable: true })
-  email: string;
+  name: string;
 
   @IsOptional()
+  @IsArray()
   @IsString()
   @Field({ nullable: true })
-  fullName: string;
-
-  @IsOptional()
-  @IsBoolean()
-  @Field({ nullable: true })
-  social: boolean;
+  images: string[];
 
   @IsOptional()
   @IsString()
   @Field({ nullable: true })
-  socialId: string;
+  cover: string;
 
   @IsOptional()
   @IsString()
   @Field({ nullable: true })
-  picture: string;
+  color: string;
 
   @IsOptional()
-  @IsBoolean()
+  @IsString()
   @Field({ nullable: true })
-  isDisabled: boolean;
+  description: string;
 
   @IsOptional()
   @IsString()
@@ -45,68 +41,54 @@ export class UpdateProfileCredentials {
   createdAt: string;
 
   @IsOptional()
-  @MaxLength(50)
-  @IsString()
+  @IsArray()
+  @IsNumber()
   @Field({ nullable: true })
-  birthDate: string;
+  stars: number[];
 
   @IsOptional()
-  @MaxLength(20)
-  @IsString()
+  @IsNumber()
   @Field({ nullable: true })
-  city: string;
+  price: number;
 
   @IsOptional()
-  @MaxLength(20)
-  @IsString()
+  @IsNumber()
   @Field({ nullable: true })
-  phone: string;
+  viewCount: number;
 
   @IsOptional()
-  @MaxLength(10)
-  @IsString()
+  @IsNumber()
   @Field({ nullable: true })
-  gender: string;
+  wishlistCount: number;
 
   @IsOptional()
-  @MaxLength(30)
-  @IsString()
+  @IsNumber()
   @Field({ nullable: true })
-  profession: string;
+  saleCount: number;
 
   @IsOptional()
-  @MaxLength(5)
-  @IsString()
+  @IsBoolean()
   @Field({ nullable: true })
-  salary: string;
+  new: boolean;
 
   @IsOptional()
-  @MaxLength(500)
-  @IsString()
+  @IsBoolean()
   @Field({ nullable: true })
-  skills: string;
+  best: boolean;
 
   @IsOptional()
-  @MaxLength(20)
-  @IsString()
+  @IsBoolean()
   @Field({ nullable: true })
-  experience: string;
+  sale: boolean;
 
   @IsOptional()
-  @MaxLength(500)
-  @IsString()
+  @IsBoolean()
   @Field({ nullable: true })
-  jobDescription: string;
+  isDisabled: boolean;
 
+  //ref to categories
   @IsOptional()
-  @MaxLength(500)
   @IsString()
   @Field({ nullable: true })
-  education: string;
-
-  @IsOptional()
-  @MaxLength(500)
-  @IsString()
-  @Field({ nullable: true })
-  additionalInfo: string;
+  categoryId: string;
 }

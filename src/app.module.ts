@@ -1,25 +1,17 @@
-import { Profile } from './profile/profile.entity';
-import { User } from './user/user.entity';
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserModule } from './user/user.module';
+import { MongooseModule } from '@nestjs/mongoose';
 import { GraphQLModule } from '@nestjs/graphql';
-import { ProfileModule } from './profile/profile.module';
+import { ProductModule } from './product/product.module';
+import { CategoryModule } from './category/category.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'mongodb',
-      url: 'mongodb://localhost/employeer',
-      synchronize: true,
-      useUnifiedTopology: true,
-      entities: [User, Profile],
-    }),
+    MongooseModule.forRoot('mongodb://localhost/electroshop'),
     GraphQLModule.forRoot({
       autoSchemaFile: true,
     }),
-    UserModule,
-    ProfileModule,
+    ProductModule,
+    CategoryModule,
   ],
 })
 export class AppModule {}
