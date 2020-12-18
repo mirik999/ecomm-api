@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { v4 as uuid } from 'uuid';
 import { Product, ProductDocument } from './product.schema';
@@ -51,7 +51,7 @@ export class ProductService {
     try {
       const product = new Product();
       product.id = uuid();
-      product.categoryId = newProduct.categoryId;
+      product.categoryId = Types.ObjectId(newProduct.categoryId);
       product.name = newProduct.name;
       product.images = newProduct.images;
       product.cover = newProduct.cover;

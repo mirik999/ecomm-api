@@ -27,7 +27,7 @@ export class ProductResolver {
 
   @Mutation(() => ProductType)
   createProduct(
-    @Args('UpdateProductDto')
+    @Args('updateProductDto')
       updateProductDto: UpdateProductDto
   ): Promise<Product> {
     return this.productService.createProduct(updateProductDto);

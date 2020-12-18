@@ -9,12 +9,12 @@ export class CategoryResolver {
   constructor(private categoryService: CategoryService) {}
 
   @Query(() => [CategoryType])
-  getProducts(): Promise<Category[]> {
+  getCategories(): Promise<Category[]> {
     return this.categoryService.getCategories();
   }
 
   @Mutation(() => CategoryType)
-  createProduct(
+  createCategory(
     @Args('updateCategoryDto')
       updateProductDto: UpdateCategoryDto
   ): Promise<Category> {

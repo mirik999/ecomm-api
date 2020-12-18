@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
-import { Category } from '../category/category.schema';
+import { Document, Types } from 'mongoose';
 
 export type ProductDocument = Product & Document;
 
@@ -12,7 +11,7 @@ export class Product {
   @Prop()
   name: string;
 
-  @Prop()
+  @Prop([String])
   images: string[];
 
   @Prop()
@@ -27,7 +26,7 @@ export class Product {
   @Prop()
   createdAt: string;
 
-  @Prop()
+  @Prop([Number])
   stars: number[];
 
   @Prop()
@@ -55,9 +54,8 @@ export class Product {
   isDisabled: boolean;
 
   //category ref
-  // @Prop(type: [Types.ObjectId], ref: Category.name)
-  @Prop()
-  categoryId: string;
+  @Prop({ type: Types.ObjectId , ref: 'Category' })
+  categoryId: Types.ObjectId;
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

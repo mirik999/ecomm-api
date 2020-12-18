@@ -8,7 +8,7 @@ export class ProductType {
   @Field({ nullable: true })
   name: string;
 
-  @Field({ nullable: true })
+  @Field(() => [String], { nullable: true })
   images: string[];
 
   @Field({ nullable: true })
@@ -23,7 +23,7 @@ export class ProductType {
   @Field({ nullable: true })
   createdAt: string;
 
-  @Field({ nullable: true })
+  @Field(() => [Number], { nullable: true })
   stars: number[];
 
   @Field({ nullable: true })

@@ -17,7 +17,7 @@ export class UpdateProductDto {
   @IsOptional()
   @IsArray()
   @IsString()
-  @Field({ nullable: true })
+  @Field(() => [String], { nullable: true })
   images: string[];
 
   @IsOptional()
@@ -43,7 +43,7 @@ export class UpdateProductDto {
   @IsOptional()
   @IsArray()
   @IsNumber()
-  @Field({ nullable: true })
+  @Field(() => [Number], { nullable: true })
   stars: number[];
 
   @IsOptional()
