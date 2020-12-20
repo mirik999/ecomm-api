@@ -4,7 +4,7 @@ import { UpdateCategoryDto } from './dto/update.dto';
 import { Category } from './category.schema';
 import { CategoryType } from './category.type';
 
-@Resolver()
+@Resolver(() => CategoryType)
 export class CategoryResolver {
   constructor(private categoryService: CategoryService) {}
 

@@ -3,10 +3,11 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Model, Types } from 'mongoose';
+import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { v4 as uuid } from 'uuid';
 import { Product, ProductDocument } from './product.schema';
+import { CreateProductDto } from './dto/create.dto';
 import { UpdateProductDto } from './dto/update.dto';
 
 @Injectable()
@@ -17,14 +18,9 @@ export class ProductService {
   ) {}
 
   async getProduct(id: string): Promise<Product> {
-    const product = await this.productRepository.findOne({
-      where: {
-        id,
-        isDisabled: false
-      }
-    });
+    const product = await this.productRepository.findOne({id});
     if (product) {
-      if (product.name) {
+      if (product.isDisabled) {
         throw new ConflictException('Product is disabled');
       } else {
         return product;
@@ -36,9 +32,7 @@ export class ProductService {
 
   async getProducts(): Promise<Product[]> {
     const products = await this.productRepository.find({
-      where: {
-        isDisabled: false
-      },
+      isDisabled: false
     });
     if (products.length) {
       return products;
@@ -47,57 +41,48 @@ export class ProductService {
     }
   }
 
-  async createProduct(newProduct: UpdateProductDto): Promise<Product> {
+  async createProduct(newProduct: CreateProductDto): Promise<Product> {
     try {
-      const product = new Product();
-      product.id = uuid();
-      product.categoryId = Types.ObjectId(newProduct.categoryId);
-      product.name = newProduct.name;
-      product.images = newProduct.images;
-      product.cover = newProduct.cover;
-      product.color = newProduct.color;
-      product.price = newProduct.price;
-      product.stars = newProduct.stars;
-      product.viewCount = newProduct.viewCount;
-      product.saleCount = newProduct.saleCount;
-      product.wishlistCount = newProduct.wishlistCount;
-      product.new = newProduct.new;
-      product.best = newProduct.best;
-      product.sale = newProduct.sale;
-      product.isDisabled = newProduct.isDisabled;
-      product.createdAt = newProduct.createdAt;
-      product.description = newProduct.description;
-      // return this.productRepository.save(product);
-      return product;
+      return this.productRepository.create({
+        id: uuid(),
+        name: newProduct.name,
+        images: newProduct.images,
+        cover: newProduct.cover,
+        color: newProduct.color,
+        description: newProduct.description,
+        createdAt: newProduct.createdAt,
+        stars: newProduct.stars,
+        price: newProduct.price,
+        viewCount: newProduct.viewCount,
+        wishlistCount: newProduct.wishlistCount,
+        saleCount: newProduct.saleCount,
+        new: newProduct.new,
+        best: newProduct.best,
+        sale: newProduct.sale,
+        isDisabled: newProduct.isDisabled,
+        category: newProduct.category,
+      });
     } catch (err) {
-      throw new ConflictException('Cant create a product');
+      throw new ConflictException(`Cant create a product. [Error] => ${err.message}`);
     }
   }
-  //
-  // async updateProduct(
-  //   user: JwtPayload,
-  //   updateProductCredentials: UpdateProductCredentials,
-  // ): Promise<Product> {
-  //   try {
-  //     const product = await this.productRepository.findOne({
-  //       email: user.email,
-  //     });
-  //     for (let key in updateProductCredentials) {
-  //       product[key] = updateProductCredentials[key];
-  //     }
-  //     return this.productRepository.save(product);
-  //   } catch (err) {
-  //     throw new ConflictException('Cant update a product');
-  //   }
-  // }
-  //
-  // async disableProduct(user: JwtPayload): Promise<Product> {
-  //   try {
-  //     const product = await this.productRepository.findOne({ user: user.id });
-  //     product.isDisabled = true;
-  //     return this.productRepository.save(product);
-  //   } catch (err) {
-  //     throw new ConflictException('Cant disable a product');
-  //   }
-  // }
+
+  async updateProduct(
+    // user: JwtPayload,
+    updatedProduct: UpdateProductDto,
+  ): Promise<Product> {
+    try {
+      const product = await this.productRepository.findOne({
+        id: updatedProduct.id,
+      });
+      for (const key in updatedProduct) {
+        if (updatedProduct.hasOwnProperty(key)) {
+          product[key] = updatedProduct[key];
+        }
+      }
+      return this.productRepository.create(product);
+    } catch (err) {
+      throw new ConflictException(`Cant update a product [Error] => ${err.message}`);
+    }
+  }
 }

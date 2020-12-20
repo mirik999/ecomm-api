@@ -33,4 +33,12 @@ export class CategoryService {
     }
   }
 
+  async getCategory(ids: string[]): Promise<Category[]> {
+    return this.categoryRepository.find({
+      id: {
+        $in: ids
+      }
+    });
+  }
+
 }

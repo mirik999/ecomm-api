@@ -5,11 +5,11 @@ import { CategoryResolver } from './category.resolver';
 import { Category, CategorySchema } from './category.schema';
 
 @Module({
-  imports: [MongooseModule.forFeature(
-    [
+  imports: [
+    MongooseModule.forFeature([
       { name: Category.name, schema: CategorySchema }
-    ]
-  )],
+    ])
+  ],
   providers: [CategoryService, CategoryResolver],
   exports: [CategoryService],
 })
