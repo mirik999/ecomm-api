@@ -4,6 +4,7 @@ import { v4 as uuid } from 'uuid';
 import { InjectModel } from '@nestjs/mongoose';
 import { Category, CategoryDocument } from './category.schema';
 import { UpdateCategoryDto } from './dto/update.dto';
+import { JwtPayload } from '../utils/jwt.strategy';
 
 @Injectable()
 export class CategoryService {
@@ -21,7 +22,11 @@ export class CategoryService {
     }
   }
 
-  async createProduct(newCategory: UpdateCategoryDto): Promise<Category> {
+  async createCategory(
+    newCategory: UpdateCategoryDto,
+    user: JwtPayload
+  ): Promise<Category> {
+    console.log('user in cr ct', user)
     try {
       const category = new Category();
       category.id = uuid();

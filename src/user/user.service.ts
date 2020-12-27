@@ -6,7 +6,6 @@ import { v4 as uuid } from 'uuid';
 import * as bcrypt from 'bcryptjs';
 import { User, UserDocument } from './user.schema';
 import { CreateUserDto } from './dto/create.dto';
-import { JwtPayload } from '../utils/jwt.strategy';
 
 @Injectable()
 export class UserService {
@@ -15,7 +14,12 @@ export class UserService {
     private jwtService: JwtService
   ) {}
 
-  async createUser(newUser: CreateUserDto) {
+  async createUser(newUser: CreateUserDto): Promise<{ accessToken: string }> {
+    const isUserExists = await this.checkUser(newUser.email);
+    if (isUserExists) {
+      throw new ConflictException('Email already exists')
+    }
+
     const user = new User();
     user.id = uuid();
     user.email = newUser.email;
@@ -24,34 +28,55 @@ export class UserService {
 
     try {
       await this.userRepository.create(user);
-      const tokenCredentials = {
-        id: user.id,
-        email: user.email
-      }
-      const { accessToken } = await this.generateToken(tokenCredentials);
-      return {
-        id: user.id,
-        email: user.email,
-        accessToken
-      }
+      return this.generateToken(user);
     } catch(err) {
-      if (err.code === 11000) {
-        throw new ConflictException('Email already exists');
-      } else {
-        throw new InternalServerErrorException();
-      }
+      throw new InternalServerErrorException();
     }
   }
 
-  private async generateToken(
-    user: JwtPayload,
-  ): Promise<{ accessToken: string }> {
-    const accessToken = await this.jwtService.sign(user);
+  async loginUser(newUser: CreateUserDto): Promise<{ accessToken: string }> {
+    const user = await this.checkUser(newUser.email);
+    await UserService.isUserPasswordValid(user, newUser.password);
+    return this.generateToken(user);
+  }
 
+  private async generateToken(
+    user: User,
+  ): Promise<{ accessToken: string }> {
+    const tokenCredentials = {
+      id: user.id,
+      email: user.email
+    }
+    const accessToken = this.jwtService.sign(tokenCredentials);
     return { accessToken };
+  }
+
+  private async checkUser(email: string): Promise<UserDocument> {
+    return this.userRepository.findOne({email});
   }
 
   static async hashPassword(password: string, salt: string): Promise<string> {
     return bcrypt.hash(password, salt);
+  }
+
+  static async isUserPasswordValid(
+    user: User,
+    password: string
+  ): Promise<boolean> {
+    if (user) {
+      const isValid = await UserService.validatePassword(user, password);
+      if (isValid) {
+        return true;
+      } else {
+        throw new ConflictException('Wrong password');
+      }
+    } else {
+      throw new ConflictException('Email does not exists');
+    }
+  }
+
+  static async validatePassword(user: User, password: string): Promise<boolean> {
+    const hash = await bcrypt.hash(password, user.salt);
+    return hash === user.password;
   }
 }

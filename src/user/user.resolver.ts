@@ -13,4 +13,9 @@ export class UserResolver {
   createUser(@Args("newUser") newUser: CreateUserDto): Promise<{ accessToken: string }> {
     return this.userService.createUser(newUser);
   }
+
+  @Mutation(() => UserType)
+  loginUser(@Args("newUser") newUser: CreateUserDto): Promise<{ accessToken: string }> {
+    return this.userService.loginUser(newUser);
+  }
 }

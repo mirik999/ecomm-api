@@ -3,6 +3,8 @@ import { CategoryService } from './category.service';
 import { UpdateCategoryDto } from './dto/update.dto';
 import { Category } from './category.schema';
 import { CategoryType } from './category.type';
+import { User } from '../utils/user.decorator';
+import { JwtPayload } from '../utils/jwt.strategy';
 
 @Resolver(() => CategoryType)
 export class CategoryResolver {
@@ -15,10 +17,12 @@ export class CategoryResolver {
 
   @Mutation(() => CategoryType)
   createCategory(
+    @User() user: JwtPayload,
     @Args('updateCategoryDto')
       updateProductDto: UpdateCategoryDto
   ): Promise<Category> {
-    return this.categoryService.createProduct(updateProductDto);
+    console.log('cas', user)
+    return this.categoryService.createCategory(updateProductDto, user);
   }
 
 }
