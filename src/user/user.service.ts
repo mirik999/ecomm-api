@@ -1,23 +1,27 @@
-import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { JwtService } from '@nestjs/jwt';
 import { Model } from 'mongoose';
 import { v4 as uuid } from 'uuid';
 import * as bcrypt from 'bcryptjs';
 import { User, UserDocument } from './user.schema';
-import { CreateUserDto } from './dto/create.dto';
+import { AuthInput } from './input/auth.input';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel('User') private userRepository: Model<UserDocument>,
-    private jwtService: JwtService
+    private jwtService: JwtService,
   ) {}
 
-  async createUser(newUser: CreateUserDto): Promise<{ accessToken: string }> {
+  async createUser(newUser: AuthInput): Promise<{ accessToken: string }> {
     const isUserExists = await this.checkUser(newUser.email);
     if (isUserExists) {
-      throw new ConflictException('Email already exists')
+      throw new ConflictException('Email already exists');
     }
 
     const user = new User();
@@ -29,30 +33,28 @@ export class UserService {
     try {
       await this.userRepository.create(user);
       return this.generateToken(user);
-    } catch(err) {
+    } catch (err) {
       throw new InternalServerErrorException();
     }
   }
 
-  async loginUser(newUser: CreateUserDto): Promise<{ accessToken: string }> {
+  async loginUser(newUser: AuthInput): Promise<{ accessToken: string }> {
     const user = await this.checkUser(newUser.email);
     await UserService.isUserPasswordValid(user, newUser.password);
     return this.generateToken(user);
   }
 
-  private async generateToken(
-    user: User,
-  ): Promise<{ accessToken: string }> {
+  private async generateToken(user: User): Promise<{ accessToken: string }> {
     const tokenCredentials = {
       id: user.id,
-      email: user.email
-    }
+      email: user.email,
+    };
     const accessToken = this.jwtService.sign(tokenCredentials);
     return { accessToken };
   }
 
   private async checkUser(email: string): Promise<UserDocument> {
-    return this.userRepository.findOne({email});
+    return this.userRepository.findOne({ email });
   }
 
   static async hashPassword(password: string, salt: string): Promise<string> {
@@ -61,7 +63,7 @@ export class UserService {
 
   static async isUserPasswordValid(
     user: User,
-    password: string
+    password: string,
   ): Promise<boolean> {
     if (user) {
       const isValid = await UserService.validatePassword(user, password);
@@ -75,7 +77,10 @@ export class UserService {
     }
   }
 
-  static async validatePassword(user: User, password: string): Promise<boolean> {
+  static async validatePassword(
+    user: User,
+    password: string,
+  ): Promise<boolean> {
     const hash = await bcrypt.hash(password, user.salt);
     return hash === user.password;
   }

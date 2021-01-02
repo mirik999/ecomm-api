@@ -9,7 +9,7 @@ import {
 } from 'class-validator';
 
 @InputType()
-export class UpdateProductDto {
+export class UpdateProductInput {
   @IsOptional()
   @IsUUID()
   @Field({ nullable: true })
@@ -92,7 +92,7 @@ export class UpdateProductDto {
 
   //ref to categories
   @IsOptional()
-  @IsUUID("4", { each: true })
+  @IsUUID('4', { each: true })
   @Field(() => [ID], { nullable: true })
   category: string[];
 }

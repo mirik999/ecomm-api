@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 export type CategoryDocument = Category & Document;
 
@@ -13,6 +13,12 @@ export class Category {
 
   @Prop()
   tabName: string;
+
+  @Prop()
+  createdAt: Date;
+
+  @Prop()
+  isDisabled: boolean;
 }
 
 export const CategorySchema = SchemaFactory.createForClass(Category);

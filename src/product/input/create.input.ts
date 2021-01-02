@@ -10,7 +10,7 @@ import {
 } from 'class-validator';
 
 @InputType()
-export class CreateProductDto {
+export class CreateProductInput {
   @IsOptional()
   @IsUUID()
   @Field({ nullable: true, defaultValue: uuid() })
@@ -93,7 +93,7 @@ export class CreateProductDto {
 
   //ref to categories
   @IsOptional()
-  @IsUUID("4", { each: true })
+  @IsUUID('4', { each: true })
   @Field(() => [ID], { nullable: true, defaultValue: [] })
   category: string[];
 }

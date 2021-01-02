@@ -7,18 +7,21 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { v4 as uuid } from 'uuid';
 import { Product, ProductDocument } from './product.schema';
-import { CreateProductDto } from './dto/create.dto';
-import { UpdateProductDto } from './dto/update.dto';
+import { CreateProductInput } from './input/create.input';
+import { UpdateProductInput } from './input/update.input';
+import { ProductSelf, ProductType } from './product.type';
+import { GetElementsInput } from '../global-inputs/get-elements.input';
+import { GetByIdsInput } from '../global-inputs/get-by-ids.input';
 
 @Injectable()
 export class ProductService {
   constructor(
     @InjectModel('Product')
-    private productRepository: Model<ProductDocument>
+    private productRepository: Model<ProductDocument>,
   ) {}
 
-  async getProduct(id: string): Promise<Product> {
-    const product = await this.productRepository.findOne({id});
+  async getProduct(id: string): Promise<ProductSelf> {
+    const product = await this.productRepository.findOne({ id });
     if (product) {
       if (product.isDisabled) {
         throw new ConflictException('Product is disabled');
@@ -30,18 +33,41 @@ export class ProductService {
     }
   }
 
-  async getProducts(): Promise<Product[]> {
-    const products = await this.productRepository.find({
-      isDisabled: false
-    });
-    if (products.length) {
-      return products;
-    } else {
-      throw new NotFoundException('Product not found');
+  async getProducts(controls: GetElementsInput): Promise<ProductType> {
+    try {
+      const { offset, limit, keyword } = controls;
+      const products = await this.productRepository.aggregate([
+        {
+          $match: {
+            $or: [{ name: { $regex: keyword } }],
+          },
+        },
+        {
+          $sort: { createdAt: -1 },
+        },
+        {
+          $facet: {
+            stage1: [{ $group: { _id: null, count: { $sum: 1 } } }],
+            stage2: [{ $skip: offset }, { $limit: limit }],
+          },
+        },
+        {
+          $unwind: '$stage1',
+        },
+        {
+          $project: {
+            count: '$stage1.count',
+            payload: '$stage2',
+          },
+        },
+      ]);
+      return products[0];
+    } catch (err) {
+      console.log(err.message);
     }
   }
 
-  async createProduct(newProduct: CreateProductDto): Promise<Product> {
+  async createProduct(newProduct: CreateProductInput): Promise<ProductSelf> {
     try {
       return this.productRepository.create({
         id: uuid(),
@@ -63,14 +89,13 @@ export class ProductService {
         category: newProduct.category,
       });
     } catch (err) {
-      throw new ConflictException(`Cant create a product. [Error] => ${err.message}`);
+      throw new ConflictException(
+        `Cant create a product. [Error] => ${err.message}`,
+      );
     }
   }
 
-  async updateProduct(
-    // user: JwtPayload,
-    updatedProduct: UpdateProductDto,
-  ): Promise<Product> {
+  async updateProduct(updatedProduct: UpdateProductInput): Promise<Product> {
     try {
       const product = await this.productRepository.findOne({
         id: updatedProduct.id,
@@ -82,7 +107,33 @@ export class ProductService {
       }
       return this.productRepository.create(product);
     } catch (err) {
-      throw new ConflictException(`Cant update a product [Error] => ${err.message}`);
+      throw new ConflictException(
+        `Cant update a product [Error] => ${err.message}`,
+      );
+    }
+  }
+
+  async disableProducts(disabledProducts: GetByIdsInput): Promise<ProductSelf> {
+    try {
+      return this.productRepository.updateMany(
+        { id: { $in: disabledProducts.ids } },
+        { $set: { isDisabled: true } },
+      );
+    } catch (err) {
+      throw new ConflictException('Cant disable products');
+    }
+  }
+
+  async activateProducts(
+    activateProducts: GetByIdsInput,
+  ): Promise<ProductSelf> {
+    try {
+      return this.productRepository.updateMany(
+        { id: { $in: activateProducts.ids } },
+        { $set: { isDisabled: false } },
+      );
+    } catch (err) {
+      throw new ConflictException('Cant activate products');
     }
   }
 }
