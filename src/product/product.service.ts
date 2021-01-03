@@ -6,12 +6,15 @@ import {
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { v4 as uuid } from 'uuid';
-import { Product, ProductDocument } from './product.schema';
+import { ProductDocument } from './product.schema';
 import { CreateProductInput } from './input/create.input';
 import { UpdateProductInput } from './input/update.input';
-import { ProductSelf, ProductType } from './product.type';
+import { ProductType, ProductsType } from './product.type';
 import { GetElementsInput } from '../global-inputs/get-elements.input';
-import { GetByIdsInput } from '../global-inputs/get-by-ids.input';
+import {
+  GetByIdsInput,
+  GetByIdsOutput,
+} from '../global-inputs/get-by-ids.input';
 
 @Injectable()
 export class ProductService {
@@ -20,7 +23,7 @@ export class ProductService {
     private productRepository: Model<ProductDocument>,
   ) {}
 
-  async getProduct(id: string): Promise<ProductSelf> {
+  async getProduct(id: string): Promise<ProductType> {
     const product = await this.productRepository.findOne({ id });
     if (product) {
       if (product.isDisabled) {
@@ -33,13 +36,13 @@ export class ProductService {
     }
   }
 
-  async getProducts(controls: GetElementsInput): Promise<ProductType> {
+  async getProducts(controls: GetElementsInput): Promise<ProductsType> {
     try {
       const { offset, limit, keyword } = controls;
       const products = await this.productRepository.aggregate([
         {
           $match: {
-            $or: [{ name: { $regex: keyword } }],
+            $or: [{ name: { $regex: keyword, $options: 'i' } }],
           },
         },
         {
@@ -67,7 +70,7 @@ export class ProductService {
     }
   }
 
-  async createProduct(newProduct: CreateProductInput): Promise<ProductSelf> {
+  async createProduct(newProduct: CreateProductInput): Promise<ProductType> {
     try {
       return this.productRepository.create({
         id: uuid(),
@@ -95,7 +98,9 @@ export class ProductService {
     }
   }
 
-  async updateProduct(updatedProduct: UpdateProductInput): Promise<Product> {
+  async updateProduct(
+    updatedProduct: UpdateProductInput,
+  ): Promise<ProductType> {
     try {
       const product = await this.productRepository.findOne({
         id: updatedProduct.id,
@@ -113,12 +118,15 @@ export class ProductService {
     }
   }
 
-  async disableProducts(disabledProducts: GetByIdsInput): Promise<ProductSelf> {
+  async disableProducts(
+    disabledProducts: GetByIdsInput,
+  ): Promise<GetByIdsOutput> {
     try {
-      return this.productRepository.updateMany(
+      await this.productRepository.updateMany(
         { id: { $in: disabledProducts.ids } },
         { $set: { isDisabled: true } },
       );
+      return disabledProducts;
     } catch (err) {
       throw new ConflictException('Cant disable products');
     }
@@ -126,12 +134,13 @@ export class ProductService {
 
   async activateProducts(
     activateProducts: GetByIdsInput,
-  ): Promise<ProductSelf> {
+  ): Promise<GetByIdsOutput> {
     try {
-      return this.productRepository.updateMany(
+      await this.productRepository.updateMany(
         { id: { $in: activateProducts.ids } },
         { $set: { isDisabled: false } },
       );
+      return activateProducts;
     } catch (err) {
       throw new ConflictException('Cant activate products');
     }

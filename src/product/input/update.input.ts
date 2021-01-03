@@ -12,7 +12,7 @@ import {
 export class UpdateProductInput {
   @IsOptional()
   @IsUUID()
-  @Field({ nullable: true })
+  @Field()
   id: string;
 
   @IsOptional()

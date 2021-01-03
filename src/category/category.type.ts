@@ -1,7 +1,7 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 
-@ObjectType('CategorySelf')
-export class CategorySelf {
+@ObjectType('CategoryType')
+export class CategoryType {
   @Field(type => ID, { nullable: true })
   id: string;
 
@@ -18,11 +18,11 @@ export class CategorySelf {
   isDisabled: boolean;
 }
 
-@ObjectType('Category')
-export class CategoryType {
+@ObjectType('CategoriesType')
+export class CategoriesType {
   @Field()
   count: number;
 
-  @Field(type => [CategorySelf])
-  payload: CategorySelf[];
+  @Field(type => [CategoryType])
+  payload: CategoryType[];
 }

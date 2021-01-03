@@ -16,9 +16,8 @@ export class CreateProductInput {
   @Field({ nullable: true, defaultValue: uuid() })
   id: string;
 
-  @IsOptional()
   @IsString()
-  @Field({ nullable: true, defaultValue: '' })
+  @Field()
   name: string;
 
   @IsOptional()
@@ -26,9 +25,8 @@ export class CreateProductInput {
   @Field(() => [String], { defaultValue: [] })
   images: string[];
 
-  @IsOptional()
   @IsString()
-  @Field({ nullable: true, defaultValue: '' })
+  @Field()
   cover: string;
 
   @IsOptional()
@@ -51,9 +49,8 @@ export class CreateProductInput {
   @Field(() => [Number], { defaultValue: [] })
   stars: number[];
 
-  @IsOptional()
   @IsNumber()
-  @Field({ nullable: true, defaultValue: 0 })
+  @Field()
   price: number;
 
   @IsOptional()
@@ -94,6 +91,6 @@ export class CreateProductInput {
   //ref to categories
   @IsOptional()
   @IsUUID('4', { each: true })
-  @Field(() => [ID], { nullable: true, defaultValue: [] })
+  @Field(() => [ID])
   category: string[];
 }

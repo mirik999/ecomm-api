@@ -6,16 +6,18 @@ import {
   ResolveField,
   Parent,
 } from '@nestjs/graphql';
-import { Product } from './product.schema';
 import { ProductService } from './product.service';
-import { ProductSelf, ProductType } from './product.type';
+import { ProductType, ProductsType } from './product.type';
 import { CreateProductInput } from './input/create.input';
 import { UpdateProductInput } from './input/update.input';
 import { CategoryService } from '../category/category.service';
-import { CategorySelf } from '../category/category.type';
+import { CategoryType } from '../category/category.type';
 import { JwtPayload } from '../utils/jwt.strategy';
 import { GetElementsInput } from '../global-inputs/get-elements.input';
-import { GetByIdsInput } from '../global-inputs/get-by-ids.input';
+import {
+  GetByIdsInput,
+  GetByIdsOutput,
+} from '../global-inputs/get-by-ids.input';
 import { User } from '../utils/user.decorator';
 
 @Resolver(() => ProductType)
@@ -25,23 +27,23 @@ export class ProductResolver {
     private categoryService: CategoryService,
   ) {}
 
-  @Query(() => ProductSelf)
-  async getProduct(@Args('id') id: string): Promise<ProductSelf> {
+  @Query(() => ProductType)
+  async getProduct(@Args('id') id: string): Promise<ProductType> {
     return this.productService.getProduct(id);
   }
 
-  @Query(() => ProductType)
+  @Query(() => ProductsType)
   getProducts(
     @Args('controls') controls: GetElementsInput,
-  ): Promise<ProductType> {
+  ): Promise<ProductsType> {
     return this.productService.getProducts(controls);
   }
 
-  @Mutation(() => ProductSelf)
+  @Mutation(() => ProductType)
   createProduct(
     @Args('newProduct')
     newProduct: CreateProductInput,
-  ): Promise<ProductSelf> {
+  ): Promise<ProductType> {
     return this.productService.createProduct(newProduct);
   }
 
@@ -49,31 +51,30 @@ export class ProductResolver {
   updateProduct(
     @Args('updatedProduct')
     updatedProduct: UpdateProductInput,
-  ): Promise<Product> {
+  ): Promise<ProductType> {
     return this.productService.updateProduct(updatedProduct);
   }
 
-  @Mutation(() => ProductType)
+  @Mutation(() => GetByIdsOutput)
   disableProducts(
     @User() user: JwtPayload,
     @Args('disabledProducts')
     disabledProducts: GetByIdsInput,
-  ) {
+  ): Promise<GetByIdsOutput> {
     return this.productService.disableProducts(disabledProducts);
   }
 
-  @Mutation(() => ProductType)
+  @Mutation(() => GetByIdsOutput)
   activateProducts(
     @User() user: JwtPayload,
     @Args('activateProducts')
     activateProducts: GetByIdsInput,
-  ) {
+  ): Promise<GetByIdsOutput> {
     return this.productService.activateProducts(activateProducts);
   }
 
-  @ResolveField('category', () => [CategorySelf])
-  async getCategory(@Parent() product: ProductSelf): Promise<CategorySelf[]> {
-    console.log('category resolve filed', product);
-    return await this.categoryService.getCategory(product.category);
+  @ResolveField(() => [CategoryType])
+  async category(@Parent() product: ProductType): Promise<CategoryType[]> {
+    return await this.categoryService.getCategoriesByIds(product.category);
   }
 }

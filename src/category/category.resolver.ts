@@ -1,7 +1,7 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CategoryService } from './category.service';
 import { UpdateCategoryInput } from './input/update.input';
-import { CategorySelf, CategoryType } from './category.type';
+import { CategoryType, CategoriesType } from './category.type';
 import { User } from '../utils/user.decorator';
 import { JwtPayload } from '../utils/jwt.strategy';
 import { GetElementsInput } from '../global-inputs/get-elements.input';
@@ -11,37 +11,37 @@ import { GetByIdsInput } from '../global-inputs/get-by-ids.input';
 export class CategoryResolver {
   constructor(private categoryService: CategoryService) {}
 
-  @Query(() => CategorySelf)
-  getCategoryById(@Args('id') id: string): Promise<CategorySelf> {
+  @Query(() => CategoryType)
+  getCategoryById(@Args('id') id: string): Promise<CategoryType> {
     return this.categoryService.getCategoryById(id);
   }
 
-  @Query(() => CategoryType)
+  @Query(() => CategoriesType)
   getCategories(
     @Args('controls') controls: GetElementsInput,
-  ): Promise<CategoryType> {
+  ): Promise<CategoriesType> {
     return this.categoryService.getCategories(controls);
   }
 
-  @Mutation(() => CategorySelf)
+  @Mutation(() => CategoryType)
   createCategory(
     @User() user: JwtPayload,
     @Args('newCategory')
     newCategory: UpdateCategoryInput,
-  ): Promise<CategorySelf> {
-    return this.categoryService.createCategory(newCategory, user);
+  ): Promise<CategoryType> {
+    return this.categoryService.createCategory(newCategory);
   }
 
-  @Mutation(() => CategorySelf)
+  @Mutation(() => CategoryType)
   updateCategory(
     @User() user: JwtPayload,
     @Args('updatedCategory')
     updatedCategory: UpdateCategoryInput,
-  ): Promise<CategorySelf> {
+  ): Promise<CategoryType> {
     return this.categoryService.updateCategory(updatedCategory);
   }
 
-  @Mutation(() => CategorySelf)
+  @Mutation(() => CategoryType)
   disableCategories(
     @User() user: JwtPayload,
     @Args('disabledCategories')
@@ -50,7 +50,7 @@ export class CategoryResolver {
     return this.categoryService.disableCategories(disabledCategories);
   }
 
-  @Mutation(() => CategorySelf)
+  @Mutation(() => CategoryType)
   activateCategories(
     @User() user: JwtPayload,
     @Args('activateCategories')

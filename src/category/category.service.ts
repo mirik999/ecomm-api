@@ -4,7 +4,7 @@ import { v4 as uuid } from 'uuid';
 import { InjectModel } from '@nestjs/mongoose';
 import { Category, CategoryDocument } from './category.schema';
 import { JwtPayload } from '../utils/jwt.strategy';
-import { CategorySelf, CategoryType } from './category.type';
+import { CategoryType, CategoriesType } from './category.type';
 import { UpdateCategoryInput } from './input/update.input';
 import { GetElementsInput } from '../global-inputs/get-elements.input';
 import { GetByIdsInput } from '../global-inputs/get-by-ids.input';
@@ -16,7 +16,7 @@ export class CategoryService {
     private categoryRepository: Model<CategoryDocument>,
   ) {}
 
-  async getCategoryById(id: string): Promise<CategorySelf> {
+  async getCategoryById(id: string): Promise<CategoryType> {
     const category = await this.categoryRepository.findOne({
       id,
       isDisabled: false,
@@ -28,7 +28,7 @@ export class CategoryService {
     }
   }
 
-  async getCategories(controls: GetElementsInput): Promise<CategoryType> {
+  async getCategories(controls: GetElementsInput): Promise<CategoriesType> {
     const { offset, limit, keyword } = controls;
     const categories = await this.categoryRepository.aggregate([
       {
@@ -63,9 +63,7 @@ export class CategoryService {
 
   async createCategory(
     newCategory: UpdateCategoryInput,
-    user: JwtPayload,
-  ): Promise<CategorySelf> {
-    console.log('user in cr ct', user);
+  ): Promise<CategoryType> {
     try {
       const category = new Category();
       category.id = uuid();
@@ -81,7 +79,7 @@ export class CategoryService {
 
   async updateCategory(
     updatedCategory: UpdateCategoryInput,
-  ): Promise<CategorySelf> {
+  ): Promise<CategoryType> {
     try {
       const category = await this.categoryRepository.findOne({
         id: updatedCategory.id,
@@ -99,7 +97,7 @@ export class CategoryService {
 
   async disableCategories(
     disabledCategories: GetByIdsInput,
-  ): Promise<CategorySelf> {
+  ): Promise<CategoryType> {
     try {
       return this.categoryRepository.updateMany(
         { id: { $in: disabledCategories.ids } },
@@ -112,7 +110,7 @@ export class CategoryService {
 
   async activateCategories(
     activateCategories: GetByIdsInput,
-  ): Promise<CategorySelf> {
+  ): Promise<CategoryType> {
     try {
       return this.categoryRepository.updateMany(
         { id: { $in: activateCategories.ids } },
@@ -123,13 +121,11 @@ export class CategoryService {
     }
   }
 
-  async getCategory(ids: string[]): Promise<CategorySelf[]> {
+  async getCategoriesByIds(ids: string[]): Promise<CategoryType[]> {
     try {
-      const categories = await this.categoryRepository.find({
+      return this.categoryRepository.find({
         id: { $in: ids },
       });
-      console.log(categories);
-      return categories;
     } catch (err) {
       console.log(err.message);
     }
