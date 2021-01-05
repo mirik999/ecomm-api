@@ -64,6 +64,7 @@ export class ProductService {
           },
         },
       ]);
+
       return products[0];
     } catch (err) {
       console.log(err.message);
