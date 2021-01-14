@@ -41,6 +41,7 @@ export class ProductResolver {
 
   @Mutation(() => ProductType)
   createProduct(
+    @User() user: JwtPayload,
     @Args('newProduct')
     newProduct: CreateProductInput,
   ): Promise<ProductType> {
@@ -49,6 +50,7 @@ export class ProductResolver {
 
   @Mutation(() => ProductType)
   updateProduct(
+    @User() user: JwtPayload,
     @Args('updatedProduct')
     updatedProduct: UpdateProductInput,
   ): Promise<ProductType> {

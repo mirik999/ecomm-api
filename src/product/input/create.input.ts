@@ -3,10 +3,13 @@ import { v4 as uuid } from 'uuid';
 import {
   IsArray,
   IsBoolean,
+  IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
   IsUUID,
+  MaxLength,
+  MinLength,
 } from 'class-validator';
 
 @InputType()
@@ -17,6 +20,9 @@ export class CreateProductInput {
   id: string;
 
   @IsString()
+  @IsNotEmpty()
+  @MinLength(3)
+  @MaxLength(24)
   @Field()
   name: string;
 
@@ -26,6 +32,7 @@ export class CreateProductInput {
   images: string[];
 
   @IsString()
+  @IsNotEmpty()
   @Field()
   cover: string;
 
@@ -50,6 +57,7 @@ export class CreateProductInput {
   stars: number[];
 
   @IsNumber()
+  @IsNotEmpty()
   @Field()
   price: number;
 
