@@ -3,11 +3,11 @@ import { Model } from 'mongoose';
 import { v4 as uuid } from 'uuid';
 import { InjectModel } from '@nestjs/mongoose';
 import { Category, CategoryDocument } from './category.schema';
-import { JwtPayload } from '../utils/jwt.strategy';
 import { CategoryType, CategoriesType } from './category.type';
 import { UpdateCategoryInput } from './input/update.input';
 import { GetElementsInput } from '../global-inputs/get-elements.input';
 import { GetByIdsInput } from '../global-inputs/get-by-ids.input';
+import { CreateCategoryInput } from './input/create.input';
 
 @Injectable()
 export class CategoryService {
@@ -62,7 +62,7 @@ export class CategoryService {
   }
 
   async createCategory(
-    newCategory: UpdateCategoryInput,
+    newCategory: CreateCategoryInput,
   ): Promise<CategoryType> {
     try {
       const category = new Category();

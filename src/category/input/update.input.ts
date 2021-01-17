@@ -1,5 +1,12 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsBoolean, IsDate, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsDate,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 
 @InputType()
 export class UpdateCategoryInput {
@@ -8,14 +15,16 @@ export class UpdateCategoryInput {
   @Field({ nullable: true })
   id: string;
 
-  @IsOptional()
   @IsString()
-  @Field({ nullable: true })
+  @IsNotEmpty()
+  @MaxLength(26)
+  @Field()
   name: string;
 
-  @IsOptional()
   @IsString()
-  @Field({ nullable: true })
+  @IsNotEmpty()
+  @MaxLength(26)
+  @Field()
   tabName: string;
 
   @IsOptional()

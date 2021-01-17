@@ -6,6 +6,7 @@ import { User } from '../utils/user.decorator';
 import { JwtPayload } from '../utils/jwt.strategy';
 import { GetElementsInput } from '../global-inputs/get-elements.input';
 import { GetByIdsInput } from '../global-inputs/get-by-ids.input';
+import { CreateCategoryInput } from './input/create.input';
 
 @Resolver(() => CategoryType)
 export class CategoryResolver {
@@ -27,7 +28,7 @@ export class CategoryResolver {
   createCategory(
     @User() user: JwtPayload,
     @Args('newCategory')
-    newCategory: UpdateCategoryInput,
+    newCategory: CreateCategoryInput,
   ): Promise<CategoryType> {
     return this.categoryService.createCategory(newCategory);
   }
