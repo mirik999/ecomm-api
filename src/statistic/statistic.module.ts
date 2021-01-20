@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
-import { StatisticResolver } from './statistic.resolver';
-import { StatisticService } from './statistic.service';
+import { StatisticGateway } from './statistic.gateway';
 
 @Module({
-  providers: [StatisticResolver, StatisticService]
+  providers: [StatisticGateway],
 })
 export class StatisticModule {}

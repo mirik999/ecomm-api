@@ -10,7 +10,6 @@ import { StatisticModule } from './statistic/statistic.module';
   imports: [
     MongooseModule.forRoot('mongodb://localhost/electroshop'),
     GraphQLModule.forRoot({
-      installSubscriptionHandlers: true,
       autoSchemaFile: true,
     }),
     ProductModule,
