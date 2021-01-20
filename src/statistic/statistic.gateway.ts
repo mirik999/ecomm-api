@@ -25,11 +25,11 @@ export class StatisticGateway
   }
 
   handleConnection(client: Socket, ...args) {
-    this.logger.log(`connected ${client.id}`);
+    // this.logger.log(`connected ${client.id}`);
   }
 
   handleDisconnect(client: Socket) {
-    this.logger.log(`disconnected ${client.id}`);
+    // this.logger.log(`disconnected ${client.id}`);
   }
 
   @SubscribeMessage('getSystemInfo')
