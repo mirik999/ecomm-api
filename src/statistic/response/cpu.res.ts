@@ -3,11 +3,18 @@ import { Field, ID, ObjectType } from '@nestjs/graphql';
 @ObjectType('CpuResponse')
 export class CpuResponse {
   @Field()
-  threads: number;
+  cpuModel: string;
+  cpuSpeed: number;
+  cpuCores: number;
+  cpuLoad: any;
 }
 
-@ObjectType('CpuResponseTest')
-export class CpuResponseTest {
+@ObjectType('OsInfoResponse')
+export class OsInfoResponse {
   @Field()
-  name: string;
+  type: string;
+  upTime: number;
+  freeMem: number;
+  totalMem: number;
+  memUsage: number;
 }

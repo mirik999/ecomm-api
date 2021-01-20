@@ -1,4 +1,5 @@
 import {
+  MessageBody,
   OnGatewayConnection,
   OnGatewayDisconnect,
   OnGatewayInit,
@@ -8,10 +9,13 @@ import {
 } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
+import { StatisticService } from './statistic.service';
 
-@WebSocketGateway()
+@WebSocketGateway({ namespace: 'statistic' })
 export class StatisticGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
+  constructor(private statisticService: StatisticService) {}
+
   @WebSocketServer() wss: Server;
 
   private logger: Logger = new Logger('AppGateway');
@@ -28,9 +32,13 @@ export class StatisticGateway
     this.logger.log(`disconnected ${client.id}`);
   }
 
-  @SubscribeMessage('msgToServer')
-  handleMessage(client: Socket, text: string): void {
-    console.log('text', text);
-    this.wss.emit('msToClient', text);
+  @SubscribeMessage('getSystemInfo')
+  async handleMessage(@MessageBody() data): Promise<void> {
+    const osInfo = this.statisticService.getOsInfo();
+    const cpuInfo = await this.statisticService.getCpuInfo();
+    this.wss.emit('sendSystemInfo', {
+      ...osInfo,
+      ...cpuInfo,
+    });
   }
 }
