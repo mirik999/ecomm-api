@@ -19,6 +19,12 @@ export class ProductType {
   color: string;
 
   @Field({ nullable: true })
+  group: string;
+
+  @Field({ nullable: true })
+  sold: number;
+
+  @Field({ nullable: true })
   description: string;
 
   @Field({ nullable: true })

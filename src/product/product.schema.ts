@@ -21,6 +21,12 @@ export class Product {
   color: string;
 
   @Prop()
+  group: string;
+
+  @Prop()
+  sold: number;
+
+  @Prop()
   description: string;
 
   @Prop()

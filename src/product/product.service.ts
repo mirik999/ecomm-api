@@ -15,6 +15,7 @@ import {
   GetByIdsInput,
   GetByIdsOutput,
 } from '../global-inputs/get-by-ids.input';
+import { ProductStatistic } from '../statistic/response/cpu.res';
 
 @Injectable()
 export class ProductService {
@@ -79,6 +80,8 @@ export class ProductService {
         images: newProduct.images,
         cover: newProduct.cover,
         color: newProduct.color,
+        group: newProduct.group,
+        sold: newProduct.sold,
         description: newProduct.description,
         createdAt: newProduct.createdAt,
         stars: newProduct.stars,
@@ -145,5 +148,48 @@ export class ProductService {
     } catch (err) {
       throw new ConflictException('Cant activate products');
     }
+  }
+
+  async collectStatistics(): Promise<ProductStatistic> {
+    const statistics = await this.productRepository.aggregate([
+      {
+        $group: {
+          _id: '',
+          count: {
+            $sum: 1,
+          },
+          isDisabled: {
+            $sum: { $cond: ['$isDisabled', 1, 0] },
+          },
+          price: {
+            $sum: '$price',
+          },
+          sale: {
+            $sum: { $cond: ['$sale', 1, 0] },
+          },
+          comment: {
+            $sum: {
+              $size: '$comment',
+            },
+          },
+          sold: {
+            $sum: '$sold',
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          count: 1,
+          isDisabled: 1,
+          price: 1,
+          sale: 1,
+          comment: 1,
+          sold: 1,
+        },
+      },
+    ]);
+
+    return statistics[0];
   }
 }

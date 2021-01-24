@@ -44,6 +44,16 @@ export class CreateProductInput {
   @IsOptional()
   @IsString()
   @Field({ nullable: true, defaultValue: '' })
+  group: string;
+
+  @IsOptional()
+  @IsNumber()
+  @Field({ nullable: true, defaultValue: 0 })
+  sold: number;
+
+  @IsOptional()
+  @IsString()
+  @Field({ nullable: true, defaultValue: '' })
   description: string;
 
   @IsOptional()
