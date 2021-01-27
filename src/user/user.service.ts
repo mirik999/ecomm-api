@@ -9,7 +9,7 @@ import { Model } from 'mongoose';
 import { v4 as uuid } from 'uuid';
 import * as bcrypt from 'bcryptjs';
 import { User, UserDocument } from './user.schema';
-import { AuthInput } from './input/auth.input';
+import { AuthReq } from './request/auth.req';
 
 @Injectable()
 export class UserService {
@@ -18,7 +18,7 @@ export class UserService {
     private jwtService: JwtService,
   ) {}
 
-  async createUser(newUser: AuthInput): Promise<{ accessToken: string }> {
+  async createUser(newUser: AuthReq): Promise<{ accessToken: string }> {
     const isUserExists = await this.checkUser(newUser.email);
     if (isUserExists) {
       throw new ConflictException('Email already exists');
@@ -28,6 +28,7 @@ export class UserService {
     user.id = uuid();
     user.email = newUser.email;
     user.salt = await bcrypt.genSalt();
+    user.roles = ['guest'];
     user.password = await UserService.hashPassword(newUser.password, user.salt);
 
     try {
@@ -38,7 +39,7 @@ export class UserService {
     }
   }
 
-  async loginUser(newUser: AuthInput): Promise<{ accessToken: string }> {
+  async loginUser(newUser: AuthReq): Promise<{ accessToken: string }> {
     const user = await this.checkUser(newUser.email);
     await UserService.isUserPasswordValid(user, newUser.password);
     return this.generateToken(user);
@@ -48,6 +49,7 @@ export class UserService {
     const tokenCredentials = {
       id: user.id,
       email: user.email,
+      roles: user.roles,
     };
     const accessToken = this.jwtService.sign(tokenCredentials);
     return { accessToken };

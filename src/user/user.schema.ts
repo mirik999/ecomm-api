@@ -16,6 +16,9 @@ export class User {
 
   @Prop()
   salt: string;
+
+  @Prop()
+  roles: string[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
