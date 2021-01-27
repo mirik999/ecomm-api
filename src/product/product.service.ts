@@ -94,6 +94,7 @@ export class ProductService {
         sale: newProduct.sale,
         isDisabled: newProduct.isDisabled,
         category: newProduct.category,
+        comment: []
       });
     } catch (err) {
       throw new ConflictException(

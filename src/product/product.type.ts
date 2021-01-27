@@ -3,7 +3,7 @@ import { CategoryType } from '../category/category.type';
 
 @ObjectType('ProductType')
 export class ProductType {
-  @Field(type => ID)
+  @Field(() => ID)
   id: string;
 
   @Field({ nullable: true })
@@ -57,8 +57,11 @@ export class ProductType {
   @Field({ nullable: true })
   isDisabled: boolean;
 
-  @Field(type => [CategoryType])
+  @Field(() => [CategoryType])
   category: string[];
+
+  @Field(() => [String], { nullable: true })
+  comment: string[];
 }
 
 @ObjectType('ProductsType')
@@ -66,6 +69,6 @@ export class ProductsType {
   @Field()
   count: number;
 
-  @Field(type => [ProductType!]!)
+  @Field(() => [ProductType!]!)
   payload: ProductType[];
 }
