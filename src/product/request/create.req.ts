@@ -12,8 +12,8 @@ import {
   MinLength,
 } from 'class-validator';
 
-@InputType()
-export class CreateProductInput {
+@InputType('CreateProductReq')
+export class CreateProductReq {
   @IsOptional()
   @IsUUID()
   @Field({ nullable: true, defaultValue: uuid() })

@@ -7,9 +7,9 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { v4 as uuid } from 'uuid';
 import { ProductDocument } from './product.schema';
-import { CreateProductInput } from './input/create.input';
-import { UpdateProductInput } from './input/update.input';
-import { ProductType, ProductsType } from './product.type';
+import { CreateProductReq } from './request/create.req';
+import { UpdateProductReq } from './request/update.req';
+import { ProductRes, ProductsRes } from './response/product.res';
 import { GetElementsInput } from '../global-inputs/get-elements.input';
 import {
   GetByIdsInput,
@@ -24,7 +24,7 @@ export class ProductService {
     private productRepository: Model<ProductDocument>,
   ) {}
 
-  async getProduct(id: string): Promise<ProductType> {
+  async getProduct(id: string): Promise<ProductRes> {
     const product = await this.productRepository.findOne({ id });
     if (product) {
       if (product.isDisabled) {
@@ -37,9 +37,9 @@ export class ProductService {
     }
   }
 
-  async getProducts(controls: GetElementsInput): Promise<ProductsType> {
+  async getProducts(controls: GetElementsInput): Promise<ProductsRes> {
+    const { offset, limit, keyword } = controls;
     try {
-      const { offset, limit, keyword } = controls;
       const products = await this.productRepository.aggregate([
         {
           $match: {
@@ -69,10 +69,11 @@ export class ProductService {
       return products[0];
     } catch (err) {
       console.log(err.message);
+      throw new ConflictException();
     }
   }
 
-  async createProduct(newProduct: CreateProductInput): Promise<ProductType> {
+  async createProduct(newProduct: CreateProductReq): Promise<ProductRes> {
     try {
       return this.productRepository.create({
         id: uuid(),
@@ -94,7 +95,7 @@ export class ProductService {
         sale: newProduct.sale,
         isDisabled: newProduct.isDisabled,
         category: newProduct.category,
-        comment: []
+        comment: [],
       });
     } catch (err) {
       throw new ConflictException(
@@ -103,9 +104,7 @@ export class ProductService {
     }
   }
 
-  async updateProduct(
-    updatedProduct: UpdateProductInput,
-  ): Promise<ProductType> {
+  async updateProduct(updatedProduct: UpdateProductReq): Promise<ProductRes> {
     try {
       const product = await this.productRepository.findOne({
         id: updatedProduct.id,
@@ -120,34 +119,6 @@ export class ProductService {
       throw new ConflictException(
         `Cant update a product [Error] => ${err.message}`,
       );
-    }
-  }
-
-  async disableProducts(
-    disabledProducts: GetByIdsInput,
-  ): Promise<GetByIdsOutput> {
-    try {
-      await this.productRepository.updateMany(
-        { id: { $in: disabledProducts.ids } },
-        { $set: { isDisabled: true } },
-      );
-      return disabledProducts;
-    } catch (err) {
-      throw new ConflictException('Cant disable products');
-    }
-  }
-
-  async activateProducts(
-    activateProducts: GetByIdsInput,
-  ): Promise<GetByIdsOutput> {
-    try {
-      await this.productRepository.updateMany(
-        { id: { $in: activateProducts.ids } },
-        { $set: { isDisabled: false } },
-      );
-      return activateProducts;
-    } catch (err) {
-      throw new ConflictException('Cant activate products');
     }
   }
 
@@ -192,5 +163,33 @@ export class ProductService {
     ]);
 
     return statistics[0];
+  }
+
+  async disableProducts(
+    disabledProducts: GetByIdsInput,
+  ): Promise<GetByIdsOutput> {
+    try {
+      await this.productRepository.updateMany(
+        { id: { $in: disabledProducts.ids } },
+        { $set: { isDisabled: true } },
+      );
+      return disabledProducts;
+    } catch (err) {
+      throw new ConflictException('Cant disable products');
+    }
+  }
+
+  async activateProducts(
+    activateProducts: GetByIdsInput,
+  ): Promise<GetByIdsOutput> {
+    try {
+      await this.productRepository.updateMany(
+        { id: { $in: activateProducts.ids } },
+        { $set: { isDisabled: false } },
+      );
+      return activateProducts;
+    } catch (err) {
+      throw new ConflictException('Cant activate products');
+    }
   }
 }

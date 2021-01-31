@@ -1,8 +1,8 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { CategoryType } from '../category/category.type';
+import { CategoryType } from '../../category/category.type';
 
-@ObjectType('ProductType')
-export class ProductType {
+@ObjectType('ProductRes')
+export class ProductRes {
   @Field(() => ID)
   id: string;
 
@@ -64,11 +64,11 @@ export class ProductType {
   comment: string[];
 }
 
-@ObjectType('ProductsType')
-export class ProductsType {
+@ObjectType('ProductsRes')
+export class ProductsRes {
   @Field()
   count: number;
 
-  @Field(() => [ProductType!]!)
-  payload: ProductType[];
+  @Field(() => [ProductRes!]!)
+  payload: ProductRes[];
 }

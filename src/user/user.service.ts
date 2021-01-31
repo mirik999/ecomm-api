@@ -10,6 +10,13 @@ import { v4 as uuid } from 'uuid';
 import * as bcrypt from 'bcryptjs';
 import { User, UserDocument } from './user.schema';
 import { AuthReq } from './request/auth.req';
+import { UserRes, UsersRes } from './response/user.res';
+import { GetElementsInput } from '../global-inputs/get-elements.input';
+import { UpdateUserReq } from './request/update-roles.req';
+import {
+  GetByIdsInput,
+  GetByIdsOutput,
+} from '../global-inputs/get-by-ids.input';
 
 @Injectable()
 export class UserService {
@@ -17,6 +24,80 @@ export class UserService {
     @InjectModel('User') private userRepository: Model<UserDocument>,
     private jwtService: JwtService,
   ) {}
+
+  async getUsers(controls: GetElementsInput): Promise<UsersRes> {
+    const { keyword, offset, limit } = controls;
+    try {
+      const users = await this.userRepository.aggregate([
+        {
+          $match: {
+            $or: [{ email: { $regex: keyword, $options: 'i' } }],
+          },
+        },
+        {
+          $sort: { createdAt: -1 },
+        },
+        {
+          $facet: {
+            stage1: [{ $group: { _id: null, count: { $sum: 1 } } }],
+            stage2: [{ $skip: offset }, { $limit: limit }],
+          },
+        },
+        {
+          $unwind: '$stage1',
+        },
+        {
+          $project: {
+            count: '$stage1.count',
+            payload: '$stage2',
+          },
+        },
+      ]);
+
+      return users[0];
+    } catch (err) {
+      console.log(err.message);
+      throw new ConflictException();
+    }
+  }
+
+  async updateUser(updatedUser: UpdateUserReq): Promise<UserRes> {
+    try {
+      const user = await this.userRepository.findOne({ id: updatedUser.id });
+      for (const key in updatedUser) {
+        if (updatedUser.hasOwnProperty(key)) {
+          user[key] = updatedUser[key];
+        }
+      }
+      return this.userRepository.create(user);
+    } catch (err) {
+      throw new ConflictException('Cant update user');
+    }
+  }
+
+  async disableUsers(disabledUsers: GetByIdsInput): Promise<GetByIdsOutput> {
+    try {
+      await this.userRepository.updateMany(
+        { id: { $in: disabledUsers.ids } },
+        { $set: { isDisabled: true } },
+      );
+      return disabledUsers;
+    } catch (err) {
+      throw new ConflictException('Cant disable users');
+    }
+  }
+
+  async activateUsers(activateUsers: GetByIdsInput): Promise<GetByIdsOutput> {
+    try {
+      await this.userRepository.updateMany(
+        { id: { $in: activateUsers.ids } },
+        { $set: { isDisabled: false } },
+      );
+      return activateUsers;
+    } catch (err) {
+      throw new ConflictException('Cant activate users');
+    }
+  }
 
   async createUser(newUser: AuthReq): Promise<{ accessToken: string }> {
     const isUserExists = await this.checkUser(newUser.email);
@@ -29,6 +110,8 @@ export class UserService {
     user.email = newUser.email;
     user.salt = await bcrypt.genSalt();
     user.roles = ['guest'];
+    user.createdAt = new Date().toString();
+    user.isDisabled = false;
     user.password = await UserService.hashPassword(newUser.password, user.salt);
 
     try {
