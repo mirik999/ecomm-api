@@ -11,6 +11,9 @@ export class Product {
   @Prop()
   name: string;
 
+  @Prop()
+  articul: string;
+
   @Prop([String])
   images: string[];
 
@@ -24,9 +27,6 @@ export class Product {
   group: string;
 
   @Prop()
-  sold: number;
-
-  @Prop()
   description: string;
 
   @Prop()
@@ -34,6 +34,9 @@ export class Product {
 
   @Prop([Number])
   stars: number[];
+
+  @Prop()
+  sold: number;
 
   @Prop()
   price: number;
@@ -58,6 +61,12 @@ export class Product {
 
   @Prop()
   isDisabled: boolean;
+
+  @Prop()
+  freeDelivery: boolean;
+
+  @Prop()
+  guarantee: boolean;
 
   @Prop()
   category: string[];

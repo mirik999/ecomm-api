@@ -77,6 +77,7 @@ export class ProductService {
     try {
       return this.productRepository.create({
         id: uuid(),
+        articul: newProduct.articul,
         name: newProduct.name,
         images: newProduct.images,
         cover: newProduct.cover,
@@ -93,6 +94,8 @@ export class ProductService {
         new: newProduct.new,
         best: newProduct.best,
         sale: newProduct.sale,
+        freeDelivery: newProduct.freeDelivery,
+        guarantee: newProduct.guarantee,
         isDisabled: newProduct.isDisabled,
         category: newProduct.category,
         comment: [],

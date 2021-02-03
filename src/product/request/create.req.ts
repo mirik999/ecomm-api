@@ -19,6 +19,12 @@ export class CreateProductReq {
   @Field({ nullable: true, defaultValue: uuid() })
   id: string;
 
+  @IsOptional()
+  @IsString()
+  @MaxLength(24)
+  @Field()
+  articul: string;
+
   @IsString()
   @IsNotEmpty()
   @MinLength(3)
@@ -105,6 +111,16 @@ export class CreateProductReq {
   @IsBoolean()
   @Field({ nullable: true, defaultValue: false })
   isDisabled: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  @Field({ nullable: true, defaultValue: true })
+  freeDelivery: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  @Field({ nullable: true, defaultValue: true })
+  guarantee: boolean;
 
   //ref to categories
   @IsOptional()

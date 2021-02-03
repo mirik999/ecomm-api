@@ -20,6 +20,12 @@ export class UpdateProductReq {
 
   @IsOptional()
   @IsString()
+  @MaxLength(24)
+  @Field()
+  articul: string;
+
+  @IsOptional()
+  @IsString()
   @IsNotEmpty()
   @MinLength(3)
   @MaxLength(24)
@@ -102,6 +108,16 @@ export class UpdateProductReq {
   @IsBoolean()
   @Field({ nullable: true })
   sale: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  @Field({ nullable: true, defaultValue: true })
+  freeDelivery: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  @Field({ nullable: true, defaultValue: true })
+  guarantee: boolean;
 
   @IsOptional()
   @IsBoolean()

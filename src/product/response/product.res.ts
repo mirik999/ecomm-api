@@ -7,6 +7,9 @@ export class ProductRes {
   id: string;
 
   @Field({ nullable: true })
+  articul: string;
+
+  @Field({ nullable: true })
   name: string;
 
   @Field(() => [String], { nullable: true })
@@ -56,6 +59,12 @@ export class ProductRes {
 
   @Field({ nullable: true })
   isDisabled: boolean;
+
+  @Field({ nullable: true })
+  freeDelivery: boolean;
+
+  @Field({ nullable: true })
+  guarantee: boolean;
 
   @Field(() => [CategoryType])
   category: string[];
