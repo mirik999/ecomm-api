@@ -99,6 +99,19 @@ export class UserService {
     }
   }
 
+  async deleteUsers(
+    deleteUsers: GetByIdsInput,
+  ): Promise<GetByIdsOutput> {
+    try {
+      await this.userRepository.deleteMany(
+        { id: { $in: deleteUsers.ids } }
+      );
+      return deleteUsers;
+    } catch (err) {
+      throw new ConflictException('Cant delete users');
+    }
+  }
+
   async createUser(newUser: AuthReq): Promise<{ accessToken: string }> {
     const isUserExists = await this.checkUser(newUser.email);
     if (isUserExists) {

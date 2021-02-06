@@ -16,6 +16,8 @@ import {
   GetByIdsOutput,
 } from '../global-inputs/get-by-ids.input';
 import { ProductStatistic } from '../statistic/response/cpu.res';
+import { UserRes } from '../user/response/user.res';
+import { getUserRole } from '../utils/user.decorator';
 
 @Injectable()
 export class ProductService {
@@ -68,12 +70,11 @@ export class ProductService {
 
       return products[0];
     } catch (err) {
-      console.log(err.message);
-      throw new ConflictException();
+      throw new ConflictException(`Cant get products. [Error] => ${err.message}`);
     }
   }
 
-  async createProduct(newProduct: CreateProductReq): Promise<ProductRes> {
+  async createProduct(newProduct: CreateProductReq, user: Partial<UserRes>): Promise<ProductRes> {
     try {
       return this.productRepository.create({
         id: uuid(),
@@ -86,6 +87,8 @@ export class ProductService {
         sold: newProduct.sold,
         description: newProduct.description,
         createdAt: newProduct.createdAt,
+        createdBy: user.email,
+        modifiedBy: newProduct.modifiedBy,
         stars: newProduct.stars,
         price: newProduct.price,
         viewCount: newProduct.viewCount,
@@ -107,7 +110,7 @@ export class ProductService {
     }
   }
 
-  async updateProduct(updatedProduct: UpdateProductReq): Promise<ProductRes> {
+  async updateProduct(updatedProduct: UpdateProductReq, user: Partial<UserRes>): Promise<ProductRes> {
     try {
       const product = await this.productRepository.findOne({
         id: updatedProduct.id,
@@ -117,6 +120,7 @@ export class ProductService {
           product[key] = updatedProduct[key];
         }
       }
+      product.modifiedBy = user.email;
       return this.productRepository.create(product);
     } catch (err) {
       throw new ConflictException(
@@ -125,74 +129,93 @@ export class ProductService {
     }
   }
 
-  async collectStatistics(): Promise<ProductStatistic> {
-    const statistics = await this.productRepository.aggregate([
-      {
-        $group: {
-          _id: '',
-          count: {
-            $sum: 1,
-          },
-          isDisabled: {
-            $sum: { $cond: ['$isDisabled', 1, 0] },
-          },
-          price: {
-            $sum: '$price',
-          },
-          sale: {
-            $sum: { $cond: ['$sale', 1, 0] },
-          },
-          comment: {
-            $sum: {
-              $size: '$comment',
-            },
-          },
-          sold: {
-            $sum: '$sold',
-          },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          count: 1,
-          isDisabled: 1,
-          price: 1,
-          sale: 1,
-          comment: 1,
-          sold: 1,
-        },
-      },
-    ]);
-
-    return statistics[0];
-  }
-
   async disableProducts(
     disabledProducts: GetByIdsInput,
+    user: Partial<UserRes>
   ): Promise<GetByIdsOutput> {
     try {
       await this.productRepository.updateMany(
         { id: { $in: disabledProducts.ids } },
-        { $set: { isDisabled: true } },
+        { $set: { isDisabled: true, modifiedBy: user.email, } },
       );
       return disabledProducts;
     } catch (err) {
-      throw new ConflictException('Cant disable products');
+      throw new ConflictException(`Cant disable products => ${err.message}`);
     }
   }
 
   async activateProducts(
     activateProducts: GetByIdsInput,
+    user: Partial<UserRes>
   ): Promise<GetByIdsOutput> {
     try {
       await this.productRepository.updateMany(
         { id: { $in: activateProducts.ids } },
-        { $set: { isDisabled: false } },
+        { $set: { isDisabled: false, modifiedBy: user.email, } },
       );
       return activateProducts;
     } catch (err) {
-      throw new ConflictException('Cant activate products');
+      throw new ConflictException(`Cant activate products => ${err.message}`);
+    }
+  }
+
+  async deleteProducts(
+    deleteProducts: GetByIdsInput,
+  ): Promise<GetByIdsOutput> {
+    try {
+      await this.productRepository.deleteMany(
+        { id: { $in: deleteProducts.ids } }
+      );
+      return deleteProducts;
+    } catch (err) {
+      throw new ConflictException(`Cant delete products => ${err.message}`);
+    }
+  }
+
+  async collectStatistics(): Promise<ProductStatistic> {
+    try {
+      const statistics = await this.productRepository.aggregate([
+        {
+          $group: {
+            _id: '',
+            count: {
+              $sum: 1,
+            },
+            isDisabled: {
+              $sum: { $cond: ['$isDisabled', 1, 0] },
+            },
+            price: {
+              $sum: '$price',
+            },
+            sale: {
+              $sum: { $cond: ['$sale', 1, 0] },
+            },
+            comment: {
+              $sum: {
+                $size: '$comment',
+              },
+            },
+            sold: {
+              $sum: '$sold',
+            },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            count: 1,
+            isDisabled: 1,
+            price: 1,
+            sale: 1,
+            comment: 1,
+            sold: 1,
+          },
+        },
+      ]);
+      
+      return statistics[0];
+    } catch(err) {
+      throw new ConflictException(`Cant collect product statistics => ${err.message}`);
     }
   }
 }

@@ -32,6 +32,12 @@ export class Product {
   @Prop()
   createdAt: string;
 
+  @Prop()
+  createdBy: string;
+
+  @Prop()
+  modifiedBy: string;
+
   @Prop([Number])
   stars: number[];
 

@@ -3,7 +3,6 @@ import { UserService } from './user.service';
 import { AuthRes } from './response/auth.res';
 import { AuthReq } from './request/auth.req';
 import { User } from '../utils/user.decorator';
-import { JwtPayload } from '../utils/jwt.strategy';
 import { UserRes, UsersRes } from './response/user.res';
 import { GetElementsInput } from '../global-inputs/get-elements.input';
 import { UpdateUserReq } from './request/update-roles.req';
@@ -18,7 +17,7 @@ export class UserResolver {
 
   @Query(() => UsersRes)
   getUsers(
-    @User() user: JwtPayload,
+    @User() user: Partial<UserRes>,
     @Args('controls') controls: GetElementsInput,
   ) {
     return this.userService.getUsers(controls);
@@ -26,7 +25,7 @@ export class UserResolver {
 
   @Mutation(() => UserRes)
   updateUser(
-    @User() user: JwtPayload,
+    @User() user: Partial<UserRes>,
     @Args('updatedUser') updatedUser: UpdateUserReq,
   ) {
     return this.userService.updateUser(updatedUser);
@@ -44,7 +43,7 @@ export class UserResolver {
 
   @Mutation(() => GetByIdsOutput)
   disableUsers(
-    @User() user: JwtPayload,
+    @User() user: Partial<UserRes>,
     @Args('disabledUsers') disabledUsers: GetByIdsInput,
   ) {
     return this.userService.disableUsers(disabledUsers);
@@ -52,9 +51,17 @@ export class UserResolver {
 
   @Mutation(() => GetByIdsOutput)
   activateUsers(
-    @User() user: JwtPayload,
+    @User() user: Partial<UserRes>,
     @Args('activateUsers') activateUsers: GetByIdsInput,
   ) {
     return this.userService.activateUsers(activateUsers);
+  }
+
+  @Mutation(() => GetByIdsOutput)
+  deleteUsers(
+    @User() user: Partial<UserRes>,
+    @Args('deleteUsers') deleteUsers: GetByIdsInput,
+  ) {
+    return this.userService.deleteUsers(deleteUsers);
   }
 }

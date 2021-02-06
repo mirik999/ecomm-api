@@ -5,7 +5,7 @@ import { CategoryType, CategoriesType } from './category.type';
 import { User } from '../utils/user.decorator';
 import { JwtPayload } from '../utils/jwt.strategy';
 import { GetElementsInput } from '../global-inputs/get-elements.input';
-import { GetByIdsInput } from '../global-inputs/get-by-ids.input';
+import { GetByIdsInput, GetByIdsOutput } from '../global-inputs/get-by-ids.input';
 import { CreateCategoryInput } from './input/create.input';
 
 @Resolver(() => CategoryType)
@@ -58,5 +58,13 @@ export class CategoryResolver {
     activateCategories: GetByIdsInput,
   ) {
     return this.categoryService.activateCategories(activateCategories);
+  }
+
+  @Mutation(() => GetByIdsOutput)
+  deleteCategories(
+    @User() user: JwtPayload,
+    @Args('deleteCategories') deleteCategories: GetByIdsInput,
+  ) {
+    return this.categoryService.deleteCategories(deleteCategories);
   }
 }

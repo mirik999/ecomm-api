@@ -33,6 +33,12 @@ export class ProductRes {
   @Field({ nullable: true })
   createdAt: string;
 
+  @Field({ nullable: true })
+  createdBy: string;
+
+  @Field({ nullable: true })
+  modifiedBy: string;
+
   @Field(() => [Number], { nullable: true })
   stars: number[];
 

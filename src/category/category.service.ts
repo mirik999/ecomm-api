@@ -6,7 +6,7 @@ import { Category, CategoryDocument } from './category.schema';
 import { CategoryType, CategoriesType } from './category.type';
 import { UpdateCategoryInput } from './input/update.input';
 import { GetElementsInput } from '../global-inputs/get-elements.input';
-import { GetByIdsInput } from '../global-inputs/get-by-ids.input';
+import { GetByIdsInput, GetByIdsOutput } from '../global-inputs/get-by-ids.input';
 import { CreateCategoryInput } from './input/create.input';
 import { CategoryStatistic } from '../statistic/response/cpu.res';
 
@@ -119,6 +119,19 @@ export class CategoryService {
       );
     } catch (err) {
       throw new ConflictException('Cant activate categories');
+    }
+  }
+
+  async deleteCategories(
+    deleteCategories: GetByIdsInput,
+  ): Promise<GetByIdsOutput> {
+    try {
+      await this.categoryRepository.deleteMany(
+        { id: { $in: deleteCategories.ids } }
+      );
+      return deleteCategories;
+    } catch (err) {
+      throw new ConflictException('Cant delete categories');
     }
   }
 

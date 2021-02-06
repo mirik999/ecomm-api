@@ -68,6 +68,16 @@ export class CreateProductReq {
   createdAt: string;
 
   @IsOptional()
+  @IsString()
+  @Field({ nullable: true })
+  createdBy: string;
+
+  @IsOptional()
+  @IsString()
+  @Field({ nullable: true, defaultValue: '' })
+  modifiedBy: string;
+
+  @IsOptional()
   @IsArray()
   @Field(() => [Number], { defaultValue: [] })
   stars: number[];
@@ -121,6 +131,11 @@ export class CreateProductReq {
   @IsBoolean()
   @Field({ nullable: true, defaultValue: true })
   guarantee: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  @Field({ nullable: true, defaultValue: true })
+  pending: boolean;
 
   //ref to categories
   @IsOptional()

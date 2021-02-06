@@ -69,6 +69,16 @@ export class UpdateProductReq {
   createdAt: string;
 
   @IsOptional()
+  @IsString()
+  @Field({ nullable: true })
+  createdBy: string;
+
+  @IsOptional()
+  @IsString()
+  @Field({ nullable: true })
+  modifiedBy: string;
+
+  @IsOptional()
   @IsArray()
   @Field(() => [Number], { nullable: true })
   stars: number[];
@@ -123,6 +133,11 @@ export class UpdateProductReq {
   @IsBoolean()
   @Field({ nullable: true })
   isDisabled: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  @Field({ nullable: true, defaultValue: true })
+  pending: boolean;
 
   //ref to categories
   @IsOptional()
