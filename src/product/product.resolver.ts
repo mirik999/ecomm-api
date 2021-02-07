@@ -11,7 +11,7 @@ import { ProductRes, ProductsRes } from './response/product.res';
 import { CreateProductReq } from './request/create.req';
 import { UpdateProductReq } from './request/update.req';
 import { CategoryService } from '../category/category.service';
-import { CategoryType } from '../category/category.type';
+import { CategoryRes } from '../category/response/category.res';
 import { GetElementsInput } from '../global-inputs/get-elements.input';
 import {
   GetByIdsInput,
@@ -77,7 +77,7 @@ export class ProductResolver {
     return this.productService.deleteProducts(deleteProducts);
   }
 
-  @ResolveField(() => [CategoryType])
+  @ResolveField(() => [CategoryRes])
   async category(@Parent() product: ProductRes) {
     return await this.categoryService.getCategoriesByIds(product.category);
   }

@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { CategoryType } from '../../category/category.type';
+import { CategoryRes } from '../../category/response/category.res';
 
 @ObjectType('ProductRes')
 export class ProductRes {
@@ -72,7 +72,7 @@ export class ProductRes {
   @Field({ nullable: true })
   guarantee: boolean;
 
-  @Field(() => [CategoryType])
+  @Field(() => [CategoryRes])
   category: string[];
 
   @Field(() => [String], { nullable: true })

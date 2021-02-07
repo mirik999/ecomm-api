@@ -1,48 +1,48 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CategoryService } from './category.service';
-import { UpdateCategoryInput } from './input/update.input';
-import { CategoryType, CategoriesType } from './category.type';
+import { UpdateCategoryReq } from './request/update.req';
+import { CategoryRes, CategoriesRes } from './response/category.res';
 import { User } from '../utils/user.decorator';
 import { JwtPayload } from '../utils/jwt.strategy';
 import { GetElementsInput } from '../global-inputs/get-elements.input';
 import { GetByIdsInput, GetByIdsOutput } from '../global-inputs/get-by-ids.input';
-import { CreateCategoryInput } from './input/create.input';
+import { CreateCategoryReq } from './request/create.req';
 
-@Resolver(() => CategoryType)
+@Resolver(() => CategoryRes)
 export class CategoryResolver {
   constructor(private categoryService: CategoryService) {}
 
-  @Query(() => CategoryType)
-  getCategoryById(@Args('id') id: string): Promise<CategoryType> {
+  @Query(() => CategoryRes)
+  getCategoryById(@Args('id') id: string): Promise<CategoryRes> {
     return this.categoryService.getCategoryById(id);
   }
 
-  @Query(() => CategoriesType)
+  @Query(() => CategoriesRes)
   getCategories(
     @Args('controls') controls: GetElementsInput,
-  ): Promise<CategoriesType> {
+  ): Promise<CategoriesRes> {
     return this.categoryService.getCategories(controls);
   }
 
-  @Mutation(() => CategoryType)
+  @Mutation(() => CategoryRes)
   createCategory(
     @User() user: JwtPayload,
     @Args('newCategory')
-    newCategory: CreateCategoryInput,
-  ): Promise<CategoryType> {
+    newCategory: CreateCategoryReq,
+  ): Promise<CategoryRes> {
     return this.categoryService.createCategory(newCategory);
   }
 
-  @Mutation(() => CategoryType)
+  @Mutation(() => CategoryRes)
   updateCategory(
     @User() user: JwtPayload,
     @Args('updatedCategory')
-    updatedCategory: UpdateCategoryInput,
-  ): Promise<CategoryType> {
+    updatedCategory: UpdateCategoryReq,
+  ): Promise<CategoryRes> {
     return this.categoryService.updateCategory(updatedCategory);
   }
 
-  @Mutation(() => CategoryType)
+  @Mutation(() => CategoryRes)
   disableCategories(
     @User() user: JwtPayload,
     @Args('disabledCategories')
@@ -51,7 +51,7 @@ export class CategoryResolver {
     return this.categoryService.disableCategories(disabledCategories);
   }
 
-  @Mutation(() => CategoryType)
+  @Mutation(() => CategoryRes)
   activateCategories(
     @User() user: JwtPayload,
     @Args('activateCategories')

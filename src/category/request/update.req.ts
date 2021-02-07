@@ -7,9 +7,10 @@ import {
   IsString,
   MaxLength,
 } from 'class-validator';
+import { SubCategoryReq } from './create.req';
 
 @InputType()
-export class UpdateCategoryInput {
+export class UpdateCategoryReq {
   @IsOptional()
   @IsString()
   @Field({ nullable: true })
@@ -36,4 +37,10 @@ export class UpdateCategoryInput {
   @IsBoolean()
   @Field({ nullable: true })
   isDisabled: boolean;
+
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(26)
+  @Field(() => [SubCategoryReq])
+  subCategories: SubCategoryReq[];
 }

@@ -3,11 +3,11 @@ import { Model } from 'mongoose';
 import { v4 as uuid } from 'uuid';
 import { InjectModel } from '@nestjs/mongoose';
 import { Category, CategoryDocument } from './category.schema';
-import { CategoryType, CategoriesType } from './category.type';
-import { UpdateCategoryInput } from './input/update.input';
+import { CategoryRes, CategoriesRes } from './response/category.res';
+import { UpdateCategoryReq } from './request/update.req';
 import { GetElementsInput } from '../global-inputs/get-elements.input';
 import { GetByIdsInput, GetByIdsOutput } from '../global-inputs/get-by-ids.input';
-import { CreateCategoryInput } from './input/create.input';
+import { CreateCategoryReq } from './request/create.req';
 import { CategoryStatistic } from '../statistic/response/cpu.res';
 
 @Injectable()
@@ -17,7 +17,7 @@ export class CategoryService {
     private categoryRepository: Model<CategoryDocument>,
   ) {}
 
-  async getCategoryById(id: string): Promise<CategoryType> {
+  async getCategoryById(id: string): Promise<CategoryRes> {
     const category = await this.categoryRepository.findOne({
       id,
       isDisabled: false,
@@ -29,7 +29,7 @@ export class CategoryService {
     }
   }
 
-  async getCategories(controls: GetElementsInput): Promise<CategoriesType> {
+  async getCategories(controls: GetElementsInput): Promise<CategoriesRes> {
     const { offset, limit, keyword } = controls;
     const categories = await this.categoryRepository.aggregate([
       {
@@ -63,8 +63,8 @@ export class CategoryService {
   }
 
   async createCategory(
-    newCategory: CreateCategoryInput,
-  ): Promise<CategoryType> {
+    newCategory: CreateCategoryReq,
+  ): Promise<CategoryRes> {
     try {
       const category = new Category();
       category.id = uuid();
@@ -72,6 +72,7 @@ export class CategoryService {
       category.tabName = newCategory.tabName;
       category.createdAt = new Date();
       category.isDisabled = false;
+      category.subCategories = newCategory.subCategories;
       return this.categoryRepository.create(category);
     } catch (err) {
       throw new ConflictException('Cant create a category');
@@ -79,8 +80,8 @@ export class CategoryService {
   }
 
   async updateCategory(
-    updatedCategory: UpdateCategoryInput,
-  ): Promise<CategoryType> {
+    updatedCategory: UpdateCategoryReq,
+  ): Promise<CategoryRes> {
     try {
       const category = await this.categoryRepository.findOne({
         id: updatedCategory.id,
@@ -98,7 +99,7 @@ export class CategoryService {
 
   async disableCategories(
     disabledCategories: GetByIdsInput,
-  ): Promise<CategoryType> {
+  ): Promise<CategoryRes> {
     try {
       return this.categoryRepository.updateMany(
         { id: { $in: disabledCategories.ids } },
@@ -111,7 +112,7 @@ export class CategoryService {
 
   async activateCategories(
     activateCategories: GetByIdsInput,
-  ): Promise<CategoryType> {
+  ): Promise<CategoryRes> {
     try {
       return this.categoryRepository.updateMany(
         { id: { $in: activateCategories.ids } },
@@ -135,7 +136,7 @@ export class CategoryService {
     }
   }
 
-  async getCategoriesByIds(ids: string[]): Promise<CategoryType[]> {
+  async getCategoriesByIds(ids: string[]): Promise<CategoryRes[]> {
     try {
       return this.categoryRepository.find({
         id: { $in: ids },
