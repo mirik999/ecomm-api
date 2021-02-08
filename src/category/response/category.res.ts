@@ -2,6 +2,12 @@ import { Field, ID, ObjectType } from '@nestjs/graphql';
 
 @ObjectType('SubCategoryRes')
 export class SubCategoryRes {
+  @Field(() => ID, { nullable: true })
+  id: string;
+
+  @Field(() => ID, { nullable: true })
+  parentId: string;
+
   @Field({ nullable: true })
   name: string;
 

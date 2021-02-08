@@ -67,7 +67,7 @@ export class CategoryService {
   ): Promise<CategoryRes> {
     try {
       const category = new Category();
-      category.id = uuid();
+      category.id = newCategory.id;
       category.name = newCategory.name;
       category.tabName = newCategory.tabName;
       category.createdAt = new Date();

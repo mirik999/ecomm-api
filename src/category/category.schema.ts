@@ -1,10 +1,17 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
+import { v4 as uuid } from 'uuid';
 
 export type CategoryDocument = Category & Document;
 
 @Schema()
 class SubCategory {
+  @Prop()
+  id: string;
+
+  @Prop()
+  parentId: string;
+
   @Prop()
   name: string;
 

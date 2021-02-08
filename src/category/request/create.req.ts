@@ -1,8 +1,16 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsArray, IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import { IsArray, IsNotEmpty, IsString, IsUUID, MaxLength } from 'class-validator';
 
 @InputType()
 export class SubCategoryReq {
+  @IsUUID()
+  @Field()
+  id: string;
+
+  @IsUUID()
+  @Field()
+  parentId: string;
+
   @IsString()
   @IsNotEmpty()
   @MaxLength(26)
@@ -18,6 +26,10 @@ export class SubCategoryReq {
 
 @InputType()
 export class CreateCategoryReq {
+  @IsUUID()
+  @Field()
+  id: string;
+
   @IsString()
   @IsNotEmpty()
   @MaxLength(26)

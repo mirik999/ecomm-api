@@ -1,13 +1,36 @@
 import { Field, InputType } from '@nestjs/graphql';
 import {
+  IsArray,
   IsBoolean,
   IsDate,
   IsNotEmpty,
   IsOptional,
-  IsString,
+  IsString, IsUUID,
   MaxLength,
 } from 'class-validator';
-import { SubCategoryReq } from './create.req';
+
+@InputType()
+export class UpdateSubCategoryReq {
+  @IsUUID()
+  @Field({ nullable: true })
+  id: string;
+
+  @IsUUID()
+  @Field({ nullable: true })
+  parentId: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(26)
+  @Field({ nullable: true })
+  name: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(26)
+  @Field({ nullable: true })
+  tabName: string;
+}
 
 @InputType()
 export class UpdateCategoryReq {
@@ -38,9 +61,7 @@ export class UpdateCategoryReq {
   @Field({ nullable: true })
   isDisabled: boolean;
 
-  @IsString()
-  @IsNotEmpty()
-  @MaxLength(26)
-  @Field(() => [SubCategoryReq])
-  subCategories: SubCategoryReq[];
+  @IsArray()
+  @Field(() => [UpdateSubCategoryReq])
+  subCategories: UpdateSubCategoryReq[];
 }
