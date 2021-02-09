@@ -4,15 +4,14 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { JwtService } from '@nestjs/jwt';
 import { Model } from 'mongoose';
 import { v4 as uuid } from 'uuid';
 import * as bcrypt from 'bcryptjs';
 import { User, UserDocument } from './user.schema';
-import { AuthReq } from './request/auth.req';
+import { AuthReq } from '../auth/request/auth.req';
 import { UserRes, UsersRes } from './response/user.res';
 import { GetElementsInput } from '../global-inputs/get-elements.input';
-import { UpdateUserReq } from './request/update-roles.req';
+import { UpdateUserReq } from './request/user.req';
 import {
   GetByIdsInput,
   GetByIdsOutput,
@@ -21,8 +20,8 @@ import {
 @Injectable()
 export class UserService {
   constructor(
-    @InjectModel('User') private userRepository: Model<UserDocument>,
-    private jwtService: JwtService,
+    @InjectModel('User')
+    private userRepository: Model<UserDocument>,
   ) {}
 
   async getUsers(controls: GetElementsInput): Promise<UsersRes> {
@@ -112,7 +111,7 @@ export class UserService {
     }
   }
 
-  async createUser(newUser: AuthReq): Promise<{ accessToken: string }> {
+  async createUser(newUser: AuthReq): Promise<User> {
     const isUserExists = await this.checkUser(newUser.email);
     if (isUserExists) {
       throw new ConflictException('Email already exists');
@@ -128,30 +127,19 @@ export class UserService {
     user.password = await UserService.hashPassword(newUser.password, user.salt);
 
     try {
-      await this.userRepository.create(user);
-      return this.generateToken(user);
+      return await this.userRepository.create(user);
     } catch (err) {
       throw new InternalServerErrorException();
     }
   }
 
-  async loginUser(newUser: AuthReq): Promise<{ accessToken: string }> {
+  async loginUser(newUser: AuthReq): Promise<User> {
     const user = await this.checkUser(newUser.email);
     await UserService.isUserPasswordValid(user, newUser.password);
-    return this.generateToken(user);
+    return user;
   }
 
-  private async generateToken(user: User): Promise<{ accessToken: string }> {
-    const tokenCredentials = {
-      id: user.id,
-      email: user.email,
-      roles: user.roles,
-    };
-    const accessToken = this.jwtService.sign(tokenCredentials);
-    return { accessToken };
-  }
-
-  private async checkUser(email: string): Promise<UserDocument> {
+  async checkUser(email: string): Promise<UserDocument> {
     return this.userRepository.findOne({ email });
   }
 

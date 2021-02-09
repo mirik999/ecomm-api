@@ -1,5 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsEmail, IsString, MinLength } from 'class-validator';
+import { IsEmail, IsString, IsUUID, MinLength } from 'class-validator';
 
 @InputType('AuthReq')
 export class AuthReq {
@@ -12,4 +12,12 @@ export class AuthReq {
   @IsString()
   @Field()
   password: string;
+
+  @IsUUID()
+  @Field()
+  clientId: string;
+
+  @IsString()
+  @Field()
+  grantType: 'access_token' | 'refresh_token';
 }

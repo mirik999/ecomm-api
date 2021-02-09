@@ -4,4 +4,13 @@ import { Field, ObjectType } from '@nestjs/graphql';
 export class AuthRes {
   @Field()
   accessToken: string;
+
+  @Field()
+  refreshToken: string;
+
+  @Field()
+  clientId: string;
+
+  @Field()
+  createdAt: string;
 }

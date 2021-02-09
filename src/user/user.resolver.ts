@@ -1,11 +1,10 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UserService } from './user.service';
-import { AuthRes } from './response/auth.res';
-import { AuthReq } from './request/auth.req';
+import { AuthRes } from '../auth/response/auth.res';
 import { User } from '../utils/user.decorator';
 import { UserRes, UsersRes } from './response/user.res';
 import { GetElementsInput } from '../global-inputs/get-elements.input';
-import { UpdateUserReq } from './request/update-roles.req';
+import { UpdateUserReq } from './request/user.req';
 import {
   GetByIdsInput,
   GetByIdsOutput,
@@ -29,16 +28,6 @@ export class UserResolver {
     @Args('updatedUser') updatedUser: UpdateUserReq,
   ) {
     return this.userService.updateUser(updatedUser);
-  }
-
-  @Mutation(() => AuthRes)
-  createUser(@Args('newUser') newUser: AuthReq): Promise<AuthRes> {
-    return this.userService.createUser(newUser);
-  }
-
-  @Mutation(() => AuthRes)
-  loginUser(@Args('user') user: AuthReq): Promise<AuthRes> {
-    return this.userService.loginUser(user);
   }
 
   @Mutation(() => GetByIdsOutput)
