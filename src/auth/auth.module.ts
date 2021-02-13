@@ -1,4 +1,4 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -19,7 +19,7 @@ import { UserModule } from '../user/user.module';
     JwtModule.register({
       secret: 'top-secret-2020',
       signOptions: {
-        expiresIn: 60,
+        expiresIn: '1m',
       },
     }),
     UserModule

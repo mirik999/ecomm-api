@@ -33,7 +33,10 @@ export class ProductResolver {
   }
 
   @Query(() => ProductsRes)
-  getProducts(@Args('controls') controls: GetElementsInput) {
+  getProducts(
+    @User() user: UserRes,
+    @Args('controls') controls: GetElementsInput
+  ) {
     return this.productService.getProducts(controls);
   }
 

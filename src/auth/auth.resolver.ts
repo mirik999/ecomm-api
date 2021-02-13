@@ -1,4 +1,4 @@
-import { Args, Mutation, Resolver, Query, Context } from '@nestjs/graphql';
+import { Args, Mutation, Resolver, Query } from '@nestjs/graphql';
 import { AuthRes } from './response/auth.res';
 import { AuthReq } from './request/auth.req';
 import { AuthService } from './auth.service';
@@ -20,9 +20,9 @@ export class AuthResolver {
     return this.authService.loginUser(user);
   }
 
-  @Mutation(() => AuthRes)
-  logoutUser(@Args('user') user: AuthReq): Promise<Partial<AuthRes>> {
-    return this.authService.logoutUser(user);
+  @Query(() => AuthRes)
+  logoutUser(@Args('clientId') clientId: string): Promise<Partial<AuthRes>> {
+    return this.authService.logoutUser(clientId);
   }
 
   @Query(() => AuthRes)

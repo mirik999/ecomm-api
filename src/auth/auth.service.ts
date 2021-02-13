@@ -44,16 +44,21 @@ export class AuthService {
     return credentials;
   }
 
-  async logoutUser(credentials: AuthReq): Promise<Partial<AuthRes>> {
-    await this.deleteTokenStatus(credentials);
-    return {
-      clientId: null
+  async logoutUser(clientId: string): Promise<Partial<AuthRes>> {
+    const isDelete = await this.deleteTokenStatus(clientId);
+    if (isDelete) {
+      return {
+        clientId: null
+      }
+    } else {
+      throw new NotFoundException('Token by client id not found')
     }
   }
 
   async refreshToken(credentials: Partial<AuthRes>) {
+    await this.findTokenStatus(credentials);
+    await this.upsertTokenStatus(credentials);
     const newAccessToken = await this.refreshJwt(credentials.accessToken);
-    await this.upsertTokenStatus(credentials)
     return {
       accessToken: newAccessToken,
       refreshToken: uuid(),
@@ -70,25 +75,33 @@ export class AuthService {
     });
   }
 
-  private async deleteTokenStatus(credentials: AuthReq): Promise<boolean> {
+  private async findTokenStatus(credentials) {
     try {
-      const result = this.authRepository.deleteOne({ clientId: credentials.clientId });
-      console.log(result)
-      return true;
-    } catch (err) {
-      throw new NotFoundException('Client id not found => ', err.message)
+      return await this.authRepository.findOne({ clientId: credentials.clientId })
+    } catch(err) {
+      throw new NotFoundException('Cant find status of token =>', err.message)
     }
   }
 
   private async upsertTokenStatus(credentials) {
     try {
-      return await this.authRepository.findOneAndUpdate(
-        { clientId: credentials.clientId },
-        { ...credentials },
-        { new: true, upsert: true }
-      )
+      await this.authRepository.updateOne(
+        {clientId: credentials.clientId},
+        { $set: credentials },
+        { upsert: true }
+      );
+      return credentials;
     } catch(err) {
       throw new ConflictException('Cant upsert new credentials => ', err.message)
+    }
+  }
+
+  private async deleteTokenStatus(clientId: string): Promise<boolean> {
+    try {
+      const result: any = await this.authRepository.deleteOne({ clientId });
+      return result.modifiedCount;
+    } catch (err) {
+      throw new NotFoundException('Client id not found => ', err.message)
     }
   }
 
