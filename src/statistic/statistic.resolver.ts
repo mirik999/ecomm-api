@@ -1,5 +1,5 @@
-import { Query, Int, Resolver } from '@nestjs/graphql';
-import { CommonStatistics, ProductStatistic } from './response/cpu.res';
+import { Query, Resolver } from '@nestjs/graphql';
+import { CommonStatistics } from './response/cpu.res';
 import { ProductService } from '../product/product.service';
 import { CategoryService } from '../category/category.service';
 

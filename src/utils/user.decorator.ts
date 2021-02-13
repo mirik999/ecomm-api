@@ -6,7 +6,7 @@ import {
 import { GqlExecutionContext } from '@nestjs/graphql';
 import * as jwt from 'jsonwebtoken';
 
-type UserDataType = {
+export type UserDataType = {
   id: string
   email: string
   roles: string[]
@@ -37,25 +37,27 @@ export const User = createParamDecorator(
 async function verifyToken(token: string, method: string): Promise<any> {
   return new Promise((res, rej) => {
     jwt.verify(token, 'top-secret-2020', (err, data: UserDataType) => {
-      const isGuest = getUserRole(data.roles, 'guest');
-      const isAdmin = getUserRole(data.roles, 'admin');
       if (err) {
         rej({
           status: 401,
           msg: 'Unauthorized'
         })
-      } else if (isGuest && !method.includes('Get')) {
+      }
+      const isGuest = getUserRole(data.roles, 'guest');
+      const isAdmin = getUserRole(data.roles, 'admin');
+      if (!err && isGuest && !method.includes('Get')) {
         rej({
           status: 403,
-          msg: 'Forbidden'
+          msg: 'Forbidden, Guest has not access'
         })
       } else if (
+        !err &&
         (isAdmin && method.includes('Delete')) ||
         (isAdmin && method.includes('User') && !method.includes('Get'))
       ) {
         rej({
           status: 403,
-          msg: 'Forbidden'
+          msg: 'Forbidden, only Sudo has access'
         })
       } else {
         delete data.iat;

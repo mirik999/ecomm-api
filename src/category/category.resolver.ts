@@ -3,10 +3,10 @@ import { CategoryService } from './category.service';
 import { UpdateCategoryReq } from './request/update.req';
 import { CategoryRes, CategoriesRes } from './response/category.res';
 import { User } from '../utils/user.decorator';
-import { JwtPayload } from '../utils/jwt.strategy';
 import { GetElementsInput } from '../global-inputs/get-elements.input';
 import { GetByIdsInput, GetByIdsOutput } from '../global-inputs/get-by-ids.input';
 import { CreateCategoryReq } from './request/create.req';
+import { UserRes } from '../user/response/user.res';
 
 @Resolver(() => CategoryRes)
 export class CategoryResolver {
@@ -19,6 +19,7 @@ export class CategoryResolver {
 
   @Query(() => CategoriesRes)
   getCategories(
+    @User() user: UserRes,
     @Args('controls') controls: GetElementsInput,
   ): Promise<CategoriesRes> {
     return this.categoryService.getCategories(controls);
@@ -26,7 +27,7 @@ export class CategoryResolver {
 
   @Mutation(() => CategoryRes)
   createCategory(
-    @User() user: JwtPayload,
+    @User() user: Partial<UserRes>,
     @Args('newCategory')
     newCategory: CreateCategoryReq,
   ): Promise<CategoryRes> {
@@ -35,7 +36,7 @@ export class CategoryResolver {
 
   @Mutation(() => CategoryRes)
   updateCategory(
-    @User() user: JwtPayload,
+    @User() user: Partial<UserRes>,
     @Args('updatedCategory')
     updatedCategory: UpdateCategoryReq,
   ): Promise<CategoryRes> {
@@ -44,7 +45,7 @@ export class CategoryResolver {
 
   @Mutation(() => CategoryRes)
   disableCategories(
-    @User() user: JwtPayload,
+    @User() user: Partial<UserRes>,
     @Args('disabledCategories')
     disabledCategories: GetByIdsInput,
   ) {
@@ -53,7 +54,7 @@ export class CategoryResolver {
 
   @Mutation(() => CategoryRes)
   activateCategories(
-    @User() user: JwtPayload,
+    @User() user: Partial<UserRes>,
     @Args('activateCategories')
     activateCategories: GetByIdsInput,
   ) {
@@ -62,7 +63,7 @@ export class CategoryResolver {
 
   @Mutation(() => GetByIdsOutput)
   deleteCategories(
-    @User() user: JwtPayload,
+    @User() user: Partial<UserRes>,
     @Args('deleteCategories') deleteCategories: GetByIdsInput,
   ) {
     return this.categoryService.deleteCategories(deleteCategories);
