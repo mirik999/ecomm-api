@@ -17,7 +17,6 @@ import {
 } from '../global-inputs/get-by-ids.input';
 import { ProductStatistic } from '../statistic/response/cpu.res';
 import { UserRes } from '../user/response/user.res';
-import { getUserRole } from '../utils/user.decorator';
 
 @Injectable()
 export class ProductService {
@@ -212,7 +211,7 @@ export class ProductService {
           },
         },
       ]);
-      
+
       return statistics[0];
     } catch(err) {
       throw new ConflictException(`Cant collect product statistics => ${err.message}`);

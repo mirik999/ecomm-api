@@ -46,13 +46,12 @@ async function verifyToken(token: string, method: string): Promise<any> {
       }
       const isGuest = getUserRole(data.roles, 'guest');
       const isAdmin = getUserRole(data.roles, 'admin');
-      if (!err && isGuest && !method.includes('Get')) {
+      if (isGuest && !method.includes('Get')) {
         rej({
           status: 403,
           msg: 'Forbidden, Guest has not access'
         })
       } else if (
-        !err &&
         (isAdmin && method.includes('Delete')) ||
         (isAdmin && method.includes('User') && !method.includes('Get'))
       ) {

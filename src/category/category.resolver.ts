@@ -18,10 +18,7 @@ export class CategoryResolver {
   }
 
   @Query(() => CategoriesRes)
-  getCategories(
-    @User() user: UserRes,
-    @Args('controls') controls: GetElementsInput,
-  ): Promise<CategoriesRes> {
+  getCategories(@Args('controls') controls: GetElementsInput) {
     return this.categoryService.getCategories(controls);
   }
 
@@ -30,7 +27,7 @@ export class CategoryResolver {
     @User() user: Partial<UserRes>,
     @Args('newCategory')
     newCategory: CreateCategoryReq,
-  ): Promise<CategoryRes> {
+  ) {
     return this.categoryService.createCategory(newCategory);
   }
 
@@ -39,7 +36,7 @@ export class CategoryResolver {
     @User() user: Partial<UserRes>,
     @Args('updatedCategory')
     updatedCategory: UpdateCategoryReq,
-  ): Promise<CategoryRes> {
+  ) {
     return this.categoryService.updateCategory(updatedCategory);
   }
 

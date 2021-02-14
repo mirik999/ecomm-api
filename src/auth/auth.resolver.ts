@@ -11,24 +11,22 @@ export class AuthResolver {
   ) {}
 
   @Mutation(() => AuthRes)
-  createUser(@Args('newUser') newUser: AuthReq): Promise<AuthRes> {
+  createUser(@Args('newUser') newUser: AuthReq) {
     return this.authService.createUser(newUser);
   }
 
   @Mutation(() => AuthRes)
-  loginUser(@Args('user') user: AuthReq): Promise<AuthRes> {
+  loginUser(@Args('user') user: AuthReq) {
     return this.authService.loginUser(user);
   }
 
   @Query(() => AuthRes)
-  logoutUser(@Args('clientId') clientId: string): Promise<Partial<AuthRes>> {
+  logoutUser(@Args('clientId') clientId: string) {
     return this.authService.logoutUser(clientId);
   }
 
   @Query(() => AuthRes)
-  refreshToken(
-    @RefreshToken() refreshToken: Partial<AuthRes>
-  ): Promise<AuthRes> {
+  refreshToken(@RefreshToken() refreshToken: Partial<AuthRes>) {
     return this.authService.refreshToken(refreshToken);
   }
 }

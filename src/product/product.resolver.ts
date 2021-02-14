@@ -28,15 +28,12 @@ export class ProductResolver {
   ) {}
 
   @Query(() => ProductRes)
-  async getProduct(@Args('id') id: string): Promise<ProductRes> {
+  async getProduct(@Args('id') id: string) {
     return this.productService.getProduct(id);
   }
 
   @Query(() => ProductsRes)
-  getProducts(
-    @User() user: UserRes,
-    @Args('controls') controls: GetElementsInput
-  ) {
+  getProducts( @Args('controls') controls: GetElementsInput) {
     return this.productService.getProducts(controls);
   }
 

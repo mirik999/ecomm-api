@@ -16,8 +16,4 @@ export class AuthReq {
   @IsUUID()
   @Field()
   clientId: string;
-
-  @IsString()
-  @Field()
-  grantType: 'access_token' | 'refresh_token';
 }
