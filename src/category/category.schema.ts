@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { v4 as uuid } from 'uuid';
 
 export type CategoryDocument = Category & Document;
 

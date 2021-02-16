@@ -27,13 +27,13 @@ export class CategoryRes {
   tabName: string;
 
   @Field({ nullable: true })
-  createdAt: Date;
+  createdAt?: Date;
 
   @Field({ nullable: true })
-  isDisabled: boolean;
+  isDisabled?: boolean;
 
-  @Field(() => [SubCategoryRes])
-  subCategories: SubCategoryRes[]
+  @Field(() => [SubCategoryRes], { nullable: true })
+  subCategories?: SubCategoryRes[]
 }
 
 @ObjectType('CategoriesRes')

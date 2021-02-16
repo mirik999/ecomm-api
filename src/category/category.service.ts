@@ -2,7 +2,7 @@ import { ConflictException, Injectable, NotFoundException } from '@nestjs/common
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Category, CategoryDocument } from './category.schema';
-import { CategoryRes, CategoriesRes } from './response/category.res';
+import { CategoryRes, CategoriesRes, SubCategoryRes } from './response/category.res';
 import { UpdateCategoryReq } from './request/update.req';
 import { GetElementsInput } from '../global-inputs/get-elements.input';
 import { GetByIdsInput, GetByIdsOutput } from '../global-inputs/get-by-ids.input';
@@ -137,11 +137,16 @@ export class CategoryService {
   }
 
   async getCategoriesByIds(ids: string[]): Promise<CategoryRes[]> {
-    // client side sub category problem
     try {
-      return await this.categoryRepository.find({
+      const categories = await this.categoryRepository.find({
         $or: [ { id: { $in: ids } }, { "subCategories.id": { $in: ids } } ]
       });
+      return categories.map(el => {
+        if (el.subCategories.some(sel => ids.includes(sel.id))) {
+          return el.subCategories.find(sel => ids.includes(sel.id))
+        }
+        return el
+      })
     } catch (err) {
       console.log(err.message);
     }

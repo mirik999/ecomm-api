@@ -19,7 +19,7 @@ import { UserModule } from '../user/user.module';
     JwtModule.register({
       secret: 'top-secret-2020',
       signOptions: {
-        expiresIn: '1m',
+        expiresIn: '20s',
       },
     }),
     UserModule
