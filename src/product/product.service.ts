@@ -99,8 +99,7 @@ export class ProductService {
         freeDelivery: newProduct.freeDelivery,
         guarantee: newProduct.guarantee,
         isDisabled: newProduct.isDisabled,
-        category: newProduct.category,
-        comment: [],
+        category: newProduct.category
       });
     } catch (err) {
       throw new ConflictException(

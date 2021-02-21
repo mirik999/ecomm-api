@@ -74,9 +74,6 @@ export class ProductRes {
 
   @Field(() => [CategoryRes])
   category: string[];
-
-  @Field(() => [String], { nullable: true })
-  comment: string[];
 }
 
 @ObjectType('ProductsRes')
@@ -84,6 +81,6 @@ export class ProductsRes {
   @Field()
   count: number;
 
-  @Field(() => [ProductRes!]!)
+  @Field(() => [ProductRes])
   payload: ProductRes[];
 }

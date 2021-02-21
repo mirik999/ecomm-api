@@ -24,7 +24,7 @@ import { UserRes } from '../user/response/user.res';
 export class ProductResolver {
   constructor(
     private productService: ProductService,
-    private categoryService: CategoryService,
+    private categoryService: CategoryService
   ) {}
 
   @Query(() => ProductRes)

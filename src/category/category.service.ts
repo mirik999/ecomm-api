@@ -1,14 +1,13 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Category, CategoryDocument } from './category.schema';
-import { CategoryRes, CategoriesRes, SubCategoryRes } from './response/category.res';
+import { CategoryRes, CategoriesRes } from './response/category.res';
 import { UpdateCategoryReq } from './request/update.req';
 import { GetElementsInput } from '../global-inputs/get-elements.input';
 import { GetByIdsInput, GetByIdsOutput } from '../global-inputs/get-by-ids.input';
 import { CreateCategoryReq } from './request/create.req';
 import { CategoryStatistic } from '../statistic/response/cpu.res';
-import { match } from 'assert';
 
 @Injectable()
 export class CategoryService {

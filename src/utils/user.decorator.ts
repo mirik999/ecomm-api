@@ -19,8 +19,8 @@ export const User = createParamDecorator(
   async (data: unknown, ctx: ExecutionContext) => {
     const context = GqlExecutionContext.create(ctx).getContext();
     const token = context.req.headers?.authorization?.slice(7);
-
     const gqlMethod = context.req.body.operationName;
+
     try {
       return await verifyToken(token, gqlMethod);
     } catch(errObj) {

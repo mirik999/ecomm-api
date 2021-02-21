@@ -1,7 +1,7 @@
 import {
   ConflictException,
   Injectable,
-  InternalServerErrorException,
+  InternalServerErrorException, NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -169,5 +169,13 @@ export class UserService {
   ): Promise<boolean> {
     const hash = await bcrypt.hash(password, user.salt);
     return hash === user.password;
+  }
+
+  async getCommentAuthor(id: string): Promise<UserRes> {
+    try {
+      return this.userRepository.findOne({ id })
+    } catch (err) {
+      throw new NotFoundException(`Could not find a user [Error] => ${err.message}`)
+    }
   }
 }

@@ -50,6 +50,8 @@ export class ProductStatistic extends CategoryStatistic {
 export class CommonStatistics {
   @Field()
   product: ProductStatistic;
+  @Field(() => Int)
+  comments: number;
   @Field()
   category: CategoryStatistic;
 }
