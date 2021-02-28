@@ -1,18 +1,17 @@
 import { Module } from '@nestjs/common';
+import { BrandResolver } from './brand.resolver';
+import { BrandService } from './brand.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Product, ProductSchema } from './product.schema';
-import { ProductService } from './product.service';
-import { ProductResolver } from './product.resolver';
+import { Brand, BrandSchema } from './brand.schema';
 import { CategoryModule } from '../category/category.module';
-import { BrandModule } from '../brand/brand.module';
 
 @Module({
   imports: [
     MongooseModule.forFeatureAsync([
       {
-        name: Product.name,
+        name: Brand.name,
         useFactory: async () => {
-          const schema = ProductSchema;
+          const schema = BrandSchema;
           schema.plugin(await require('mongoose-unique-validator'), {
             message: 'must be unique'
           });
@@ -20,10 +19,9 @@ import { BrandModule } from '../brand/brand.module';
         }
       }
     ]),
-    CategoryModule,
-    BrandModule
+    CategoryModule
   ],
-  providers: [ProductService, ProductResolver],
-  exports: [ProductService],
+  providers: [BrandResolver, BrandService],
+  exports: [BrandService]
 })
-export class ProductModule {}
+export class BrandModule {}

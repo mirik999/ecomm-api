@@ -34,6 +34,14 @@ export class CategoryStatistic {
   isDisabled: number;
 }
 
+@ObjectType('BrandStatistic')
+export class BrandStatistic {
+  @Field()
+  count: number;
+  @Field()
+  isDisabled: number;
+}
+
 @ObjectType('ProductStatistic')
 export class ProductStatistic extends CategoryStatistic {
   @Field({ nullable: true })
@@ -48,10 +56,12 @@ export class ProductStatistic extends CategoryStatistic {
 
 @ObjectType('CommonStatistics')
 export class CommonStatistics {
-  @Field()
+  @Field({ nullable: true })
   product: ProductStatistic;
-  @Field(() => Int)
+  @Field(() => Int, { nullable: true })
   comments: number;
-  @Field()
+  @Field({ nullable: true })
   category: CategoryStatistic;
+  @Field({ nullable: true })
+  brand: BrandStatistic;
 }

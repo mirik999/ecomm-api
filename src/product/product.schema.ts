@@ -5,13 +5,13 @@ export type ProductDocument = Product & Document;
 
 @Schema()
 export class Product {
-  @Prop()
+  @Prop({ index: true, unique: true })
   id: string;
 
-  @Prop()
+  @Prop({ trim: true })
   name: string;
 
-  @Prop()
+  @Prop({ unique: true, trim: true })
   articul: string;
 
   @Prop([String])
@@ -76,6 +76,9 @@ export class Product {
 
   @Prop()
   category: string[];
+
+  @Prop()
+  brand: string;
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

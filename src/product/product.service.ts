@@ -99,7 +99,8 @@ export class ProductService {
         freeDelivery: newProduct.freeDelivery,
         guarantee: newProduct.guarantee,
         isDisabled: newProduct.isDisabled,
-        category: newProduct.category
+        category: newProduct.category,
+        brand: newProduct.brand,
       });
     } catch (err) {
       throw new ConflictException(
@@ -187,11 +188,6 @@ export class ProductService {
             },
             sale: {
               $sum: { $cond: ['$sale', 1, 0] },
-            },
-            comment: {
-              $sum: {
-                $size: '$comment',
-              },
             },
             sold: {
               $sum: '$sold',

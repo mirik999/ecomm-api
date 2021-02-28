@@ -30,35 +30,39 @@ export class CategoryService {
 
   async getCategories(controls: GetElementsInput): Promise<CategoriesRes> {
     const { offset, limit, keyword } = controls;
-    const categories = await this.categoryRepository.aggregate([
-      {
-        $match: {
-          $or: [
-            { name: { $regex: keyword } },
-            { tabName: { $regex: keyword } },
-          ],
+    try {
+      const categories = await this.categoryRepository.aggregate([
+        {
+          $match: {
+            $or: [
+              { name: { $regex: keyword } },
+              { tabName: { $regex: keyword } },
+            ],
+          },
         },
-      },
-      {
-        $sort: { createdAt: -1 },
-      },
-      {
-        $facet: {
-          stage1: [{ $group: { _id: null, count: { $sum: 1 } } }],
-          stage2: [{ $skip: offset }, { $limit: limit }],
+        {
+          $sort: { createdAt: -1 },
         },
-      },
-      {
-        $unwind: '$stage1',
-      },
-      {
-        $project: {
-          count: '$stage1.count',
-          payload: '$stage2',
+        {
+          $facet: {
+            stage1: [{ $group: { _id: null, count: { $sum: 1 } } }],
+            stage2: [{ $skip: offset }, { $limit: limit }],
+          },
         },
-      },
-    ]);
-    return categories[0];
+        {
+          $unwind: '$stage1',
+        },
+        {
+          $project: {
+            count: '$stage1.count',
+            payload: '$stage2',
+          },
+        },
+      ]);
+      return categories[0];
+    } catch(err) {
+      throw new ConflictException(`Cant get categories. [Error] => ${err.message}`);
+    }
   }
 
   async createCategory(

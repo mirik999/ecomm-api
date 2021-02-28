@@ -144,4 +144,10 @@ export class UpdateProductReq {
   @IsUUID('4', { each: true })
   @Field(() => [ID], { nullable: true })
   category: string[];
+
+  //ref to brands
+  @IsOptional()
+  @IsUUID('4')
+  @Field(() => ID, { nullable: true })
+  brand: string;
 }

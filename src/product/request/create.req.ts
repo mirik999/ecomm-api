@@ -142,4 +142,10 @@ export class CreateProductReq {
   @IsUUID('4', { each: true })
   @Field(() => [ID])
   category: string[];
+
+  //ref to brands
+  @IsOptional()
+  @IsUUID('4')
+  @Field(() => ID)
+  brand: string;
 }

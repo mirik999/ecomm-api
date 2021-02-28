@@ -19,12 +19,15 @@ import {
 } from '../global-inputs/get-by-ids.input';
 import { User } from '../utils/user.decorator';
 import { UserRes } from '../user/response/user.res';
+import { BrandRes } from '../brand/response/brand.res';
+import { BrandService } from '../brand/brand.service';
 
 @Resolver(() => ProductRes)
 export class ProductResolver {
   constructor(
     private productService: ProductService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private brandService: BrandService,
   ) {}
 
   @Query(() => ProductRes)
@@ -78,7 +81,12 @@ export class ProductResolver {
   }
 
   @ResolveField(() => [CategoryRes])
-  async category(@Parent() product: ProductRes) {
-    return await this.categoryService.getCategoriesByIds(product.category);
+  category(@Parent() product: ProductRes) {
+    return this.categoryService.getCategoriesByIds(product.category);
+  }
+
+  @ResolveField(() => BrandRes)
+  brand(@Parent() product: ProductRes) {
+    return this.brandService.getBrandById(product.brand);
   }
 }

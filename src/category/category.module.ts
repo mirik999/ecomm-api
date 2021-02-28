@@ -6,8 +6,17 @@ import { Category, CategorySchema } from './category.schema';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([
-      { name: Category.name, schema: CategorySchema }
+    MongooseModule.forFeatureAsync([
+      {
+        name: Category.name,
+        useFactory: async () => {
+          const schema = CategorySchema;
+          schema.plugin(await require('mongoose-unique-validator'), {
+            message: 'must be unique'
+          });
+          return schema;
+        }
+      }
     ])
   ],
   providers: [CategoryService, CategoryResolver],
