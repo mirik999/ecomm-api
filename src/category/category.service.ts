@@ -146,7 +146,9 @@ export class CategoryService {
         $or: [ { id: { $in: ids } }, { "subCategories.id": { $in: ids } } ]
       });
       for (let i = 0; i < categories.length; i++) {
-        allCategories.push(categories[i])
+        if (ids.includes(categories[i].id)) {
+          allCategories.push(categories[i])
+        }
         if (categories[i].subCategories) {
           for (let j = 0; j < categories[i].subCategories.length; j++) {
             allCategories.push(categories[i].subCategories[j])
