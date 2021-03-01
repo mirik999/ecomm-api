@@ -141,15 +141,19 @@ export class CategoryService {
 
   async getCategoriesByIds(ids: string[]): Promise<CategoryRes[]> {
     try {
+      const allCategories = [];
       const categories = await this.categoryRepository.find({
         $or: [ { id: { $in: ids } }, { "subCategories.id": { $in: ids } } ]
       });
-      return categories.map(el => {
-        if (el.subCategories.some(sel => ids.includes(sel.id))) {
-          return el.subCategories.find(sel => ids.includes(sel.id))
+      for (let i = 0; i < categories.length; i++) {
+        allCategories.push(categories[i])
+        if (categories[i].subCategories) {
+          for (let j = 0; j < categories[i].subCategories.length; j++) {
+            allCategories.push(categories[i].subCategories[j])
+          }
         }
-        return el
-      })
+      }
+      return allCategories;
     } catch (err) {
       console.log(err.message);
     }
