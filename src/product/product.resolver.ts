@@ -40,6 +40,11 @@ export class ProductResolver {
     return this.productService.getProducts(controls);
   }
 
+  @Query(() => [ProductRes])
+  getProductsByCategoryId(@Args('id') id: string) {
+    return this.productService.getProductsByCategoryId(id);
+  }
+
   @Mutation(() => ProductRes)
   createProduct(
     @User() user: Partial<UserRes>,

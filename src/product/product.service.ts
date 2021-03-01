@@ -73,6 +73,14 @@ export class ProductService {
     }
   }
 
+  async getProductsByCategoryId(id: string): Promise<ProductRes[]> {
+    try {
+      return this.productRepository.find({ category: id })
+    } catch (err) {
+      throw new ConflictException(`Cant get products. [Error] => ${err.message}`);
+    }
+  }
+
   async createProduct(newProduct: CreateProductReq, user: Partial<UserRes>): Promise<ProductRes> {
     try {
       return this.productRepository.create({
