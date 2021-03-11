@@ -191,9 +191,9 @@ export class ProductService {
             isDisabled: {
               $sum: { $cond: ['$isDisabled', 1, 0] },
             },
-            price: {
-              $sum: '$price',
-            },
+            // price: {
+            //   $sum: '$price',
+            // },
             sale: {
               $sum: { $cond: ['$sale', 1, 0] },
             },
@@ -207,7 +207,7 @@ export class ProductService {
             _id: 0,
             count: 1,
             isDisabled: 1,
-            price: 1,
+            // price: 1,
             sale: 1,
             comment: 1,
             sold: 1,

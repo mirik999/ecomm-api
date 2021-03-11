@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CpuResponse, OsInfoResponse } from './response/cpu.res';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const os = require('os');
 
 @Injectable()
@@ -58,7 +59,7 @@ export class StatisticService {
     let totalMs = 0;
 
     cpus.forEach(core => {
-      for (let type in core.times) {
+      for (const type in core.times) {
         totalMs += core.times[type];
       }
       idleMs += core.times.idle;

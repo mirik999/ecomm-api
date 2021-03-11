@@ -50,8 +50,8 @@ export class ProductStatistic extends CategoryStatistic {
   sold: number;
   @Field({ nullable: true })
   comment: number;
-  @Field({ nullable: true })
-  price: number;
+  // @Field({ nullable: true })
+  // price: number;
 }
 
 @ObjectType('CommonStatistics')
