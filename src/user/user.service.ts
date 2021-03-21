@@ -135,6 +135,9 @@ export class UserService {
 
   async loginUser(newUser: AuthReq): Promise<User> {
     const user = await this.checkUser(newUser.email);
+    if (user.isDisabled) {
+      throw new ConflictException('User was disabled');
+    }
     await UserService.isUserPasswordValid(user, newUser.password);
     return user;
   }

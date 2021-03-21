@@ -46,14 +46,16 @@ async function verifyToken(token: string, method: string): Promise<any> {
       }
       const isGuest = getUserRole(data.roles, 'guest');
       const isAdmin = getUserRole(data.roles, 'admin');
+
       if (isGuest && !method.includes('Get')) {
         rej({
           status: 403,
           msg: 'Forbidden, Guest has not access'
         })
       } else if (
-        (isAdmin && method.includes('Delete')) ||
-        (isAdmin && method.includes('User') && !method.includes('Get'))
+        (isAdmin && (
+          method.includes('Delete')) ||
+          method.includes('Update'))
       ) {
         rej({
           status: 403,
@@ -72,6 +74,7 @@ export function getUserRole(roles: string[], expect: 'guest' | 'admin' | 'sudo')
   const isGuest = !roles.includes('admin') && !roles.includes('sudo');
   const isAdmin = roles.includes('admin') && !roles.includes('sudo');
   const isSudo = roles.includes('sudo');
+
   if (isGuest) {
     return expect === 'guest';
   } else if (isAdmin) {
