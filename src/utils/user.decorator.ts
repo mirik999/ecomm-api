@@ -46,12 +46,12 @@ async function verifyToken(token: string, method: string): Promise<any> {
       }
       const isGuest = getUserRole(data.roles, 'guest');
       const isAdmin = getUserRole(data.roles, 'admin');
+      const isSudo = getUserRole(data.roles, 'sudo');
 
-      if (isGuest && !method.includes('Get')) {
-        rej({
-          status: 403,
-          msg: 'Forbidden, Guest has not access'
-        })
+      if (isSudo) {
+        delete data.iat;
+        delete data.exp;
+        res(data)
       } else if (
         (isAdmin && (
           method.includes('Delete')) ||
@@ -61,10 +61,11 @@ async function verifyToken(token: string, method: string): Promise<any> {
           status: 403,
           msg: 'Forbidden, only Sudo has access'
         })
-      } else {
-        delete data.iat;
-        delete data.exp;
-        res(data)
+      } else if (isGuest && !method.includes('Get')) {
+        rej({
+          status: 403,
+          msg: 'Forbidden, Guest has not access'
+        })
       }
     });
   })
