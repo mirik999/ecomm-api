@@ -11,7 +11,7 @@ export class Coupon {
   @Prop({ trim: true })
   name: string;
 
-  @Prop({ unique: true, trim: true })
+  @Prop({ trim: true })
   description: string;
 
   @Prop({ type: [String], enum: ['product', 'category', 'brand', 'all'] })
