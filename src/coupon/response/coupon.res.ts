@@ -24,7 +24,7 @@ export class CouponRes {
   createdAt: Date;
 
   @Field({ nullable: true })
-  endDate: Date;
+  endDate: string;
 
   @Field({ nullable: true })
   createdBy: string;

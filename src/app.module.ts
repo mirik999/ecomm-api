@@ -9,6 +9,7 @@ import { CommentModule } from './comment/comment.module';
 import { AuthModule } from './auth/auth.module';
 import { BrandModule } from './brand/brand.module';
 import { CouponModule } from './coupon/coupon.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { CouponModule } from './coupon/coupon.module';
     GraphQLModule.forRoot({
       autoSchemaFile: true,
     }),
+    ScheduleModule.forRoot(),
     ProductModule,
     CategoryModule,
     UserModule,

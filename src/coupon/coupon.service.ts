@@ -1,13 +1,14 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CouponDocument } from './coupon.schema';
+import { Coupon, CouponDocument } from './coupon.schema';
 import { CouponRes, CouponsRes } from './response/coupon.res';
 import { UserRes } from '../user/response/user.res';
 import { CreateCouponReq } from './request/create.req';
 import { GetElementsInput } from '../global-inputs/get-elements.input';
 import { GetByIdsInput, GetByIdsOutput } from '../global-inputs/get-by-ids.input';
 import { UpdateCouponReq } from './request/update.req';
+import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class CouponService {
@@ -74,7 +75,7 @@ export class CouponService {
         used: 0,
         description: newCoupon.description,
         createdAt: new Date(),
-        endDate: newCoupon.endDate,
+        endDate: newCoupon.endDate.toString(),
         createdBy: user.email,
         modifiedBy: null,
         isDisabled: false,
@@ -146,5 +147,23 @@ export class CouponService {
     } catch (err) {
       throw new ConflictException(`Cant delete coupons => ${err.message}`);
     }
+  }
+
+  @Cron('*/10 * * * * *')
+  private async handleCoupon() {
+    // try {
+    //   const coupons: Coupon[] = await this.couponRepository.find({ isDisabled: false });
+    //   for (const coupon of coupons) {
+    //     console.log("NAME =>", coupon.name)
+    //     console.log('end date vs new date => ', coupon.endDate, new Date())
+    //     if (new Date() >= coupon.endDate) {
+    //       console.log('new date almost equal or greater than endDate, disable ')
+    //     } else {
+    //       console.log('new date almost less than endDate, not ready to disable')
+    //     }
+    //   }
+    // } catch(err) {
+    //   throw new ConflictException(`Cant read coupons [CRON] => ${err.message}`);
+    // }
   }
 }

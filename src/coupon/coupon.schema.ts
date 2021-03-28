@@ -24,7 +24,7 @@ export class Coupon {
   createdAt: Date;
 
   @Prop()
-  endDate: Date;
+  endDate: string;
 
   @Prop()
   createdBy: string;

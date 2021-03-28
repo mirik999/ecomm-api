@@ -1,6 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
 import {
-  IsArray, IsDate,
+  IsArray, IsDate, IsDateString,
   IsNotEmpty, IsNumber,
   IsString,
   IsUUID,
@@ -36,7 +36,7 @@ export class CreateCouponReq {
   @Field()
   description: string;
 
-  @IsDate()
+  @IsString()
   @Field()
-  endDate: Date;
+  endDate: string;
 }

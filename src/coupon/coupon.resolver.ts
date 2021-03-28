@@ -29,7 +29,8 @@ export class CouponResolver {
     @User() user: UserRes,
     @Args('newCoupon') newCoupon: CreateCouponReq
   ) {
-    return this.couponService.createCoupon(user, newCoupon);
+    console.log(newCoupon.endDate)
+    // return this.couponService.createCoupon(user, newCoupon);
   }
 
   @Mutation(() => CouponRes)
