@@ -36,7 +36,7 @@ export class CreateCouponReq {
   @Field()
   description: string;
 
-  @IsString()
+  @IsDate()
   @Field()
-  endDate: string;
+  endDate: Date;
 }

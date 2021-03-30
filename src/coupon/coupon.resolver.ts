@@ -21,6 +21,7 @@ export class CouponResolver {
 
   @Query(() => CouponsRes)
   getCoupons(@Args('controls') controls: GetElementsInput) {
+    console.log(controls)
     return this.couponService.getCoupons(controls);
   }
 
@@ -29,8 +30,7 @@ export class CouponResolver {
     @User() user: UserRes,
     @Args('newCoupon') newCoupon: CreateCouponReq
   ) {
-    console.log(newCoupon.endDate)
-    // return this.couponService.createCoupon(user, newCoupon);
+    return this.couponService.createCoupon(user, newCoupon);
   }
 
   @Mutation(() => CouponRes)

@@ -1,5 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsNumber, IsString } from 'class-validator';
+import { IsDate, IsNumber, IsOptional, IsString } from 'class-validator';
 
 @InputType()
 export class GetElementsInput {
@@ -14,4 +14,14 @@ export class GetElementsInput {
   @IsString()
   @Field()
   keyword: string;
+
+  @IsOptional()
+  @IsDate()
+  @Field({ nullable: true })
+  from: Date;
+
+  @IsOptional()
+  @IsDate()
+  @Field({ nullable: true })
+  to: Date;
 }

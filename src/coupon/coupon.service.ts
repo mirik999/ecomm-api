@@ -29,14 +29,22 @@ export class CouponService {
       throw new NotFoundException('Coupon not found');
     }
   }
-
+//1616264112000
   async getCoupons(controls: GetElementsInput): Promise<CouponsRes> {
     try {
-      const { offset, limit, keyword } = controls;
+      const { offset, limit, keyword, to } = controls;
+      const from = new Date(1616264112000)
       const coupons = await this.couponRepository.aggregate([
         {
           $match: {
             $or: [{ name: { $regex: keyword, $options: 'i' } }],
+            $expr: {
+              $cond: [
+                { $eq: [from, undefined] },
+                true,
+                { createdAt: from }
+              ]
+            }
           },
         },
         {
@@ -75,7 +83,7 @@ export class CouponService {
         used: 0,
         description: newCoupon.description,
         createdAt: new Date(),
-        endDate: newCoupon.endDate.toString(),
+        endDate: newCoupon.endDate,
         createdBy: user.email,
         modifiedBy: null,
         isDisabled: false,
@@ -149,21 +157,20 @@ export class CouponService {
     }
   }
 
-  @Cron('*/10 * * * * *')
+  @Cron('*/30 * * * *')
   private async handleCoupon() {
-    // try {
-    //   const coupons: Coupon[] = await this.couponRepository.find({ isDisabled: false });
-    //   for (const coupon of coupons) {
-    //     console.log("NAME =>", coupon.name)
-    //     console.log('end date vs new date => ', coupon.endDate, new Date())
-    //     if (new Date() >= coupon.endDate) {
-    //       console.log('new date almost equal or greater than endDate, disable ')
-    //     } else {
-    //       console.log('new date almost less than endDate, not ready to disable')
-    //     }
-    //   }
-    // } catch(err) {
-    //   throw new ConflictException(`Cant read coupons [CRON] => ${err.message}`);
-    // }
+    try {
+      const coupons: Coupon[] = await this.couponRepository.find({ isDisabled: false });
+      for await (const coupon of coupons) {
+        if (new Date() >= coupon.endDate) {
+          await this.couponRepository.updateOne(
+            { id: coupon.id },
+            { $set: { isDisabled: true, modifiedBy: 'CRON', } }
+          )
+        }
+      }
+    } catch(err) {
+      throw new ConflictException(`Cant read coupons [CRON] => ${err.message}`);
+    }
   }
 }
