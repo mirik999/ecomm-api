@@ -21,6 +21,8 @@ import { User } from '../utils/user.decorator';
 import { UserRes } from '../user/response/user.res';
 import { BrandRes } from '../brand/response/brand.res';
 import { BrandService } from '../brand/brand.service';
+import { CouponRes } from '../coupon/response/coupon.res';
+import { CouponService } from '../coupon/coupon.service';
 
 @Resolver(() => ProductRes)
 export class ProductResolver {
@@ -28,6 +30,7 @@ export class ProductResolver {
     private productService: ProductService,
     private categoryService: CategoryService,
     private brandService: BrandService,
+    private couponService: CouponService,
   ) {}
 
   @Query(() => ProductRes)
@@ -93,5 +96,10 @@ export class ProductResolver {
   @ResolveField(() => BrandRes)
   brand(@Parent() product: ProductRes) {
     return this.brandService.getBrandById(product.brand);
+  }
+
+  @ResolveField(() => CouponRes)
+  coupon(@Parent() product: ProductRes) {
+    return this.couponService.getCouponById(product.coupon);
   }
 }

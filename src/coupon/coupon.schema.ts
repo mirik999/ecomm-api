@@ -17,6 +17,9 @@ export class Coupon {
   @Prop({ type: [String], enum: ['product', 'category', 'brand', 'all'] })
   type: string[];
 
+  @Prop({ type: [String] })
+  couponList: string[];
+
   @Prop()
   value: number;
 

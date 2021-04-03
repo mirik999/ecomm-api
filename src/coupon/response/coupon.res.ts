@@ -11,6 +11,9 @@ export class CouponRes {
   @Field(() => [String], { nullable: true })
   type: string[];
 
+  @Field(() => [String], { nullable: true })
+  couponList: string[];
+
   @Field({ nullable: true })
   value: number;
 

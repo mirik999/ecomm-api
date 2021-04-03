@@ -12,7 +12,7 @@ export class Product {
   name: string;
 
   @Prop({ unique: true, trim: true })
-  articul: string;
+  code: string;
 
   @Prop([String])
   images: string[];
@@ -22,9 +22,6 @@ export class Product {
 
   @Prop()
   color: string;
-
-  @Prop()
-  group: string;
 
   @Prop()
   description: string;
@@ -60,6 +57,15 @@ export class Product {
   new: boolean;
 
   @Prop()
+  used: boolean;
+
+  @Prop()
+  hasCoupon: boolean;
+
+  @Prop()
+  defective: boolean;
+
+  @Prop()
   best: boolean;
 
   @Prop()
@@ -79,6 +85,9 @@ export class Product {
 
   @Prop()
   brand: string;
+
+  @Prop()
+  coupon: string;
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

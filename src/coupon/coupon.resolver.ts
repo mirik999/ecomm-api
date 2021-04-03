@@ -15,8 +15,8 @@ export class CouponResolver {
   ) {}
 
   @Query(() => CouponRes)
-  async getCoupon(@Args('id') id: string) {
-    return this.couponService.getCoupon(id);
+  async getCouponById(@Args('id') id: string) {
+    return this.couponService.getCouponById(id);
   }
 
   @Query(() => CouponsRes)

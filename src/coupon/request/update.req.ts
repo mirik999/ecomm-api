@@ -31,6 +31,11 @@ export class UpdateCouponReq {
   type: string[];
 
   @IsOptional()
+  @IsArray()
+  @Field(() => [String], { nullable: true })
+  couponList: string[];
+
+  @IsOptional()
   @IsString()
   @Field({ nullable: true })
   description: string;

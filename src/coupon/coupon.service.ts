@@ -17,7 +17,7 @@ export class CouponService {
     private couponRepository: Model<CouponDocument>
   ) {}
 
-  async getCoupon(id: string): Promise<CouponRes> {
+  async getCouponById(id: string): Promise<CouponRes> {
     const coupon = await this.couponRepository.findOne({ id });
     if (coupon) {
       if (coupon.isDisabled) {
@@ -80,6 +80,7 @@ export class CouponService {
         name: newCoupon.name,
         type: newCoupon.type,
         value: newCoupon.value,
+        couponList: newCoupon.couponList,
         used: 0,
         description: newCoupon.description,
         createdAt: new Date(),

@@ -85,12 +85,11 @@ export class ProductService {
     try {
       return this.productRepository.create({
         id: uuid(),
-        articul: newProduct.articul,
+        code: newProduct.code,
         name: newProduct.name,
         images: newProduct.images,
         cover: newProduct.cover,
         color: newProduct.color,
-        group: newProduct.group,
         sold: newProduct.sold,
         description: newProduct.description,
         createdAt: newProduct.createdAt,
@@ -102,13 +101,17 @@ export class ProductService {
         wishlistCount: newProduct.wishlistCount,
         saleCount: newProduct.saleCount,
         new: newProduct.new,
-        best: newProduct.best,
+        used: newProduct.used,
+        hasCoupon: newProduct.hasCoupon,
+        defective: newProduct.defective,
         sale: newProduct.sale,
+        best: false,
         freeDelivery: newProduct.freeDelivery,
         guarantee: newProduct.guarantee,
         isDisabled: newProduct.isDisabled,
         category: newProduct.category,
         brand: newProduct.brand,
+        coupon: newProduct.coupon
       });
     } catch (err) {
       throw new ConflictException(

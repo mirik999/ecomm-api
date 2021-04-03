@@ -1,6 +1,7 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { CategoryRes } from '../../category/response/category.res';
 import { BrandRes } from '../../brand/response/brand.res';
+import { CouponRes } from '../../coupon/response/coupon.res';
 
 @ObjectType('ProductRes')
 export class ProductRes {
@@ -8,7 +9,7 @@ export class ProductRes {
   id: string;
 
   @Field({ nullable: true })
-  articul: string;
+  code: string;
 
   @Field({ nullable: true })
   name: string;
@@ -21,9 +22,6 @@ export class ProductRes {
 
   @Field({ nullable: true })
   color: string;
-
-  @Field({ nullable: true })
-  group: string;
 
   @Field({ nullable: true })
   sold: number;
@@ -78,6 +76,9 @@ export class ProductRes {
 
   @Field(() => BrandRes, { nullable: true })
   brand: string;
+
+  @Field(() => CouponRes, { nullable: true })
+  coupon: string;
 }
 
 @ObjectType('ProductsRes')

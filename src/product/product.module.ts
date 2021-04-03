@@ -5,6 +5,7 @@ import { ProductService } from './product.service';
 import { ProductResolver } from './product.resolver';
 import { CategoryModule } from '../category/category.module';
 import { BrandModule } from '../brand/brand.module';
+import { CouponModule } from '../coupon/coupon.module';
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { BrandModule } from '../brand/brand.module';
       }
     ]),
     CategoryModule,
-    BrandModule
+    BrandModule,
+    CouponModule
   ],
   providers: [ProductService, ProductResolver],
   exports: [ProductService],

@@ -23,7 +23,7 @@ export class CreateProductReq {
   @IsString()
   @MaxLength(24)
   @Field()
-  articul: string;
+  code: string;
 
   @IsString()
   @IsNotEmpty()
@@ -46,11 +46,6 @@ export class CreateProductReq {
   @IsString()
   @Field({ nullable: true, defaultValue: '' })
   color: string;
-
-  @IsOptional()
-  @IsString()
-  @Field({ nullable: true, defaultValue: '' })
-  group: string;
 
   @IsOptional()
   @IsNumber()
@@ -110,7 +105,17 @@ export class CreateProductReq {
   @IsOptional()
   @IsBoolean()
   @Field({ nullable: true, defaultValue: false })
-  best: boolean;
+  hasCoupon: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  @Field({ nullable: true, defaultValue: false })
+  used: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  @Field({ nullable: true, defaultValue: false })
+  defective: boolean;
 
   @IsOptional()
   @IsBoolean()
@@ -148,4 +153,10 @@ export class CreateProductReq {
   @IsUUID('4')
   @Field(() => ID)
   brand: string;
+
+  //ref to coupons
+  @IsOptional()
+  @IsUUID('4')
+  @Field(() => ID, { nullable: true })
+  coupon: string;
 }

@@ -1,6 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
 import {
-  IsArray, IsDate, IsDateString,
+  IsArray, IsDate,
   IsNotEmpty, IsNumber,
   IsString,
   IsUUID,
@@ -30,6 +30,10 @@ export class CreateCouponReq {
   @IsArray()
   @Field(() => [String])
   type: string[];
+
+  @IsArray()
+  @Field(() => [String])
+  couponList: string[];
 
   @IsString()
   @IsNotEmpty()
