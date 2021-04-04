@@ -13,6 +13,10 @@ export class CreateBrandReq {
   @Field()
   name: string;
 
+  @IsString()
+  @Field()
+  imageUrl: string;
+
   //ref to categories
   @IsOptional()
   @IsUUID('4', { each: true })

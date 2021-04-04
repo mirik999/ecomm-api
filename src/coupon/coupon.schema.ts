@@ -4,6 +4,16 @@ import { Document } from 'mongoose';
 export type CouponDocument = Coupon & Document;
 
 @Schema()
+class CouponKey {
+  @Prop()
+  used: boolean;
+
+  @Prop()
+  key: string;
+}
+export const CouponKeySchema = SchemaFactory.createForClass(CouponKey);
+
+@Schema()
 export class Coupon {
   @Prop({ index: true, unique: true })
   id: string;
@@ -17,8 +27,8 @@ export class Coupon {
   @Prop({ type: [String], enum: ['product', 'category', 'brand', 'all'] })
   type: string[];
 
-  @Prop({ type: [String] })
-  couponList: string[];
+  @Prop({ type: [CouponKeySchema] })
+  couponList: CouponKey[];
 
   @Prop()
   value: number;

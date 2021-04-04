@@ -31,46 +31,40 @@ export class CouponService {
   }
 //1616264112000
   async getCoupons(controls: GetElementsInput): Promise<CouponsRes> {
-    try {
-      const { offset, limit, keyword, to } = controls;
-      const from = new Date(1616264112000)
-      const coupons = await this.couponRepository.aggregate([
-        {
-          $match: {
-            $or: [{ name: { $regex: keyword, $options: 'i' } }],
-            $expr: {
-              $cond: [
-                { $eq: [from, undefined] },
-                true,
-                { createdAt: from }
-              ]
-            }
-          },
+    const { offset, limit, keyword, from, to } = controls;
+    const coupons = await this.couponRepository.aggregate([
+      {
+        $match: {
+          $or: [{ name: { $regex: keyword, $options: 'i' } }],
+          createdAt: { $gte: from || new Date(952273033000), $lte: to || new Date() }
         },
-        {
-          $sort: { createdAt: -1 },
+      },
+      {
+        $sort: { createdAt: -1 },
+      },
+      {
+        $facet: {
+          stage1: [{ $group: { _id: null, count: { $sum: 1 } } }],
+          stage2: [{ $skip: offset }, { $limit: limit }],
         },
-        {
-          $facet: {
-            stage1: [{ $group: { _id: null, count: { $sum: 1 } } }],
-            stage2: [{ $skip: offset }, { $limit: limit }],
-          },
+      },
+      {
+        $unwind: '$stage1',
+      },
+      {
+        $project: {
+          count: '$stage1.count',
+          payload: '$stage2',
         },
-        {
-          $unwind: '$stage1',
-        },
-        {
-          $project: {
-            count: '$stage1.count',
-            payload: '$stage2',
-          },
-        },
-      ]);
-
-      return coupons[0];
-    } catch (err) {
-      throw new ConflictException(`Cant get coupons. [Error] => ${err.message}`);
+      },
+    ]);
+    if (!coupons[0]) {
+      return {
+        count: 0,
+        payload: []
+      }
     }
+    return coupons[0];
   }
 
   async createCoupon(user: UserRes, newCoupon: CreateCouponReq): Promise<CouponRes> {

@@ -11,6 +11,17 @@ import {
   MinLength,
 } from 'class-validator';
 
+@InputType('UpdateCouponKeyReq')
+export class UpdateCouponKeyReq {
+  @IsBoolean()
+  @Field()
+  used: boolean;
+
+  @IsString()
+  @Field()
+  key: string;
+}
+
 @InputType('UpdateCouponReq')
 export class UpdateCouponReq {
   @IsUUID()
@@ -32,8 +43,8 @@ export class UpdateCouponReq {
 
   @IsOptional()
   @IsArray()
-  @Field(() => [String], { nullable: true })
-  couponList: string[];
+  @Field(() => [UpdateCouponKeyReq], { nullable: true })
+  couponList: UpdateCouponKeyReq[];
 
   @IsOptional()
   @IsString()

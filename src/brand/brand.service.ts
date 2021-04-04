@@ -75,6 +75,7 @@ export class BrandService {
       return this.brandRepository.create({
         id: newBrand.id,
         name: newBrand.name,
+        imageUrl: newBrand.imageUrl,
         createdAt: new Date(),
         isDisabled: false,
         category: newBrand.category

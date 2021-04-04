@@ -57,6 +57,15 @@ export class ProductRes {
   new: boolean;
 
   @Field({ nullable: true })
+  hasCoupon: boolean;
+
+  @Field({ nullable: true })
+  used: boolean;
+
+  @Field({ nullable: true })
+  defective: boolean;
+
+  @Field({ nullable: true })
   best: boolean;
 
   @Field({ nullable: true })

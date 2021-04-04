@@ -10,6 +10,9 @@ export class BrandRes {
   name: string;
 
   @Field({ nullable: true })
+  imageUrl: string;
+
+  @Field({ nullable: true })
   createdAt: Date;
 
   @Field({ nullable: true })

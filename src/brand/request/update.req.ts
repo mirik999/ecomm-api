@@ -14,6 +14,11 @@ export class UpdateBrandReq {
   name: string;
 
   @IsOptional()
+  @IsString()
+  @Field({ nullable: true })
+  imageUrl: string;
+
+  @IsOptional()
   @IsDate()
   @Field({ nullable: true })
   createdAt: Date;

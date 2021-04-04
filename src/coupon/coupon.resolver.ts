@@ -21,7 +21,6 @@ export class CouponResolver {
 
   @Query(() => CouponsRes)
   getCoupons(@Args('controls') controls: GetElementsInput) {
-    console.log(controls)
     return this.couponService.getCoupons(controls);
   }
 

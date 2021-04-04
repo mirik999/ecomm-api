@@ -1,5 +1,14 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 
+@ObjectType('CouponKeyRes')
+export class CouponKeyRes {
+  @Field()
+  used: boolean;
+
+  @Field()
+  key: string;
+}
+
 @ObjectType('CouponRes')
 export class CouponRes {
   @Field(() => ID)
@@ -11,8 +20,8 @@ export class CouponRes {
   @Field(() => [String], { nullable: true })
   type: string[];
 
-  @Field(() => [String], { nullable: true })
-  couponList: string[];
+  @Field(() => [CouponKeyRes], { nullable: true })
+  couponList: CouponKeyRes[];
 
   @Field({ nullable: true })
   value: number;

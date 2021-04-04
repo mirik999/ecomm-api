@@ -12,6 +12,9 @@ export class Brand {
   name: string;
 
   @Prop()
+  imageUrl: string;
+
+  @Prop()
   createdAt: Date;
 
   @Prop()
