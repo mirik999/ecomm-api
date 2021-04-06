@@ -29,7 +29,7 @@ export class CouponService {
       throw new NotFoundException('Coupon not found');
     }
   }
-//1616264112000
+
   async getCoupons(controls: GetElementsInput): Promise<CouponsRes> {
     const { offset, limit, keyword, from, to } = controls;
     const coupons = await this.couponRepository.aggregate([

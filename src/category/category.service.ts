@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Category, CategoryDocument } from './category.schema';
@@ -17,14 +17,15 @@ export class CategoryService {
   ) {}
 
   async getCategoryById(id: string): Promise<CategoryRes> {
-    const category = await this.categoryRepository.findOne({
-      id,
-      isDisabled: false,
-    });
+    const category = await this.categoryRepository.findOne({ id });
     if (category) {
-      return category;
+      if (category.isDisabled) {
+        throw new ConflictException('Category is disabled');
+      } else {
+        return category;
+      }
     } else {
-      throw new ConflictException('This category was disabled');
+      throw new NotFoundException('Category not found');
     }
   }
 
@@ -149,10 +150,9 @@ export class CategoryService {
         if (ids.includes(categories[i].id)) {
           sortedCategories.push(categories[i])
         }
-        if (categories[i].subCategories.some(scat => ids.includes(scat.id))) {
-          for (let j = 0; j < categories[i].subCategories.length; j++) {
-            sortedCategories.push(categories[i].subCategories[j])
-          }
+        const filtered = categories[i].subCategories.filter(scat => ids.includes(scat.id));
+        for (let j = 0; j < filtered.length; j++) {
+          sortedCategories.push(filtered[i])
         }
       }
       return sortedCategories;

@@ -14,6 +14,11 @@ import {
 export class UserResolver {
   constructor(private userService: UserService) {}
 
+  @Query(() => UserRes)
+  async getUserById(@Args('id') id: string) {
+    return this.userService.getUserById(id);
+  }
+
   @Query(() => UsersRes)
   getUsers(
     @User() user: Partial<UserRes>,

@@ -17,6 +17,11 @@ export class BrandResolver {
     private categoryService: CategoryService,
   ) {}
 
+  @Query(() => BrandRes)
+  async getBrandById(@Args('id') id: string) {
+    return this.brandService.getBrandById(id);
+  }
+
   @Query(() => BrandsRes)
   getBrands(@Args('controls') controls: GetElementsInput) {
     return this.brandService.getBrands(controls);

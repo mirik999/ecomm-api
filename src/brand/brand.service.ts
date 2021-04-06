@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { BrandDocument } from './brand.schema';
@@ -17,13 +17,15 @@ export class BrandService {
   ) {}
 
   async getBrandById(id: string): Promise<BrandRes> {
-    try {
-      return await this.brandRepository.findOne({
-        id,
-        isDisabled: false,
-      });
-    } catch (err) {
-      throw new ConflictException('This brand was disabled');
+    const brand = await this.brandRepository.findOne({ id });
+    if (brand) {
+      if (brand.isDisabled) {
+        throw new ConflictException('Brand is disabled');
+      } else {
+        return brand;
+      }
+    } else {
+      throw new NotFoundException('Brand not found');
     }
   }
 

@@ -24,6 +24,19 @@ export class UserService {
     private userRepository: Model<UserDocument>,
   ) {}
 
+  async getUserById(id: string): Promise<UserRes> {
+    const user = await this.userRepository.findOne({ id });
+    if (user) {
+      if (user.isDisabled) {
+        throw new ConflictException('User is disabled');
+      } else {
+        return user;
+      }
+    } else {
+      throw new NotFoundException('User not found');
+    }
+  }
+
   async getUsers(controls: GetElementsInput): Promise<UsersRes> {
     const { keyword, offset, limit } = controls;
     try {

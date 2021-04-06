@@ -5,29 +5,29 @@ export type CategoryDocument = Category & Document;
 
 @Schema()
 class SubCategory {
-  @Prop({ index: true, unique: true })
+  @Prop({ index: true })
   id: string;
 
   @Prop()
   parentId: string;
 
-  @Prop({ unique: true, trim: true })
+  @Prop({ trim: true })
   name: string;
 
-  @Prop({ unique: true, trim: true })
+  @Prop({ trim: true })
   tabName: string;
 }
 export const SubCategorySchema = SchemaFactory.createForClass(SubCategory);
 
 @Schema()
 export class Category {
-  @Prop({ index: true, unique: true })
+  @Prop({ index: true })
   id: string;
 
-  @Prop({ unique: true, trim: true })
+  @Prop({ trim: true })
   name: string;
 
-  @Prop({ unique: true, trim: true })
+  @Prop({ trim: true })
   tabName: string;
 
   @Prop()

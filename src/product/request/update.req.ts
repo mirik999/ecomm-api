@@ -137,6 +137,11 @@ export class UpdateProductReq {
   @IsOptional()
   @IsBoolean()
   @Field({ nullable: true })
+  best: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  @Field({ nullable: true })
   isDisabled: boolean;
 
   @IsOptional()
