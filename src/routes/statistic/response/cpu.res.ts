@@ -31,17 +31,13 @@ export class ProductStatistic {
   @Field()
   count: number;
   @Field()
-  isDisabled: number;
-  @Field()
-  createdAt: number;
-  @Field({ nullable: true })
   sale: number;
-  @Field({ nullable: true })
-  sold: number;
-  @Field({ nullable: true })
-  comment: number;
-  // @Field({ nullable: true })
-  // price: number;
+  @Field()
+  new: number;
+  @Field()
+  used: number;
+  @Field()
+  defective: number;
 }
 
 @ObjectType('CommonStatistics')

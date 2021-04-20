@@ -17,6 +17,7 @@ import {
 import { ProductStatistic } from '../statistic/response/cpu.res';
 import { UserRes } from '../user/response/user.res';
 import { GetByIdsRes } from '../../common/response/get-by-ids.res';
+import { DateRangeReq } from '../../common/request/date-range.req';
 
 @Injectable()
 export class ProductService {
@@ -185,45 +186,56 @@ export class ProductService {
     }
   }
 
-  async collectStatistics(): Promise<ProductStatistic> {
-    try {
-      const statistics = await this.productRepository.aggregate([
-        {
-          $group: {
-            _id: '',
-            count: {
-              $sum: 1,
-            },
-            isDisabled: {
-              $sum: { $cond: ['$isDisabled', 1, 0] },
-            },
-            // price: {
-            //   $sum: '$price',
-            // },
-            sale: {
-              $sum: { $cond: ['$sale', 1, 0] },
-            },
-            sold: {
-              $sum: '$sold',
-            },
-          },
-        },
-        {
-          $project: {
-            _id: 0,
-            count: 1,
-            isDisabled: 1,
-            // price: 1,
-            sale: 1,
-            comment: 1,
-            sold: 1,
-          },
-        },
-      ]);
+  async collectStatistics(dateRange: DateRangeReq): Promise<ProductStatistic> {
+    const { from, to } = dateRange;
 
-      return statistics[0];
-    } catch(err) {
-      throw new ConflictException(`Cant collect product statistics => ${err.message}`);
+    const statistics = await this.productRepository.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: from || new Date(952273033000), $lte: to || new Date() }
+        }
+      },
+      {
+        $group: {
+          _id: '',
+          count: {
+            $sum: 1,
+          },
+          sale: {
+            $sum: { $cond: ['$sale', 1, 0] },
+          },
+          new: {
+            $sum: { $cond: ['$new', 1, 0] },
+          },
+          used: {
+            $sum: { $cond: ['$used', 1, 0] },
+          },
+          defective: {
+            $sum: { $cond: ['$defective', 1, 0] },
+          }
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          count: 1,
+          sale: 1,
+          new: 1,
+          used: 1,
+          defective: 1
+        },
+      },
+    ]);
+
+    if (!statistics[0]) {
+      return {
+        count: 0,
+        sale: 0,
+        new: 0,
+        used: 0,
+        defective: 0
+      }
     }
+    return statistics[0];
   }
 }
