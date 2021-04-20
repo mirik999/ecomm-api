@@ -7,7 +7,6 @@ import { BrandRes, BrandsRes } from './response/brand.res';
 import { CreateBrandReq } from './request/create.req';
 import { GetByIdsInput, GetByIdsOutput } from '../global-inputs/get-by-ids.input';
 import { UpdateBrandReq } from './request/update.req';
-import { BrandStatistic } from '../statistic/response/cpu.res';
 
 @Injectable()
 export class BrandService {
@@ -25,7 +24,7 @@ export class BrandService {
         return brand;
       }
     } else {
-      throw new NotFoundException('Brand not found');
+      return null;
     }
   }
 
@@ -143,35 +142,6 @@ export class BrandService {
       return deleteBrands;
     } catch (err) {
       throw new ConflictException('Cant delete brands');
-    }
-  }
-
-  async collectStatistics(): Promise<BrandStatistic> {
-    try {
-      const statistics = await this.brandRepository.aggregate([
-        {
-          $group: {
-            _id: '',
-            count: {
-              $sum: 1,
-            },
-            isDisabled: {
-              $sum: { $cond: ['$isDisabled', 1, 0] },
-            },
-          },
-        },
-        {
-          $project: {
-            _id: 0,
-            count: 1,
-            isDisabled: 1,
-          },
-        },
-      ]);
-
-      return statistics[0];
-    } catch(err) {
-      throw new ConflictException(`Cant collect brand statistics => ${err.message}`);
     }
   }
 }

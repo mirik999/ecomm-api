@@ -2,7 +2,7 @@ import { Field, ID, InputType } from '@nestjs/graphql';
 import { v4 as uuid } from 'uuid';
 import {
   IsArray,
-  IsBoolean,
+  IsBoolean, IsDate,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -58,9 +58,9 @@ export class CreateProductReq {
   description: string;
 
   @IsOptional()
-  @IsString()
-  @Field({ nullable: true, defaultValue: new Date().toString() })
-  createdAt: string;
+  @IsDate()
+  @Field({ nullable: true, defaultValue: new Date() })
+  createdAt: Date;
 
   @IsOptional()
   @IsString()
@@ -150,13 +150,11 @@ export class CreateProductReq {
 
   //ref to brands
   @IsOptional()
-  @IsUUID('4')
-  @Field(() => ID)
+  @Field(() => ID, { nullable: true })
   brand: string;
 
   //ref to coupons
   @IsOptional()
-  @IsUUID('4')
   @Field(() => ID, { nullable: true })
   coupon: string;
 }

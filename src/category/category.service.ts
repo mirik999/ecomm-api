@@ -7,7 +7,6 @@ import { UpdateCategoryReq } from './request/update.req';
 import { GetElementsInput } from '../global-inputs/get-elements.input';
 import { GetByIdsInput, GetByIdsOutput } from '../global-inputs/get-by-ids.input';
 import { CreateCategoryReq } from './request/create.req';
-import { CategoryStatistic } from '../statistic/response/cpu.res';
 
 @Injectable()
 export class CategoryService {
@@ -159,30 +158,5 @@ export class CategoryService {
     } catch (err) {
       console.log(err.message);
     }
-  }
-
-  async collectStatistics(): Promise<CategoryStatistic> {
-    const statistics = await this.categoryRepository.aggregate([
-      {
-        $group: {
-          _id: '',
-          count: {
-            $sum: 1,
-          },
-          isDisabled: {
-            $sum: { $cond: ['$isDisabled', 1, 0] },
-          },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          count: 1,
-          isDisabled: 1,
-        },
-      },
-    ]);
-
-    return statistics[0];
   }
 }

@@ -1,7 +1,7 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
 import {
   IsArray,
-  IsBoolean,
+  IsBoolean, IsDate,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -59,9 +59,9 @@ export class UpdateProductReq {
   description: string;
 
   @IsOptional()
-  @IsString()
+  @IsDate()
   @Field({ nullable: true })
-  createdAt: string;
+  createdAt: Date;
 
   @IsOptional()
   @IsString()

@@ -17,15 +17,11 @@ export class StatisticResolver {
   @Query(() => CommonStatistics)
   async getAll(): Promise<CommonStatistics> {
     const productStats = await this.productService.collectStatistics();
-    const categoryStats = await this.categoryService.collectStatistics();
     const commentStats = await this.commentService.collectStatistics();
-    const brandStats = await this.brandService.collectStatistics();
 
     return {
       product: productStats,
       comments: commentStats,
-      category: categoryStats,
-      brand: brandStats
     };
   }
 }

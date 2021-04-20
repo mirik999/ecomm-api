@@ -39,38 +39,41 @@ export class ProductService {
   }
 
   async getProducts(controls: GetElementsInput): Promise<ProductsRes> {
-    const { offset, limit, keyword } = controls;
-    try {
-      const products = await this.productRepository.aggregate([
-        {
-          $match: {
-            $or: [{ name: { $regex: keyword, $options: 'i' } }],
-          },
+    const { offset, limit, keyword, from, to } = controls;
+    const products = await this.productRepository.aggregate([
+      {
+        $match: {
+          $or: [{ name: { $regex: keyword, $options: 'i' } }],
+          createdAt: { $gte: from || new Date(952273033000), $lte: to || new Date() }
         },
-        {
-          $sort: { createdAt: -1 },
+      },
+      {
+        $sort: { createdAt: -1 },
+      },
+      {
+        $facet: {
+          stage1: [{ $group: { _id: null, count: { $sum: 1 } } }],
+          stage2: [{ $skip: offset }, { $limit: limit }],
         },
-        {
-          $facet: {
-            stage1: [{ $group: { _id: null, count: { $sum: 1 } } }],
-            stage2: [{ $skip: offset }, { $limit: limit }],
-          },
+      },
+      {
+        $unwind: '$stage1',
+      },
+      {
+        $project: {
+          count: '$stage1.count',
+          payload: '$stage2',
         },
-        {
-          $unwind: '$stage1',
-        },
-        {
-          $project: {
-            count: '$stage1.count',
-            payload: '$stage2',
-          },
-        },
-      ]);
+      },
+    ]);
 
-      return products[0];
-    } catch (err) {
-      throw new ConflictException(`Cant get products. [Error] => ${err.message}`);
+    if (!products[0]) {
+      return {
+        count: 0,
+        payload: []
+      }
     }
+    return products[0];
   }
 
   async getProductsByCategoryId(id: string): Promise<ProductRes[]> {

@@ -27,7 +27,7 @@ export class Product {
   description: string;
 
   @Prop()
-  createdAt: string;
+  createdAt: Date;
 
   @Prop()
   createdBy: string;

@@ -30,7 +30,7 @@ export class ProductRes {
   description: string;
 
   @Field({ nullable: true })
-  createdAt: string;
+  createdAt: Date;
 
   @Field({ nullable: true })
   createdBy: string;

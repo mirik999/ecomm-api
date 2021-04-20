@@ -26,7 +26,7 @@ export class CouponService {
         return coupon;
       }
     } else {
-      throw new NotFoundException('Coupon not found');
+      return null;
     }
   }
 

@@ -26,24 +26,14 @@ export class OsInfoResponse {
   memUsage: number;
 }
 
-@ObjectType('CategoryStatistic')
-export class CategoryStatistic {
-  @Field()
-  count: number;
-  @Field()
-  isDisabled: number;
-}
-
-@ObjectType('BrandStatistic')
-export class BrandStatistic {
-  @Field()
-  count: number;
-  @Field()
-  isDisabled: number;
-}
-
 @ObjectType('ProductStatistic')
-export class ProductStatistic extends CategoryStatistic {
+export class ProductStatistic {
+  @Field()
+  count: number;
+  @Field()
+  isDisabled: number;
+  @Field()
+  createdAt: number;
   @Field({ nullable: true })
   sale: number;
   @Field({ nullable: true })
@@ -60,8 +50,4 @@ export class CommonStatistics {
   product: ProductStatistic;
   @Field(() => Int, { nullable: true })
   comments: number;
-  @Field({ nullable: true })
-  category: CategoryStatistic;
-  @Field({ nullable: true })
-  brand: BrandStatistic;
 }
