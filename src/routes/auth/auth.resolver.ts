@@ -2,7 +2,7 @@ import { Args, Mutation, Resolver, Query } from '@nestjs/graphql';
 import { AuthRes } from './response/auth.res';
 import { AuthReq } from './request/auth.req';
 import { AuthService } from './auth.service';
-import { RefreshToken } from '../utils/refresh-token.decorator';
+import { RefreshToken } from '../../utils/refresh-token.decorator';
 
 @Resolver()
 export class AuthResolver {

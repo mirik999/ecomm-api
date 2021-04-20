@@ -5,10 +5,11 @@ import { Coupon, CouponDocument } from './coupon.schema';
 import { CouponRes, CouponsRes } from './response/coupon.res';
 import { UserRes } from '../user/response/user.res';
 import { CreateCouponReq } from './request/create.req';
-import { GetElementsInput } from '../global-inputs/get-elements.input';
-import { GetByIdsInput, GetByIdsOutput } from '../global-inputs/get-by-ids.input';
+import { GetReq } from '../../common/request/get.req';
+import { GetByIdsReq } from '../../common/request/get-by-ids.req';
 import { UpdateCouponReq } from './request/update.req';
 import { Cron } from '@nestjs/schedule';
+import { GetByIdsRes } from '../../common/response/get-by-ids.res';
 
 @Injectable()
 export class CouponService {
@@ -30,7 +31,7 @@ export class CouponService {
     }
   }
 
-  async getCoupons(controls: GetElementsInput): Promise<CouponsRes> {
+  async getCoupons(controls: GetReq): Promise<CouponsRes> {
     const { offset, limit, keyword, from, to } = controls;
     const coupons = await this.couponRepository.aggregate([
       {
@@ -110,9 +111,9 @@ export class CouponService {
   }
 
   async disableCoupons(
-    disabledCoupons: GetByIdsInput,
+    disabledCoupons: GetByIdsReq,
     user: Partial<UserRes>
-  ): Promise<GetByIdsOutput> {
+  ): Promise<GetByIdsRes> {
     try {
       await this.couponRepository.updateMany(
         { id: { $in: disabledCoupons.ids } },
@@ -125,9 +126,9 @@ export class CouponService {
   }
 
   async activateCoupons(
-    activateCoupons: GetByIdsInput,
+    activateCoupons: GetByIdsReq,
     user: Partial<UserRes>
-  ): Promise<GetByIdsOutput> {
+  ): Promise<GetByIdsRes> {
     try {
       await this.couponRepository.updateMany(
         { id: { $in: activateCoupons.ids } },
@@ -140,8 +141,8 @@ export class CouponService {
   }
 
   async deleteCoupons(
-    deleteCoupons: GetByIdsInput,
-  ): Promise<GetByIdsOutput> {
+    deleteCoupons: GetByIdsReq,
+  ): Promise<GetByIdsRes> {
     try {
       await this.couponRepository.deleteMany(
         { id: { $in: deleteCoupons.ids } }

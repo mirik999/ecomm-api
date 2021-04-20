@@ -1,14 +1,14 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UserService } from './user.service';
 import { AuthRes } from '../auth/response/auth.res';
-import { User } from '../utils/user.decorator';
+import { User } from '../../utils/user.decorator';
 import { UserRes, UsersRes } from './response/user.res';
-import { GetElementsInput } from '../global-inputs/get-elements.input';
+import { GetReq } from '../../common/request/get.req';
 import { UpdateUserReq } from './request/user.req';
 import {
-  GetByIdsInput,
-  GetByIdsOutput,
-} from '../global-inputs/get-by-ids.input';
+  GetByIdsReq
+} from '../../common/request/get-by-ids.req';
+import { GetByIdsRes } from '../../common/response/get-by-ids.res';
 
 @Resolver(() => AuthRes)
 export class UserResolver {
@@ -22,7 +22,7 @@ export class UserResolver {
   @Query(() => UsersRes)
   getUsers(
     @User() user: Partial<UserRes>,
-    @Args('controls') controls: GetElementsInput,
+    @Args('controls') controls: GetReq,
   ) {
     return this.userService.getUsers(controls);
   }
@@ -35,26 +35,26 @@ export class UserResolver {
     return this.userService.updateUser(updatedUser);
   }
 
-  @Mutation(() => GetByIdsOutput)
+  @Mutation(() => GetByIdsRes)
   disableUsers(
     @User() user: Partial<UserRes>,
-    @Args('disabledUsers') disabledUsers: GetByIdsInput,
+    @Args('disabledUsers') disabledUsers: GetByIdsReq,
   ) {
     return this.userService.disableUsers(disabledUsers);
   }
 
-  @Mutation(() => GetByIdsOutput)
+  @Mutation(() => GetByIdsRes)
   activateUsers(
     @User() user: Partial<UserRes>,
-    @Args('activateUsers') activateUsers: GetByIdsInput,
+    @Args('activateUsers') activateUsers: GetByIdsReq,
   ) {
     return this.userService.activateUsers(activateUsers);
   }
 
-  @Mutation(() => GetByIdsOutput)
+  @Mutation(() => GetByIdsRes)
   deleteUsers(
     @User() user: Partial<UserRes>,
-    @Args('deleteUsers') deleteUsers: GetByIdsInput,
+    @Args('deleteUsers') deleteUsers: GetByIdsReq,
   ) {
     return this.userService.deleteUsers(deleteUsers);
   }

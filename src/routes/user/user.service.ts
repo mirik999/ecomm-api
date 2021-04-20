@@ -10,12 +10,12 @@ import * as bcrypt from 'bcryptjs';
 import { User, UserDocument } from './user.schema';
 import { AuthReq } from '../auth/request/auth.req';
 import { UserRes, UsersRes } from './response/user.res';
-import { GetElementsInput } from '../global-inputs/get-elements.input';
+import { GetReq } from '../../common/request/get.req';
 import { UpdateUserReq } from './request/user.req';
 import {
-  GetByIdsInput,
-  GetByIdsOutput,
-} from '../global-inputs/get-by-ids.input';
+  GetByIdsReq
+} from '../../common/request/get-by-ids.req';
+import { GetByIdsRes } from '../../common/response/get-by-ids.res';
 
 @Injectable()
 export class UserService {
@@ -37,7 +37,7 @@ export class UserService {
     }
   }
 
-  async getUsers(controls: GetElementsInput): Promise<UsersRes> {
+  async getUsers(controls: GetReq): Promise<UsersRes> {
     const { keyword, offset, limit } = controls;
     try {
       const users = await this.userRepository.aggregate([
@@ -87,7 +87,7 @@ export class UserService {
     }
   }
 
-  async disableUsers(disabledUsers: GetByIdsInput): Promise<GetByIdsOutput> {
+  async disableUsers(disabledUsers: GetByIdsReq): Promise<GetByIdsRes> {
     try {
       await this.userRepository.updateMany(
         { id: { $in: disabledUsers.ids } },
@@ -99,7 +99,7 @@ export class UserService {
     }
   }
 
-  async activateUsers(activateUsers: GetByIdsInput): Promise<GetByIdsOutput> {
+  async activateUsers(activateUsers: GetByIdsReq): Promise<GetByIdsRes> {
     try {
       await this.userRepository.updateMany(
         { id: { $in: activateUsers.ids } },
@@ -112,8 +112,8 @@ export class UserService {
   }
 
   async deleteUsers(
-    deleteUsers: GetByIdsInput,
-  ): Promise<GetByIdsOutput> {
+    deleteUsers: GetByIdsReq,
+  ): Promise<GetByIdsRes> {
     try {
       await this.userRepository.deleteMany(
         { id: { $in: deleteUsers.ids } }

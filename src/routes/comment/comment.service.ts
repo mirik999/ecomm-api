@@ -5,7 +5,7 @@ import { v4 as uuid } from 'uuid';
 import { CommentDocument } from './comment.schema';
 import { CreateCommentReq, CreateReplyReq } from './request/create.req';
 import { CommentRes, CommentsRes, ReplyRes } from './response/comment.res';
-import { GetElementsInput } from '../global-inputs/get-elements.input';
+import { GetReq } from '../../common/request/get.req';
 import { UserRes } from '../user/response/user.res';
 
 @Injectable()
@@ -15,7 +15,7 @@ export class CommentService {
     private commentRepository: Model<CommentDocument>
   ) {}
 
-  async getComments(productId: string, controls: GetElementsInput): Promise<CommentsRes> {
+  async getComments(productId: string, controls: GetReq): Promise<CommentsRes> {
     const { offset, limit } = controls;
     try {
       const comments = await this.commentRepository.aggregate([

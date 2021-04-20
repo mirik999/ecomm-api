@@ -1,12 +1,13 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CouponService } from './coupon.service';
-import { User } from '../utils/user.decorator';
+import { User } from '../../utils/user.decorator';
 import { UserRes } from '../user/response/user.res';
 import { CouponRes, CouponsRes } from './response/coupon.res';
 import { CreateCouponReq } from './request/create.req';
-import { GetElementsInput } from '../global-inputs/get-elements.input';
-import { GetByIdsInput, GetByIdsOutput } from '../global-inputs/get-by-ids.input';
+import { GetReq } from '../../common/request/get.req';
+import { GetByIdsReq } from '../../common/request/get-by-ids.req';
 import { UpdateCouponReq } from './request/update.req';
+import { GetByIdsRes } from '../../common/response/get-by-ids.res';
 
 @Resolver(() => CouponRes)
 export class CouponResolver {
@@ -20,7 +21,7 @@ export class CouponResolver {
   }
 
   @Query(() => CouponsRes)
-  getCoupons(@Args('controls') controls: GetElementsInput) {
+  getCoupons(@Args('controls') controls: GetReq) {
     return this.couponService.getCoupons(controls);
   }
 
@@ -40,26 +41,26 @@ export class CouponResolver {
     return this.couponService.updateCoupon(updatedCoupon, user);
   }
 
-  @Mutation(() => GetByIdsOutput)
+  @Mutation(() => GetByIdsRes)
   disableCoupons(
     @User() user: Partial<UserRes>,
-    @Args('disabledCoupons') disabledCoupons: GetByIdsInput,
+    @Args('disabledCoupons') disabledCoupons: GetByIdsReq,
   ) {
     return this.couponService.disableCoupons(disabledCoupons, user);
   }
 
-  @Mutation(() => GetByIdsOutput)
+  @Mutation(() => GetByIdsRes)
   activateCoupons(
     @User() user: Partial<UserRes>,
-    @Args('activateCoupons') activateCoupons: GetByIdsInput,
+    @Args('activateCoupons') activateCoupons: GetByIdsReq,
   ) {
     return this.couponService.activateCoupons(activateCoupons, user);
   }
 
-  @Mutation(() => GetByIdsOutput)
+  @Mutation(() => GetByIdsRes)
   deleteCoupons(
     @User() user: Partial<UserRes>,
-    @Args('deleteCoupons') deleteCoupons: GetByIdsInput,
+    @Args('deleteCoupons') deleteCoupons: GetByIdsReq,
   ) {
     return this.couponService.deleteCoupons(deleteCoupons);
   }

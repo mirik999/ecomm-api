@@ -4,9 +4,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Category, CategoryDocument } from './category.schema';
 import { CategoryRes, CategoriesRes } from './response/category.res';
 import { UpdateCategoryReq } from './request/update.req';
-import { GetElementsInput } from '../global-inputs/get-elements.input';
-import { GetByIdsInput, GetByIdsOutput } from '../global-inputs/get-by-ids.input';
+import { GetReq } from '../../common/request/get.req';
+import { GetByIdsReq } from '../../common/request/get-by-ids.req';
 import { CreateCategoryReq } from './request/create.req';
+import { GetByIdsRes } from '../../common/response/get-by-ids.res';
 
 @Injectable()
 export class CategoryService {
@@ -28,7 +29,7 @@ export class CategoryService {
     }
   }
 
-  async getCategories(controls: GetElementsInput): Promise<CategoriesRes> {
+  async getCategories(controls: GetReq): Promise<CategoriesRes> {
     const { offset, limit, keyword } = controls;
     try {
       const categories = await this.categoryRepository.aggregate([
@@ -101,7 +102,7 @@ export class CategoryService {
   }
 
   async disableCategories(
-    disabledCategories: GetByIdsInput,
+    disabledCategories: GetByIdsReq,
   ): Promise<CategoryRes> {
     try {
       return this.categoryRepository.updateMany(
@@ -114,7 +115,7 @@ export class CategoryService {
   }
 
   async activateCategories(
-    activateCategories: GetByIdsInput,
+    activateCategories: GetByIdsReq,
   ): Promise<CategoryRes> {
     try {
       return this.categoryRepository.updateMany(
@@ -127,8 +128,8 @@ export class CategoryService {
   }
 
   async deleteCategories(
-    deleteCategories: GetByIdsInput,
-  ): Promise<GetByIdsOutput> {
+    deleteCategories: GetByIdsReq,
+  ): Promise<GetByIdsRes> {
     try {
       await this.categoryRepository.deleteMany(
         { id: { $in: deleteCategories.ids } }

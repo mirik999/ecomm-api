@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { GraphQLModule } from '@nestjs/graphql';
-import { ProductModule } from './product/product.module';
-import { CategoryModule } from './category/category.module';
-import { UserModule } from './user/user.module';
-import { StatisticModule } from './statistic/statistic.module';
-import { CommentModule } from './comment/comment.module';
-import { AuthModule } from './auth/auth.module';
-import { BrandModule } from './brand/brand.module';
-import { CouponModule } from './coupon/coupon.module';
+import { ProductModule } from './routes/product/product.module';
+import { CategoryModule } from './routes/category/category.module';
+import { UserModule } from './routes/user/user.module';
+import { StatisticModule } from './routes/statistic/statistic.module';
+import { CommentModule } from './routes/comment/comment.module';
+import { AuthModule } from './routes/auth/auth.module';
+import { BrandModule } from './routes/brand/brand.module';
+import { CouponModule } from './routes/coupon/coupon.module';
 import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({

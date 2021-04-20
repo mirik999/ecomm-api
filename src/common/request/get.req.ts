@@ -2,7 +2,7 @@ import { Field, InputType } from '@nestjs/graphql';
 import { IsDate, IsNumber, IsOptional, IsString } from 'class-validator';
 
 @InputType()
-export class GetElementsInput {
+export class GetReq {
   @IsNumber()
   @Field()
   offset: number;

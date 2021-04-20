@@ -2,11 +2,12 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CategoryService } from './category.service';
 import { UpdateCategoryReq } from './request/update.req';
 import { CategoryRes, CategoriesRes } from './response/category.res';
-import { User } from '../utils/user.decorator';
-import { GetElementsInput } from '../global-inputs/get-elements.input';
-import { GetByIdsInput, GetByIdsOutput } from '../global-inputs/get-by-ids.input';
+import { User } from '../../utils/user.decorator';
+import { GetReq } from '../../common/request/get.req';
+import { GetByIdsReq } from '../../common/request/get-by-ids.req';
 import { CreateCategoryReq } from './request/create.req';
 import { UserRes } from '../user/response/user.res';
+import { GetByIdsRes } from '../../common/response/get-by-ids.res';
 
 @Resolver(() => CategoryRes)
 export class CategoryResolver {
@@ -18,7 +19,7 @@ export class CategoryResolver {
   }
 
   @Query(() => CategoriesRes)
-  getCategories(@Args('controls') controls: GetElementsInput) {
+  getCategories(@Args('controls') controls: GetReq) {
     return this.categoryService.getCategories(controls);
   }
 
@@ -44,7 +45,7 @@ export class CategoryResolver {
   disableCategories(
     @User() user: Partial<UserRes>,
     @Args('disabledCategories')
-    disabledCategories: GetByIdsInput,
+    disabledCategories: GetByIdsReq,
   ) {
     return this.categoryService.disableCategories(disabledCategories);
   }
@@ -53,15 +54,15 @@ export class CategoryResolver {
   activateCategories(
     @User() user: Partial<UserRes>,
     @Args('activateCategories')
-    activateCategories: GetByIdsInput,
+    activateCategories: GetByIdsReq,
   ) {
     return this.categoryService.activateCategories(activateCategories);
   }
 
-  @Mutation(() => GetByIdsOutput)
+  @Mutation(() => GetByIdsRes)
   deleteCategories(
     @User() user: Partial<UserRes>,
-    @Args('deleteCategories') deleteCategories: GetByIdsInput,
+    @Args('deleteCategories') deleteCategories: GetByIdsReq,
   ) {
     return this.categoryService.deleteCategories(deleteCategories);
   }

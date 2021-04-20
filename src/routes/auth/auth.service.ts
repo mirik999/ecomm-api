@@ -9,7 +9,7 @@ import { UserService } from '../user/user.service';
 import { AuthReq } from './request/auth.req';
 import { AuthRes } from './response/auth.res';
 import * as jwt from 'jsonwebtoken';
-import { UserDataType } from '../utils/user.decorator';
+import { UserDataType } from '../../utils/user.decorator';
 
 @Injectable()
 export class AuthService {

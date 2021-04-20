@@ -1,14 +1,15 @@
 import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { BrandService } from './brand.service';
 import { BrandRes, BrandsRes } from './response/brand.res';
-import { GetElementsInput } from '../global-inputs/get-elements.input';
+import { GetReq } from '../../common/request/get.req';
 import { CreateBrandReq } from './request/create.req';
-import { User } from '../utils/user.decorator';
+import { User } from '../../utils/user.decorator';
 import { UserRes } from '../user/response/user.res';
-import { GetByIdsInput, GetByIdsOutput } from '../global-inputs/get-by-ids.input';
+import { GetByIdsReq } from '../../common/request/get-by-ids.req';
 import { UpdateBrandReq } from './request/update.req';
 import { CategoryRes } from '../category/response/category.res';
 import { CategoryService } from '../category/category.service';
+import { GetByIdsRes } from '../../common/response/get-by-ids.res';
 
 @Resolver(() => BrandRes)
 export class BrandResolver {
@@ -23,7 +24,7 @@ export class BrandResolver {
   }
 
   @Query(() => BrandsRes)
-  getBrands(@Args('controls') controls: GetElementsInput) {
+  getBrands(@Args('controls') controls: GetReq) {
     return this.brandService.getBrands(controls);
   }
 
@@ -53,7 +54,7 @@ export class BrandResolver {
   disableBrands(
     @User() user: Partial<UserRes>,
     @Args('disabledBrands')
-      disabledBrands: GetByIdsInput,
+      disabledBrands: GetByIdsReq,
   ) {
     return this.brandService.disableBrands(disabledBrands);
   }
@@ -62,15 +63,15 @@ export class BrandResolver {
   activateBrands(
     @User() user: Partial<UserRes>,
     @Args('activateBrands')
-      activateBrands: GetByIdsInput,
+      activateBrands: GetByIdsReq,
   ) {
     return this.brandService.activateBrands(activateBrands);
   }
 
-  @Mutation(() => GetByIdsOutput)
+  @Mutation(() => GetByIdsRes)
   deleteBrands(
     @User() user: Partial<UserRes>,
-    @Args('deleteBrands') deleteBrands: GetByIdsInput,
+    @Args('deleteBrands') deleteBrands: GetByIdsReq,
   ) {
     return this.brandService.deleteBrands(deleteBrands);
   }

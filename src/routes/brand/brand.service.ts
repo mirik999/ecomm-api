@@ -2,11 +2,12 @@ import { ConflictException, Injectable, NotFoundException } from '@nestjs/common
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { BrandDocument } from './brand.schema';
-import { GetElementsInput } from '../global-inputs/get-elements.input';
+import { GetReq } from '../../common/request/get.req';
 import { BrandRes, BrandsRes } from './response/brand.res';
 import { CreateBrandReq } from './request/create.req';
-import { GetByIdsInput, GetByIdsOutput } from '../global-inputs/get-by-ids.input';
+import { GetByIdsReq } from '../../common/request/get-by-ids.req';
 import { UpdateBrandReq } from './request/update.req';
+import { GetByIdsRes } from '../../common/response/get-by-ids.res';
 
 @Injectable()
 export class BrandService {
@@ -36,7 +37,7 @@ export class BrandService {
     }
   }
 
-  async getBrands(controls: GetElementsInput): Promise<BrandsRes> {
+  async getBrands(controls: GetReq): Promise<BrandsRes> {
     const { keyword, limit, offset } = controls;
     try {
       const brands = await this.brandRepository.aggregate([
@@ -107,7 +108,7 @@ export class BrandService {
   }
 
   async disableBrands(
-    disabledBrands: GetByIdsInput,
+    disabledBrands: GetByIdsReq,
   ): Promise<BrandRes> {
     try {
       return this.brandRepository.updateMany(
@@ -120,7 +121,7 @@ export class BrandService {
   }
 
   async activateBrands(
-    activateBrands: GetByIdsInput,
+    activateBrands: GetByIdsReq,
   ): Promise<BrandRes> {
     try {
       return this.brandRepository.updateMany(
@@ -133,8 +134,8 @@ export class BrandService {
   }
 
   async deleteBrands(
-    deleteBrands: GetByIdsInput,
-  ): Promise<GetByIdsOutput> {
+    deleteBrands: GetByIdsReq,
+  ): Promise<GetByIdsRes> {
     try {
       await this.brandRepository.deleteMany(
         { id: { $in: deleteBrands.ids } }

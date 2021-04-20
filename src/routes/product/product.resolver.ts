@@ -12,17 +12,17 @@ import { CreateProductReq } from './request/create.req';
 import { UpdateProductReq } from './request/update.req';
 import { CategoryService } from '../category/category.service';
 import { CategoryRes } from '../category/response/category.res';
-import { GetElementsInput } from '../global-inputs/get-elements.input';
+import { GetReq } from '../../common/request/get.req';
 import {
-  GetByIdsInput,
-  GetByIdsOutput,
-} from '../global-inputs/get-by-ids.input';
-import { User } from '../utils/user.decorator';
+  GetByIdsReq
+} from '../../common/request/get-by-ids.req';
+import { User } from '../../utils/user.decorator';
 import { UserRes } from '../user/response/user.res';
 import { BrandRes } from '../brand/response/brand.res';
 import { BrandService } from '../brand/brand.service';
 import { CouponRes } from '../coupon/response/coupon.res';
 import { CouponService } from '../coupon/coupon.service';
+import { GetByIdsRes } from '../../common/response/get-by-ids.res';
 
 @Resolver(() => ProductRes)
 export class ProductResolver {
@@ -39,7 +39,7 @@ export class ProductResolver {
   }
 
   @Query(() => ProductsRes)
-  getProducts( @Args('controls') controls: GetElementsInput) {
+  getProducts( @Args('controls') controls: GetReq) {
     return this.productService.getProducts(controls);
   }
 
@@ -64,26 +64,26 @@ export class ProductResolver {
     return this.productService.updateProduct(updatedProduct, user);
   }
 
-  @Mutation(() => GetByIdsOutput)
+  @Mutation(() => GetByIdsRes)
   disableProducts(
     @User() user: Partial<UserRes>,
-    @Args('disabledProducts') disabledProducts: GetByIdsInput,
+    @Args('disabledProducts') disabledProducts: GetByIdsReq,
   ) {
     return this.productService.disableProducts(disabledProducts, user);
   }
 
-  @Mutation(() => GetByIdsOutput)
+  @Mutation(() => GetByIdsRes)
   activateProducts(
     @User() user: Partial<UserRes>,
-    @Args('activateProducts') activateProducts: GetByIdsInput,
+    @Args('activateProducts') activateProducts: GetByIdsReq,
   ) {
     return this.productService.activateProducts(activateProducts, user);
   }
 
-  @Mutation(() => GetByIdsOutput)
+  @Mutation(() => GetByIdsRes)
   deleteProducts(
     @User() user: Partial<UserRes>,
-    @Args('deleteProducts') deleteProducts: GetByIdsInput,
+    @Args('deleteProducts') deleteProducts: GetByIdsReq,
   ) {
     return this.productService.deleteProducts(deleteProducts);
   }

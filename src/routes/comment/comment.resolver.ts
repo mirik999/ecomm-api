@@ -1,10 +1,10 @@
 import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { CommentService } from './comment.service';
 import { CreateCommentReq, CreateReplyReq } from './request/create.req';
-import { User } from '../utils/user.decorator';
+import { User } from '../../utils/user.decorator';
 import { UserRes } from '../user/response/user.res';
 import { CommentRes, CommentsRes, ReplyRes } from './response/comment.res';
-import { GetElementsInput } from '../global-inputs/get-elements.input';
+import { GetReq } from '../../common/request/get.req';
 import { UserService } from '../user/user.service';
 
 @Resolver(() => CommentRes)
@@ -17,7 +17,7 @@ export class CommentResolver {
   @Query(() => CommentsRes)
   getComments(
     @Args('productId') productId: string,
-    @Args('controls') controls: GetElementsInput
+    @Args('controls') controls: GetReq
   ) {
     return this.commentService.getComments(productId, controls);
   }

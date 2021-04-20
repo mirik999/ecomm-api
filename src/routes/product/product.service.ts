@@ -10,13 +10,13 @@ import { ProductDocument } from './product.schema';
 import { CreateProductReq } from './request/create.req';
 import { UpdateProductReq } from './request/update.req';
 import { ProductRes, ProductsRes } from './response/product.res';
-import { GetElementsInput } from '../global-inputs/get-elements.input';
+import { GetReq } from '../../common/request/get.req';
 import {
-  GetByIdsInput,
-  GetByIdsOutput,
-} from '../global-inputs/get-by-ids.input';
+  GetByIdsReq
+} from '../../common/request/get-by-ids.req';
 import { ProductStatistic } from '../statistic/response/cpu.res';
 import { UserRes } from '../user/response/user.res';
+import { GetByIdsRes } from '../../common/response/get-by-ids.res';
 
 @Injectable()
 export class ProductService {
@@ -38,7 +38,7 @@ export class ProductService {
     }
   }
 
-  async getProducts(controls: GetElementsInput): Promise<ProductsRes> {
+  async getProducts(controls: GetReq): Promise<ProductsRes> {
     const { offset, limit, keyword, from, to } = controls;
     const products = await this.productRepository.aggregate([
       {
@@ -143,9 +143,9 @@ export class ProductService {
   }
 
   async disableProducts(
-    disabledProducts: GetByIdsInput,
+    disabledProducts: GetByIdsReq,
     user: Partial<UserRes>
-  ): Promise<GetByIdsOutput> {
+  ): Promise<GetByIdsRes> {
     try {
       await this.productRepository.updateMany(
         { id: { $in: disabledProducts.ids } },
@@ -158,9 +158,9 @@ export class ProductService {
   }
 
   async activateProducts(
-    activateProducts: GetByIdsInput,
+    activateProducts: GetByIdsReq,
     user: Partial<UserRes>
-  ): Promise<GetByIdsOutput> {
+  ): Promise<GetByIdsRes> {
     try {
       await this.productRepository.updateMany(
         { id: { $in: activateProducts.ids } },
@@ -173,8 +173,8 @@ export class ProductService {
   }
 
   async deleteProducts(
-    deleteProducts: GetByIdsInput,
-  ): Promise<GetByIdsOutput> {
+    deleteProducts: GetByIdsReq,
+  ): Promise<GetByIdsRes> {
     try {
       await this.productRepository.deleteMany(
         { id: { $in: deleteProducts.ids } }
