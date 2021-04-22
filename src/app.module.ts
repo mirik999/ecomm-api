@@ -10,6 +10,7 @@ import { AuthModule } from './routes/auth/auth.module';
 import { BrandModule } from './routes/brand/brand.module';
 import { CouponModule } from './routes/coupon/coupon.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { UserGateway } from './routes/user/user.gateway';
 
 @Module({
   imports: [
@@ -32,5 +33,6 @@ import { ScheduleModule } from '@nestjs/schedule';
     BrandModule,
     CouponModule,
   ],
+  providers: [UserGateway],
 })
 export class AppModule {}
