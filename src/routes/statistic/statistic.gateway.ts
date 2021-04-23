@@ -21,15 +21,15 @@ export class StatisticGateway
   private logger: Logger = new Logger('AppGateway');
 
   afterInit(server: Server) {
-    this.logger.log('initialized');
+    this.logger.log(`init`);
   }
 
-  handleConnection(client: Socket, ...args) {
-    // this.logger.log(`connected ${client.id}`);
+  handleConnection(client: Socket) {
+   this.logger.log(`connected ${client.id}`);
   }
 
   handleDisconnect(client: Socket) {
-    // this.logger.log(`disconnected ${client.id}`);
+    this.logger.log(`disconnected ${client.id}`);
   }
 
   @SubscribeMessage('getSystemInfo')
