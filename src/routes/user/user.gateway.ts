@@ -22,7 +22,12 @@ export class UserGateway {
   }
 
   @SubscribeMessage('logoutUser')
-  onUserUpdate(@MessageBody() id: string) {
+  logoutUser(@MessageBody() id: string) {
     this.wss.emit('logoutUser', id);
+  }
+
+  @SubscribeMessage('logoutUsers')
+  logoutUsers(@MessageBody() ids: string[]) {
+    this.wss.emit('logoutUsers', ids);
   }
 }

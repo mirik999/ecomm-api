@@ -7,7 +7,6 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { Logger } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { StatisticService } from './statistic.service';
 
@@ -18,18 +17,16 @@ export class StatisticGateway
 
   @WebSocketServer() wss: Server;
 
-  private logger: Logger = new Logger('AppGateway');
-
   afterInit(server: Server) {
-    this.logger.log(`init`);
+    console.log(`init`);
   }
 
   handleConnection(client: Socket) {
-   this.logger.log(`connected ${client.id}`);
+   console.log(`connected ${client.id}`);
   }
 
   handleDisconnect(client: Socket) {
-    this.logger.log(`disconnected ${client.id}`);
+    console.log(`disconnected ${client.id}`);
   }
 
   @SubscribeMessage('getSystemInfo')
