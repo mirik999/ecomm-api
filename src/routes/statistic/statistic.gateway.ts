@@ -18,15 +18,15 @@ export class StatisticGateway
   @WebSocketServer() wss: Server;
 
   afterInit(server: Server) {
-    console.log(`init`);
+    // console.log(`init`);
   }
 
   handleConnection(client: Socket) {
-   console.log(`connected ${client.id}`);
+   // console.log(`connected ${client.id}`);
   }
 
   handleDisconnect(client: Socket) {
-    console.log(`disconnected ${client.id}`);
+    // console.log(`disconnected ${client.id}`);
   }
 
   @SubscribeMessage('getSystemInfo')

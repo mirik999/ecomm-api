@@ -14,11 +14,11 @@ export class UserGateway {
   @WebSocketServer() wss: Server;
 
   handleConnection(client: Socket) {
-    console.log(`connected ${client.id}`);
+    // console.log(`connected ${client.id}`);
   }
 
   handleDisconnect(client: Socket) {
-    console.log(`disconnected ${client.id}`);
+    // console.log(`disconnected ${client.id}`);
   }
 
   @SubscribeMessage('logoutUser')
