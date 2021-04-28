@@ -30,45 +30,53 @@ export class CategoryService {
   }
 
   async getCategories(controls: GetReq): Promise<CategoriesRes> {
-    const { offset, limit, keyword } = controls;
-    try {
-      const categories = await this.categoryRepository.aggregate([
-        {
-          $match: {
-            $or: [
-              { name: { $regex: keyword } },
-              { tabName: { $regex: keyword } },
-            ],
-          },
+    const { offset, limit, keyword, from, to } = controls;
+    const categories = await this.categoryRepository.aggregate([
+      {
+        $match: {
+          $or: [{ name: { $regex: keyword, $options: 'i' } }],
+          createdAt: { $gte: from || new Date(952273033000), $lte: to || new Date() }
         },
-        {
-          $sort: { createdAt: -1 },
+      },
+      {
+        $sort: { createdAt: -1 },
+      },
+      {
+        $facet: {
+          stage1: [{ $group: { _id: null, count: { $sum: 1 } } }],
+          stage2: [{ $skip: offset }, { $limit: limit }],
         },
-        {
-          $facet: {
-            stage1: [{ $group: { _id: null, count: { $sum: 1 } } }],
-            stage2: [{ $skip: offset }, { $limit: limit }],
-          },
+      },
+      {
+        $unwind: '$stage1',
+      },
+      {
+        $project: {
+          count: '$stage1.count',
+          payload: '$stage2',
         },
-        {
-          $unwind: '$stage1',
-        },
-        {
-          $project: {
-            count: '$stage1.count',
-            payload: '$stage2',
-          },
-        },
-      ]);
-      return categories[0];
-    } catch(err) {
-      throw new ConflictException(`Cant get categories. [Error] => ${err.message}`);
+      },
+    ]);
+    if (!categories[0]) {
+      return {
+        count: 0,
+        payload: []
+      }
     }
+    return categories[0];
   }
 
   async createCategory(
     newCategory: CreateCategoryReq,
   ): Promise<CategoryRes> {
+    const isCategoryExist = await this.categoryRepository.findOne({ name: newCategory.name })
+    if (!isCategoryExist) {
+      throw new ConflictException({
+        key: 'name',
+        message: 'Category already exists'
+      });
+    }
+
     try {
       const category = new Category();
       category.id = newCategory.id;

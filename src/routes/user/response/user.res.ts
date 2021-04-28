@@ -11,7 +11,7 @@ export class UserRes {
   @Field({ nullable: true })
   isDisabled: boolean;
   @Field({ nullable: true })
-  createdAt: string;
+  createdAt: Date;
 }
 
 @ObjectType('UsersRes')

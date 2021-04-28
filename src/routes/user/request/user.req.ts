@@ -1,5 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsArray, IsBoolean, IsEmail, IsString, IsUUID } from 'class-validator';
+import { IsArray, IsBoolean, IsEmail, IsString, IsUUID, IsDate } from 'class-validator';
 
 @InputType('UpdateUserReq')
 export class UpdateUserReq {
@@ -16,9 +16,9 @@ export class UpdateUserReq {
   @Field()
   isDisabled: boolean;
 
-  @IsString()
+  @IsDate()
   @Field()
-  createdAt: string;
+  createdAt: Date;
 
   @IsArray()
   @Field(() => [String])

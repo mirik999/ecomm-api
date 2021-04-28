@@ -21,7 +21,7 @@ export class User {
   roles: string[];
 
   @Prop()
-  createdAt: string;
+  createdAt: Date;
 
   @Prop()
   isDisabled: boolean;

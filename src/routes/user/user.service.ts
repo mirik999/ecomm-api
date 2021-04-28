@@ -38,39 +38,40 @@ export class UserService {
   }
 
   async getUsers(controls: GetReq): Promise<UsersRes> {
-    const { keyword, offset, limit } = controls;
-    try {
-      const users = await this.userRepository.aggregate([
-        {
-          $match: {
-            $or: [{ email: { $regex: keyword, $options: 'i' } }],
-          },
+    const { offset, limit, keyword, from, to } = controls;
+    const users = await this.userRepository.aggregate([
+      {
+        $match: {
+          $or: [{ email: { $regex: keyword, $options: 'i' } }],
+          createdAt: { $gte: from || new Date(952273033000), $lte: to || new Date() }
         },
-        {
-          $sort: { createdAt: -1 },
+      },
+      {
+        $sort: { createdAt: -1 },
+      },
+      {
+        $facet: {
+          stage1: [{ $group: { _id: null, count: { $sum: 1 } } }],
+          stage2: [{ $skip: offset }, { $limit: limit }],
         },
-        {
-          $facet: {
-            stage1: [{ $group: { _id: null, count: { $sum: 1 } } }],
-            stage2: [{ $skip: offset }, { $limit: limit }],
-          },
+      },
+      {
+        $unwind: '$stage1',
+      },
+      {
+        $project: {
+          count: '$stage1.count',
+          payload: '$stage2',
         },
-        {
-          $unwind: '$stage1',
-        },
-        {
-          $project: {
-            count: '$stage1.count',
-            payload: '$stage2',
-          },
-        },
-      ]);
-
-      return users[0];
-    } catch (err) {
-      console.log(err.message);
-      throw new ConflictException();
+      },
+    ]);
+    if (!users[0]) {
+      return {
+        count: 0,
+        payload: []
+      }
     }
+    return users[0];
   }
 
   async updateUser(updatedUser: UpdateUserReq): Promise<UserRes> {
@@ -125,9 +126,12 @@ export class UserService {
   }
 
   async createUser(newUser: AuthReq): Promise<User> {
-    const isUserExists = await this.checkUser(newUser.email);
+    const isUserExists = await this.userRepository.findOne({ email: newUser.email });
     if (isUserExists) {
-      throw new ConflictException('Email already exists');
+      throw new ConflictException({
+        key: 'email',
+        message: 'User already exists'
+      });
     }
 
     const user = new User();
@@ -135,7 +139,7 @@ export class UserService {
     user.email = newUser.email;
     user.salt = await bcrypt.genSalt();
     user.roles = ['guest'];
-    user.createdAt = new Date().toString();
+    user.createdAt = new Date();
     user.isDisabled = false;
     user.password = await UserService.hashPassword(newUser.password, user.salt);
 
@@ -149,14 +153,25 @@ export class UserService {
   async loginUser(newUser: AuthReq): Promise<User> {
     const user = await this.checkUser(newUser.email);
     if (user.isDisabled) {
-      throw new ConflictException('User was disabled');
+      throw new ConflictException({
+        key: 'email',
+        message: 'User was disabled'
+      });
     }
     await UserService.isUserPasswordValid(user, newUser.password);
     return user;
   }
 
   async checkUser(email: string): Promise<UserDocument> {
-    return this.userRepository.findOne({ email });
+    const user = await this.userRepository.findOne({ email });
+    if (user) {
+      return user
+    } else {
+      throw new NotFoundException({
+        key: 'email',
+        message: 'Email not found'
+      });
+    }
   }
 
   static async hashPassword(password: string, salt: string): Promise<string> {
@@ -172,10 +187,16 @@ export class UserService {
       if (isValid) {
         return true;
       } else {
-        throw new ConflictException('Wrong password');
+        throw new ConflictException({
+          key: 'password',
+          message: 'Wrong password'
+        });
       }
     } else {
-      throw new ConflictException('Email does not exists');
+      throw new ConflictException({
+        key: 'email',
+        message: 'Email does not exists'
+      });
     }
   }
 
