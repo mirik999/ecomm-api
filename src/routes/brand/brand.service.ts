@@ -31,9 +31,7 @@ export class BrandService {
 
   async getBrandsByCategoryId(id: string): Promise<BrandRes[]> {
     try {
-      console.log(id)
       const a = await this.brandRepository.find({ category: id })
-      console.log(a);
       return a;
     } catch (err) {
       throw new ConflictException(`Cant get brands. [Error] => ${err.message}`);

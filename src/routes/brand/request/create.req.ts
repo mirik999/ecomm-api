@@ -1,5 +1,5 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
-import { IsNotEmpty, IsOptional, IsString, IsUUID, MaxLength } from 'class-validator';
+import { ArrayNotEmpty, IsNotEmpty, IsString, IsUUID, MaxLength } from 'class-validator';
 
 @InputType()
 export class CreateBrandReq {
@@ -18,7 +18,7 @@ export class CreateBrandReq {
   imageUrl: string;
 
   //ref to categories
-  @IsOptional()
+  @ArrayNotEmpty()
   @IsUUID('4', { each: true })
   @Field(() => [ID])
   category: string[];

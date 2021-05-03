@@ -70,7 +70,7 @@ export class CategoryService {
     newCategory: CreateCategoryReq,
   ): Promise<CategoryRes> {
     const isCategoryExist = await this.categoryRepository.findOne({ name: newCategory.name })
-    if (!isCategoryExist) {
+    if (isCategoryExist !== null) {
       throw new ConflictException({
         key: 'name',
         message: 'Category already exists'
