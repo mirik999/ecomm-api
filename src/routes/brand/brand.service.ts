@@ -31,46 +31,47 @@ export class BrandService {
 
   async getBrandsByCategoryId(id: string): Promise<BrandRes[]> {
     try {
-      const a = await this.brandRepository.find({ category: id })
-      return a;
+      return await this.brandRepository.find({ category: id })
     } catch (err) {
       throw new ConflictException(`Cant get brands. [Error] => ${err.message}`);
     }
   }
 
   async getBrands(controls: GetReq): Promise<BrandsRes> {
-    const { keyword, limit, offset } = controls;
-    try {
-      const brands = await this.brandRepository.aggregate([
-        {
-          $match: {
-            $or: [{ name: { $regex: keyword, $options: 'i' } }],
-          },
+    const { offset, limit, keyword, from, to } = controls;
+    const brands = await this.brandRepository.aggregate([
+      {
+        $match: {
+          $or: [{ name: { $regex: keyword, $options: 'i' } }],
+          createdAt: { $gte: from || new Date(952273033000), $lte: to || new Date() }
         },
-        {
-          $sort: { createdAt: -1 },
+      },
+      {
+        $sort: { createdAt: -1 },
+      },
+      {
+        $facet: {
+          stage1: [{ $group: { _id: null, count: { $sum: 1 } } }],
+          stage2: [{ $skip: offset }, { $limit: limit }],
         },
-        {
-          $facet: {
-            stage1: [{ $group: { _id: null, count: { $sum: 1 } } }],
-            stage2: [{ $skip: offset }, { $limit: limit }],
-          },
+      },
+      {
+        $unwind: '$stage1',
+      },
+      {
+        $project: {
+          count: '$stage1.count',
+          payload: '$stage2',
         },
-        {
-          $unwind: '$stage1',
-        },
-        {
-          $project: {
-            count: '$stage1.count',
-            payload: '$stage2',
-          },
-        },
-      ]);
-
-      return brands[0];
-    } catch (err) {
-      throw new ConflictException(`Cant get brands. [Error] => ${err.message}`);
+      },
+    ]);
+    if (!brands[0]) {
+      return {
+        count: 0,
+        payload: []
+      }
     }
+    return brands[0];
   }
 
   async createBrand(newBrand: CreateBrandReq): Promise<BrandRes> {

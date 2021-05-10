@@ -154,15 +154,16 @@ export class CategoryService {
       const categories = await this.categoryRepository.find({
         $or: [ { id: { $in: ids } }, { "subCategories.id": { $in: ids } } ]
       });
-      for (let i = 0; i < categories.length; i++) {
-        if (ids.includes(categories[i].id)) {
-          sortedCategories.push(categories[i])
+      categories.forEach(category => {
+        if (ids.includes(category.id)) {
+          sortedCategories.push(category)
+        } else {
+          const filtered = category.subCategories.filter(scat => ids.includes(scat.id));
+          filtered.forEach((cat) => {
+            sortedCategories.push(cat)
+          })
         }
-        const filtered = categories[i].subCategories.filter(scat => ids.includes(scat.id));
-        for (let j = 0; j < filtered.length; j++) {
-          sortedCategories.push(filtered[i])
-        }
-      }
+      })
       return sortedCategories;
     } catch (err) {
       console.log(err.message);

@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { GraphQLModule } from '@nestjs/graphql';
+import { ScheduleModule } from '@nestjs/schedule';
 import { ProductModule } from './routes/product/product.module';
 import { CategoryModule } from './routes/category/category.module';
 import { UserModule } from './routes/user/user.module';
@@ -9,7 +10,7 @@ import { CommentModule } from './routes/comment/comment.module';
 import { AuthModule } from './routes/auth/auth.module';
 import { BrandModule } from './routes/brand/brand.module';
 import { CouponModule } from './routes/coupon/coupon.module';
-import { ScheduleModule } from '@nestjs/schedule';
+import { SliderModule } from './routes/slider/slider.module';
 
 @Module({
   imports: [
@@ -31,6 +32,8 @@ import { ScheduleModule } from '@nestjs/schedule';
     AuthModule,
     BrandModule,
     CouponModule,
+    SliderModule,
   ],
+  providers: [],
 })
 export class AppModule {}
