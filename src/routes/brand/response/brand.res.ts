@@ -1,25 +1,17 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 import { CategoryRes } from '../../category/response/category.res';
+import { DefaultRes, ImageRes } from '../../../common/response/common.res';
 
 @ObjectType('BrandRes')
-export class BrandRes {
-  @Field(() => ID, { nullable: true })
-  id: string;
-
+export class BrandRes extends DefaultRes {
   @Field({ nullable: true })
   name: string;
 
-  @Field({ nullable: true })
-  imageUrl: string;
-
-  @Field({ nullable: true })
-  createdAt: Date;
-
-  @Field({ nullable: true })
-  isDisabled: boolean;
+  @Field(() => ImageRes, { nullable: true })
+  imageUrl: ImageRes;
 
   @Field(() => [CategoryRes], { nullable: true })
-  category: string[]
+  category: string[];
 }
 
 @ObjectType('BrandsRes')
@@ -30,4 +22,3 @@ export class BrandsRes {
   @Field(() => [BrandRes])
   payload: BrandRes[];
 }
-

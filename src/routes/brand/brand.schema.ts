@@ -1,24 +1,16 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
+import { DefaultSchema, ImageSchema } from '../../common/schema/common.schema';
 
 export type BrandDocument = Brand & Document;
 
 @Schema()
-export class Brand {
-  @Prop({ index: true, unique: true })
-  id: string;
-
+export class Brand extends DefaultSchema {
   @Prop({ unique: true, trim: true })
   name: string;
 
   @Prop()
-  imageUrl: string;
-
-  @Prop()
-  createdAt: Date;
-
-  @Prop()
-  isDisabled: boolean;
+  imageUrl: ImageSchema;
 
   @Prop()
   category: string[];

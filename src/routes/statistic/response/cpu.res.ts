@@ -40,6 +40,12 @@ export class ProductStatistic {
   defective: number;
 }
 
+@ObjectType('ArticleStatistic')
+export class ArticleStatistic {
+  @Field()
+  count: number;
+}
+
 @ObjectType('CommonStatistics')
 export class CommonStatistics {
   @Field({ nullable: true })

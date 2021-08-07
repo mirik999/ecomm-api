@@ -1,23 +1,24 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
-import { ArrayNotEmpty, IsNotEmpty, IsString, IsUUID, MaxLength } from 'class-validator';
+import {
+  ArrayNotEmpty,
+  IsNotEmpty,
+  IsString,
+  IsUUID,
+  MaxLength,
+} from 'class-validator';
+import { DefaultReq, ImageReq } from '../../../common/request/common.req';
 
 @InputType()
-export class CreateBrandReq {
-  @IsUUID()
-  @Field()
-  id: string;
-
+export class CreateBrandReq extends DefaultReq {
   @IsString()
   @IsNotEmpty()
   @MaxLength(26)
   @Field()
   name: string;
 
-  @IsString()
-  @Field()
-  imageUrl: string;
+  @Field(() => ImageReq)
+  imageUrl: ImageReq;
 
-  //ref to categories
   @ArrayNotEmpty()
   @IsUUID('4', { each: true })
   @Field(() => [ID])

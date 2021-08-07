@@ -1,4 +1,11 @@
-import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { BrandService } from './brand.service';
 import { BrandRes, BrandsRes } from './response/brand.res';
 import { GetReq } from '../../common/request/get.req';
@@ -36,16 +43,16 @@ export class BrandResolver {
   @Mutation(() => BrandRes)
   createBrand(
     @User() user: Partial<UserRes>,
-    @Args('newBrand') newBrand: CreateBrandReq
+    @Args('newBrand') newBrand: CreateBrandReq,
   ) {
-    return this.brandService.createBrand(newBrand)
+    return this.brandService.createBrand(user, newBrand);
   }
 
   @Mutation(() => BrandRes)
   updateBrand(
     @User() user: Partial<UserRes>,
     @Args('updatedBrand')
-      updatedBrand: UpdateBrandReq,
+    updatedBrand: UpdateBrandReq,
   ) {
     return this.brandService.updateBrand(updatedBrand);
   }
@@ -54,7 +61,7 @@ export class BrandResolver {
   disableBrands(
     @User() user: Partial<UserRes>,
     @Args('disabledBrands')
-      disabledBrands: GetByIdsReq,
+    disabledBrands: GetByIdsReq,
   ) {
     return this.brandService.disableBrands(disabledBrands);
   }
@@ -63,7 +70,7 @@ export class BrandResolver {
   activateBrands(
     @User() user: Partial<UserRes>,
     @Args('activateBrands')
-      activateBrands: GetByIdsReq,
+    activateBrands: GetByIdsReq,
   ) {
     return this.brandService.activateBrands(activateBrands);
   }

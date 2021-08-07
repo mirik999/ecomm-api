@@ -1,6 +1,7 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { v4 as uuid } from 'uuid';
 import { BrandDocument } from './brand.schema';
 import { GetReq } from '../../common/request/get.req';
 import { BrandRes, BrandsRes } from './response/brand.res';
@@ -8,12 +9,13 @@ import { CreateBrandReq } from './request/create.req';
 import { GetByIdsReq } from '../../common/request/get-by-ids.req';
 import { UpdateBrandReq } from './request/update.req';
 import { GetByIdsRes } from '../../common/response/get-by-ids.res';
+import { UserRes } from '../user/response/user.res';
 
 @Injectable()
 export class BrandService {
   constructor(
     @InjectModel('Brand')
-    private brandRepository: Model<BrandDocument>
+    private brandRepository: Model<BrandDocument>,
   ) {}
 
   async getBrandById(id: string): Promise<BrandRes> {
@@ -31,7 +33,7 @@ export class BrandService {
 
   async getBrandsByCategoryId(id: string): Promise<BrandRes[]> {
     try {
-      return await this.brandRepository.find({ category: id })
+      return await this.brandRepository.find({ category: id });
     } catch (err) {
       throw new ConflictException(`Cant get brands. [Error] => ${err.message}`);
     }
@@ -43,7 +45,10 @@ export class BrandService {
       {
         $match: {
           $or: [{ name: { $regex: keyword, $options: 'i' } }],
-          createdAt: { $gte: from || new Date(952273033000), $lte: to || new Date() }
+          createdAt: {
+            $gte: from || new Date(952273033000),
+            $lte: to || new Date(),
+          },
         },
       },
       {
@@ -68,32 +73,35 @@ export class BrandService {
     if (!brands[0]) {
       return {
         count: 0,
-        payload: []
-      }
+        payload: [],
+      };
     }
     return brands[0];
   }
 
-  async createBrand(newBrand: CreateBrandReq): Promise<BrandRes> {
+  async createBrand(
+    user: Partial<UserRes>,
+    newBrand: CreateBrandReq,
+  ): Promise<BrandRes> {
     try {
       return this.brandRepository.create({
-        id: newBrand.id,
+        id: uuid(),
         name: newBrand.name,
         imageUrl: newBrand.imageUrl,
-        createdAt: new Date(),
-        isDisabled: false,
-        category: newBrand.category
+        category: newBrand.category,
+        createdAt: newBrand.createdAt,
+        createdBy: user.email,
+        modifiedBy: newBrand.modifiedBy,
+        isDisabled: newBrand.isDisabled,
       });
-    } catch(err) {
+    } catch (err) {
       throw new ConflictException(
         `Cant create a brand. [Error] => ${err.message}`,
       );
     }
   }
 
-  async updateBrand(
-    updatedBrand: UpdateBrandReq,
-  ): Promise<BrandRes> {
+  async updateBrand(updatedBrand: UpdateBrandReq): Promise<BrandRes> {
     try {
       const brand = await this.brandRepository.findOne({
         id: updatedBrand.id,
@@ -109,9 +117,7 @@ export class BrandService {
     }
   }
 
-  async disableBrands(
-    disabledBrands: GetByIdsReq,
-  ): Promise<BrandRes> {
+  async disableBrands(disabledBrands: GetByIdsReq): Promise<BrandRes> {
     try {
       return this.brandRepository.updateMany(
         { id: { $in: disabledBrands.ids } },
@@ -122,9 +128,7 @@ export class BrandService {
     }
   }
 
-  async activateBrands(
-    activateBrands: GetByIdsReq,
-  ): Promise<BrandRes> {
+  async activateBrands(activateBrands: GetByIdsReq): Promise<BrandRes> {
     try {
       return this.brandRepository.updateMany(
         { id: { $in: activateBrands.ids } },
@@ -135,13 +139,9 @@ export class BrandService {
     }
   }
 
-  async deleteBrands(
-    deleteBrands: GetByIdsReq,
-  ): Promise<GetByIdsRes> {
+  async deleteBrands(deleteBrands: GetByIdsReq): Promise<GetByIdsRes> {
     try {
-      await this.brandRepository.deleteMany(
-        { id: { $in: deleteBrands.ids } }
-      );
+      await this.brandRepository.deleteMany({ id: { $in: deleteBrands.ids } });
       return deleteBrands;
     } catch (err) {
       throw new ConflictException('Cant delete brands');

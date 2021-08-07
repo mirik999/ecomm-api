@@ -11,16 +11,22 @@ import { AuthModule } from './routes/auth/auth.module';
 import { BrandModule } from './routes/brand/brand.module';
 import { CouponModule } from './routes/coupon/coupon.module';
 import { SliderModule } from './routes/slider/slider.module';
+import { ArticleModule } from './routes/article/article.module';
+import { BiographyModule } from './routes/biography/biography.module';
+import { GalleryModule } from './routes/gallery/gallery.module';
+import { SettingModule } from './routes/setting/setting.module';
+import { TranslationModule } from './routes/translation/translation.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(
-      'mongodb://localhost/electroshop',
-      {
-        useCreateIndex: true,
-      }
-    ),
+    MongooseModule.forRoot('mongodb://localhost/electroshop', {
+      useCreateIndex: true,
+    }),
     GraphQLModule.forRoot({
+      cors: {
+        origin: true,
+        credentials: true,
+      },
       autoSchemaFile: true,
     }),
     ScheduleModule.forRoot(),
@@ -33,6 +39,11 @@ import { SliderModule } from './routes/slider/slider.module';
     BrandModule,
     CouponModule,
     SliderModule,
+    ArticleModule,
+    BiographyModule,
+    GalleryModule,
+    SettingModule,
+    TranslationModule,
   ],
   providers: [],
 })
