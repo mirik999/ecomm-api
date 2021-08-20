@@ -17,6 +17,9 @@ export class Translation {
 
   @Prop({ trim: true, type: CountryCodesTypeSchema })
   translation: CountryCodes;
+
+  @Prop()
+  createdAt: Date;
 }
 
 export const TranslationSchema = SchemaFactory.createForClass(Translation);

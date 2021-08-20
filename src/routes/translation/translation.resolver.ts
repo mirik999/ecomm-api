@@ -19,7 +19,7 @@ export class TranslationResolver {
   }
 
   @Query(() => TranslationsRes)
-  getCTranslations(@Args('controls') controls: GetReq) {
+  getTranslations(@Args('controls') controls: GetReq) {
     return this.translationService.getTranslations(controls);
   }
 

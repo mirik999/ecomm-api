@@ -35,11 +35,11 @@ export class TranslationService {
     const categories = await this.translationRepository.aggregate([
       {
         $match: {
-          $or: [{ translation: { $regex: keyword, $options: 'i' } }],
+          $or: [{ keyword: { $regex: keyword, $options: 'i' } }],
         },
       },
       {
-        $sort: { translation: -1 },
+        $sort: { createdAt: -1 },
       },
       {
         $facet: {
@@ -57,6 +57,7 @@ export class TranslationService {
         },
       },
     ]);
+
     if (!categories[0]) {
       return {
         count: 0,
@@ -84,6 +85,7 @@ export class TranslationService {
       translation.id = uuid();
       translation.keyword = newTranslation.keyword;
       translation.translation = newTranslation.translation;
+      translation.createdAt = new Date();
       return this.translationRepository.create(translation);
     } catch (err) {
       throw new ConflictException('Cant create a translation');

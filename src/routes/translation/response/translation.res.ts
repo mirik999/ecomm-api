@@ -9,6 +9,9 @@ export class TranslationRes {
   @Field({ nullable: true })
   keyword: string;
 
+  @Field({ nullable: true })
+  createdAt: Date;
+
   @Field(() => CountryCodesTypeRes, { nullable: true })
   translation: CountryCodesTypeRes;
 }
