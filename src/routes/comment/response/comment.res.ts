@@ -1,11 +1,9 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { UserRes } from '../../user/response/user.res';
+import { DefaultRes } from '../../../common/response/common.res';
 
 @ObjectType('ReplyRes')
-export class ReplyRes {
-  @Field(() => ID, { nullable: true })
-  id: string;
-
+export class ReplyRes extends DefaultRes {
   @Field(() => ID, { nullable: true })
   commentId: string;
 
@@ -14,16 +12,10 @@ export class ReplyRes {
 
   @Field({ nullable: true })
   message: string;
-
-  @Field({ nullable: true })
-  createdAt: string;
 }
 
 @ObjectType('CommentRes')
-export class CommentRes {
-  @Field(() => ID, { nullable: true })
-  id: string;
-
+export class CommentRes extends DefaultRes {
   @Field(() => ID, { nullable: true })
   productId: string;
 
@@ -32,9 +24,6 @@ export class CommentRes {
 
   @Field({ nullable: true })
   message: string;
-
-  @Field({ nullable: true })
-  createdAt: string;
 
   @Field(() => [ReplyRes], { nullable: true })
   reply: ReplyRes[];

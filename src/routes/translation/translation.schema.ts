@@ -4,22 +4,17 @@ import {
   CountryCodes,
   CountryCodesTypeSchema,
 } from '../../utils/country-codes.type';
+import { DefaultSchema } from '../../common/schema/common.schema';
 
 export type TranslationDocument = Translation & Document;
 
 @Schema()
-export class Translation {
-  @Prop({ index: true })
-  id: string;
-
+export class Translation extends DefaultSchema {
   @Prop({ trim: true, unique: true })
   keyword: string;
 
   @Prop({ trim: true, type: CountryCodesTypeSchema })
   translation: CountryCodes;
-
-  @Prop()
-  createdAt: Date;
 }
 
 export const TranslationSchema = SchemaFactory.createForClass(Translation);

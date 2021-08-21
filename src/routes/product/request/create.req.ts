@@ -1,8 +1,7 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
-import { v4 as uuid } from 'uuid';
 import {
   IsArray,
-  IsBoolean, IsDate,
+  IsBoolean,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -11,14 +10,10 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
+import { DefaultReq, ImageReq } from '../../../common/request/common.req';
 
 @InputType('CreateProductReq')
-export class CreateProductReq {
-  @IsOptional()
-  @IsUUID()
-  @Field({ nullable: true, defaultValue: uuid() })
-  id: string;
-
+export class CreateProductReq extends DefaultReq {
   @IsOptional()
   @IsString()
   @MaxLength(24)
@@ -34,13 +29,12 @@ export class CreateProductReq {
 
   @IsOptional()
   @IsArray()
-  @Field(() => [String], { defaultValue: [] })
-  images: string[];
+  @Field(() => [ImageReq], { defaultValue: [] })
+  images: ImageReq[];
 
-  @IsString()
   @IsNotEmpty()
   @Field()
-  cover: string;
+  cover: ImageReq;
 
   @IsOptional()
   @IsString()
@@ -56,21 +50,6 @@ export class CreateProductReq {
   @IsString()
   @Field({ nullable: true, defaultValue: '' })
   description: string;
-
-  @IsOptional()
-  @IsDate()
-  @Field({ nullable: true, defaultValue: new Date() })
-  createdAt: Date;
-
-  @IsOptional()
-  @IsString()
-  @Field({ nullable: true })
-  createdBy: string;
-
-  @IsOptional()
-  @IsString()
-  @Field({ nullable: true, defaultValue: '' })
-  modifiedBy: string;
 
   @IsOptional()
   @IsArray()
@@ -121,11 +100,6 @@ export class CreateProductReq {
   @IsBoolean()
   @Field({ nullable: true, defaultValue: false })
   sale: boolean;
-
-  @IsOptional()
-  @IsBoolean()
-  @Field({ nullable: true, defaultValue: false })
-  isDisabled: boolean;
 
   @IsOptional()
   @IsBoolean()

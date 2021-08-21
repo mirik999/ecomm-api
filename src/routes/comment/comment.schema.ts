@@ -1,13 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
+import { DefaultSchema } from '../../common/schema/common.schema';
 
 export type CommentDocument = Comment & Document;
 
 @Schema()
-export class Reply {
-  @Prop()
-  id: string;
-
+export class Reply extends DefaultSchema {
   @Prop()
   commentId: string;
 
@@ -16,17 +14,11 @@ export class Reply {
 
   @Prop()
   message: string;
-
-  @Prop()
-  createdAt: string;
 }
 export const ReplySchema = SchemaFactory.createForClass(Reply);
 
 @Schema()
-export class Comment {
-  @Prop()
-  id: string;
-
+export class Comment extends DefaultSchema {
   @Prop()
   productId: string;
 
@@ -35,9 +27,6 @@ export class Comment {
 
   @Prop()
   message: string;
-
-  @Prop()
-  createdAt: string;
 
   @Prop({ type: [ReplySchema] })
   reply: Reply[];

@@ -1,13 +1,10 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 import { CountryCodesTypeReq } from '../../../utils/country-codes.type';
+import { DefaultReq } from '../../../common/request/common.req';
 
 @InputType()
-export class UpdateTranslationReq {
-  @IsUUID()
-  @Field({ nullable: true })
-  id: string;
-
+export class UpdateTranslationReq extends DefaultReq {
   @IsString()
   @IsNotEmpty()
   @Field()

@@ -1,7 +1,7 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
 import {
   IsArray,
-  IsBoolean, IsDate,
+  IsBoolean,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -10,14 +10,10 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
+import { DefaultReq, ImageReq } from '../../../common/request/common.req';
 
 @InputType('UpdateProductReq')
-export class UpdateProductReq {
-  @IsOptional()
-  @IsUUID()
-  @Field()
-  id: string;
-
+export class UpdateProductReq extends DefaultReq {
   @IsOptional()
   @IsString()
   @MaxLength(24)
@@ -34,14 +30,13 @@ export class UpdateProductReq {
 
   @IsOptional()
   @IsArray()
-  @Field(() => [String], { nullable: true })
-  images: string[];
+  @Field(() => [ImageReq], { nullable: true })
+  images: ImageReq[];
 
   @IsOptional()
   @IsNotEmpty()
-  @IsString()
   @Field({ nullable: true })
-  cover: string;
+  cover: ImageReq;
 
   @IsOptional()
   @IsString()
@@ -57,21 +52,6 @@ export class UpdateProductReq {
   @IsString()
   @Field({ nullable: true })
   description: string;
-
-  @IsOptional()
-  @IsDate()
-  @Field({ nullable: true })
-  createdAt: Date;
-
-  @IsOptional()
-  @IsString()
-  @Field({ nullable: true })
-  createdBy: string;
-
-  @IsOptional()
-  @IsString()
-  @Field({ nullable: true })
-  modifiedBy: string;
 
   @IsOptional()
   @IsArray()
@@ -141,11 +121,6 @@ export class UpdateProductReq {
 
   @IsOptional()
   @IsBoolean()
-  @Field({ nullable: true })
-  isDisabled: boolean;
-
-  @IsOptional()
-  @IsBoolean()
   @Field({ nullable: true, defaultValue: true })
   pending: boolean;
 
@@ -164,6 +139,6 @@ export class UpdateProductReq {
   //ref to coupons
   @IsOptional()
   @IsUUID('4')
-  @Field(() => ID)
+  @Field(() => ID, { nullable: true })
   coupon: string;
 }

@@ -1,18 +1,20 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { v4 as uuid } from 'uuid';
 import { SliderDocument } from './slider.schema';
 import { SliderRes, SlidersRes } from './response/slider.res';
 import { GetReq } from '../../common/request/get.req';
 import { CreateSliderReq } from './request/create.req';
 import { UpdateSliderReq } from './request/update.req';
 import { GetByIdsReq } from '../../common/request/get-by-ids.req';
+import { UserRes } from '../user/response/user.res';
 
 @Injectable()
 export class SliderService {
   constructor(
     @InjectModel('Slider')
-    private sliderRepository: Model<SliderDocument>
+    private sliderRepository: Model<SliderDocument>,
   ) {}
 
   async getSliderById(id: string): Promise<SliderRes> {
@@ -34,7 +36,10 @@ export class SliderService {
       {
         $match: {
           $or: [{ name: { $regex: keyword, $options: 'i' } }],
-          createdAt: { $gte: from || new Date(952273033000), $lte: to || new Date() }
+          createdAt: {
+            $gte: from || new Date(952273033000),
+            $lte: to || new Date(),
+          },
         },
       },
       {
@@ -59,33 +64,34 @@ export class SliderService {
     if (!sliders[0]) {
       return {
         count: 0,
-        payload: []
-      }
+        payload: [],
+      };
     }
     return sliders[0];
   }
 
-  async createSlider(newSlider: CreateSliderReq): Promise<SliderRes> {
+  async createSlider(
+    user: Partial<UserRes>,
+    newSlider: CreateSliderReq,
+  ): Promise<SliderRes> {
     try {
       return this.sliderRepository.create({
-        id: newSlider.id,
+        id: uuid(),
         name: newSlider.name,
         images: newSlider.images,
         fade: newSlider.fade,
         vertical: newSlider.vertical,
         createdAt: new Date(),
-        isDisabled: false
+        createdBy: user.email,
+        modifiedBy: user.email,
+        isDisabled: false,
       });
-    } catch(err) {
-      throw new ConflictException(
-        `Cant create a slider. [Error] => ${err.message}`,
-      );
+    } catch (err) {
+      throw new ConflictException(err.message);
     }
   }
 
-  async updateSlider(
-    updatedSlider: UpdateSliderReq,
-  ): Promise<SliderRes> {
+  async updateSlider(updatedSlider: UpdateSliderReq): Promise<SliderRes> {
     try {
       const slider = await this.sliderRepository.findOne({
         id: updatedSlider.id,
@@ -101,9 +107,7 @@ export class SliderService {
     }
   }
 
-  async disableSliders(
-    disabledSliders: GetByIdsReq,
-  ): Promise<SliderRes> {
+  async disableSliders(disabledSliders: GetByIdsReq): Promise<SliderRes> {
     try {
       return this.sliderRepository.updateMany(
         { id: { $in: disabledSliders.ids } },
@@ -114,9 +118,7 @@ export class SliderService {
     }
   }
 
-  async activateSliders(
-    activateSliders: GetByIdsReq,
-  ): Promise<SliderRes> {
+  async activateSliders(activateSliders: GetByIdsReq): Promise<SliderRes> {
     try {
       return this.sliderRepository.updateMany(
         { id: { $in: activateSliders.ids } },

@@ -2,23 +2,21 @@ import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { CategoryRes } from '../../category/response/category.res';
 import { BrandRes } from '../../brand/response/brand.res';
 import { CouponRes } from '../../coupon/response/coupon.res';
+import { DefaultRes, ImageRes } from '../../../common/response/common.res';
 
 @ObjectType('ProductRes')
-export class ProductRes {
-  @Field(() => ID)
-  id: string;
-
+export class ProductRes extends DefaultRes {
   @Field({ nullable: true })
   code: string;
 
   @Field({ nullable: true })
   name: string;
 
-  @Field(() => [String], { nullable: true })
-  images: string[];
+  @Field(() => [ImageRes], { nullable: true })
+  images: ImageRes[];
 
   @Field({ nullable: true })
-  cover: string;
+  cover: ImageRes;
 
   @Field({ nullable: true })
   color: string;
@@ -28,15 +26,6 @@ export class ProductRes {
 
   @Field({ nullable: true })
   description: string;
-
-  @Field({ nullable: true })
-  createdAt: Date;
-
-  @Field({ nullable: true })
-  createdBy: string;
-
-  @Field({ nullable: true })
-  modifiedBy: string;
 
   @Field(() => [Number], { nullable: true })
   stars: number[];
@@ -70,9 +59,6 @@ export class ProductRes {
 
   @Field({ nullable: true })
   sale: boolean;
-
-  @Field({ nullable: true })
-  isDisabled: boolean;
 
   @Field({ nullable: true })
   freeDelivery: boolean;

@@ -1,39 +1,28 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
+import { DefaultSchema, ImageSchema } from '../../common/schema/common.schema';
 
 export type ProductDocument = Product & Document;
 
 @Schema()
-export class Product {
-  @Prop({ index: true, unique: true })
-  id: string;
-
+export class Product extends DefaultSchema {
   @Prop({ trim: true })
   name: string;
 
   @Prop({ unique: true, trim: true })
   code: string;
 
-  @Prop([String])
-  images: string[];
+  @Prop([ImageSchema])
+  images: ImageSchema[];
 
   @Prop()
-  cover: string;
+  cover: ImageSchema;
 
   @Prop()
   color: string;
 
   @Prop()
   description: string;
-
-  @Prop()
-  createdAt: Date;
-
-  @Prop()
-  createdBy: string;
-
-  @Prop()
-  modifiedBy: string;
 
   @Prop([Number])
   stars: number[];
@@ -70,9 +59,6 @@ export class Product {
 
   @Prop()
   sale: boolean;
-
-  @Prop()
-  isDisabled: boolean;
 
   @Prop()
   freeDelivery: boolean;

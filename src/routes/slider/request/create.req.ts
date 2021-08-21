@@ -1,12 +1,16 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { ArrayNotEmpty, IsArray, IsBoolean, IsNotEmpty, IsString, IsUUID, MaxLength } from 'class-validator';
+import {
+  ArrayNotEmpty,
+  IsArray,
+  IsBoolean,
+  IsNotEmpty,
+  IsString,
+  MaxLength,
+} from 'class-validator';
+import { DefaultReq, ImageReq } from '../../../common/request/common.req';
 
 @InputType()
-export class CreateSliderReq {
-  @IsUUID()
-  @Field()
-  id: string;
-
+export class CreateSliderReq extends DefaultReq {
   @IsString()
   @IsNotEmpty()
   @MaxLength(26)
@@ -15,8 +19,8 @@ export class CreateSliderReq {
 
   @ArrayNotEmpty()
   @IsArray()
-  @Field(() => [String])
-  images: string[];
+  @Field(() => [ImageReq])
+  images: ImageReq[];
 
   @IsBoolean()
   @Field()

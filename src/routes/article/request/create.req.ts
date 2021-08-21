@@ -15,7 +15,7 @@ export class CreateArticleReq extends SeoReq {
 
   @IsString()
   @IsNotEmpty()
-  @Field({ defaultValue: 'Dr. Rəxşəndə Aslanova' })
+  @Field()
   author: string;
 
   @IsString()

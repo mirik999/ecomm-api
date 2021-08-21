@@ -1,13 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
+import { DefaultSchema } from '../../common/schema/common.schema';
 
 export type CategoryDocument = Category & Document;
 
 @Schema()
-class SubCategory {
-  @Prop({ index: true })
-  id: string;
-
+class SubCategory extends DefaultSchema {
   @Prop()
   parentId: string;
 
@@ -20,21 +18,12 @@ class SubCategory {
 export const SubCategorySchema = SchemaFactory.createForClass(SubCategory);
 
 @Schema()
-export class Category {
-  @Prop({ index: true })
-  id: string;
-
+export class Category extends DefaultSchema {
   @Prop({ trim: true })
   name: string;
 
   @Prop({ trim: true })
   tabName: string;
-
-  @Prop()
-  createdAt: Date;
-
-  @Prop()
-  isDisabled: boolean;
 
   @Prop({ type: [SubCategorySchema] })
   subCategories: SubCategory[];

@@ -1,4 +1,11 @@
-import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { CommentService } from './comment.service';
 import { CreateCommentReq, CreateReplyReq } from './request/create.req';
 import { User } from '../../utils/user.decorator';
@@ -11,13 +18,13 @@ import { UserService } from '../user/user.service';
 export class CommentResolver {
   constructor(
     private commentService: CommentService,
-    private userService: UserService
+    private userService: UserService,
   ) {}
 
   @Query(() => CommentsRes)
   getComments(
     @Args('productId') productId: string,
-    @Args('controls') controls: GetReq
+    @Args('controls') controls: GetReq,
   ) {
     return this.commentService.getComments(productId, controls);
   }
@@ -25,15 +32,15 @@ export class CommentResolver {
   @Mutation(() => CommentRes)
   createComment(
     @User() user: UserRes,
-    @Args('newComment') newComment: CreateCommentReq
+    @Args('newComment') newComment: CreateCommentReq,
   ) {
-    return this.commentService.createComment(newComment, user);
+    return this.commentService.createComment(user, newComment);
   }
 
   @Mutation(() => ReplyRes)
   createReply(
     @User() user: UserRes,
-    @Args('newReply') newReply: CreateReplyReq
+    @Args('newReply') newReply: CreateReplyReq,
   ) {
     return this.commentService.createReply(newReply, user);
   }
@@ -45,12 +52,12 @@ export class CommentResolver {
 
   @ResolveField(() => CommentRes)
   async reply(@Parent() comment: CommentRes) {
-    return comment.reply.map(async reply => {
+    return comment.reply.map(async (reply) => {
       const author = await this.userService.getCommentAuthor(reply.author);
       return {
         ...reply,
-        author
-      }
-    })
+        author,
+      };
+    });
   }
 }

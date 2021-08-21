@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
+import { DefaultSchema } from '../../common/schema/common.schema';
 
 export type CouponDocument = Coupon & Document;
 
@@ -14,10 +15,7 @@ class CouponKey {
 export const CouponKeySchema = SchemaFactory.createForClass(CouponKey);
 
 @Schema()
-export class Coupon {
-  @Prop({ index: true, unique: true })
-  id: string;
-
+export class Coupon extends DefaultSchema {
   @Prop({ trim: true })
   name: string;
 
@@ -34,22 +32,10 @@ export class Coupon {
   value: number;
 
   @Prop()
-  createdAt: Date;
-
-  @Prop()
   endDate: Date;
 
   @Prop()
-  createdBy: string;
-
-  @Prop()
-  modifiedBy: string;
-
-  @Prop()
   used: number;
-
-  @Prop()
-  isDisabled: boolean;
 }
 
 export const CouponSchema = SchemaFactory.createForClass(Coupon);

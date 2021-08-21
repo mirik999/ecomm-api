@@ -1,16 +1,11 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 import { CountryCodesTypeRes } from '../../../utils/country-codes.type';
+import { DefaultRes } from '../../../common/response/common.res';
 
 @ObjectType('TranslationRes')
-export class TranslationRes {
-  @Field(() => ID, { nullable: true })
-  id: string;
-
+export class TranslationRes extends DefaultRes {
   @Field({ nullable: true })
   keyword: string;
-
-  @Field({ nullable: true })
-  createdAt: Date;
 
   @Field(() => CountryCodesTypeRes, { nullable: true })
   translation: CountryCodesTypeRes;

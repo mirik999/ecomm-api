@@ -1,4 +1,5 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { DefaultRes } from '../../../common/response/common.res';
 
 @ObjectType('CouponKeyRes')
 export class CouponKeyRes {
@@ -10,10 +11,7 @@ export class CouponKeyRes {
 }
 
 @ObjectType('CouponRes')
-export class CouponRes {
-  @Field(() => ID)
-  id: string;
-
+export class CouponRes extends DefaultRes {
   @Field({ nullable: true })
   name: string;
 
@@ -33,19 +31,7 @@ export class CouponRes {
   description: string;
 
   @Field({ nullable: true })
-  createdAt: Date;
-
-  @Field({ nullable: true })
   endDate: Date;
-
-  @Field({ nullable: true })
-  createdBy: string;
-
-  @Field({ nullable: true })
-  modifiedBy: string;
-
-  @Field({ nullable: true })
-  isDisabled: boolean;
 }
 
 @ObjectType('CouponsRes')

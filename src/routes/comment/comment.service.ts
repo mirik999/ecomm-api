@@ -1,4 +1,8 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { v4 as uuid } from 'uuid';
@@ -12,7 +16,7 @@ import { UserRes } from '../user/response/user.res';
 export class CommentService {
   constructor(
     @InjectModel('Comment')
-    private commentRepository: Model<CommentDocument>
+    private commentRepository: Model<CommentDocument>,
   ) {}
 
   async getComments(productId: string, controls: GetReq): Promise<CommentsRes> {
@@ -43,52 +47,69 @@ export class CommentService {
       ]);
       return comments[0];
     } catch (err) {
-      throw new NotFoundException(`Could not find comments. [Error] => ${err.message}`);
+      throw new NotFoundException(
+        `Could not find comments. [Error] => ${err.message}`,
+      );
     }
   }
 
-  async createComment(newComment: CreateCommentReq, user: UserRes): Promise<CommentRes> {
+  async createComment(
+    user: Partial<UserRes>,
+    newComment: CreateCommentReq,
+  ): Promise<CommentRes> {
     try {
       return this.commentRepository.create({
         id: uuid(),
         productId: newComment.productId,
         author: user.id,
         message: newComment.message,
-        createdAt: new Date().toString(),
-        reply: []
+        createdAt: new Date(),
+        createdBy: user.email,
+        modifiedBy: user.email,
+        isDisabled: false,
+        reply: [],
       });
-    } catch(err) {
-      throw new ConflictException(`Could not create a comment. [Error] => ${err.message}`)
+    } catch (err) {
+      throw new ConflictException(
+        `Could not create a comment. [Error] => ${err.message}`,
+      );
     }
   }
 
-  async createReply(newReply: CreateReplyReq, user: UserRes): Promise<ReplyRes> {
+  async createReply(
+    newReply: CreateReplyReq,
+    user: UserRes,
+  ): Promise<ReplyRes> {
     const reply = {
       ...newReply,
       id: uuid(),
       author: user.id,
-      createdAt: new Date().toString(),
-    }
+      createdAt: new Date(),
+    };
     try {
       await this.commentRepository.updateOne(
         {
-          id: newReply.commentId
+          id: newReply.commentId,
         },
         {
-          $push: { reply: reply }
-        }
+          $push: { reply: reply },
+        },
       );
       return reply;
-    } catch(err) {
-      throw new ConflictException(`Could not create a comment. [Error] => ${err.message}`)
+    } catch (err) {
+      throw new ConflictException(
+        `Could not create a comment. [Error] => ${err.message}`,
+      );
     }
   }
 
   async collectStatistics(): Promise<number> {
     try {
-      return this.commentRepository.countDocuments()
-    } catch(err) {
-      throw new ConflictException(`Could not count comments [Error] => ${err.message}`)
+      return this.commentRepository.countDocuments();
+    } catch (err) {
+      throw new ConflictException(
+        `Could not count comments [Error] => ${err.message}`,
+      );
     }
   }
 }

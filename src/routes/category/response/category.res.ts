@@ -1,10 +1,8 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { DefaultRes } from '../../../common/response/common.res';
 
 @ObjectType('SubCategoryRes')
-export class SubCategoryRes {
-  @Field(() => ID, { nullable: true })
-  id: string;
-
+export class SubCategoryRes extends DefaultRes {
   @Field(() => ID, { nullable: true })
   parentId: string;
 
@@ -16,24 +14,15 @@ export class SubCategoryRes {
 }
 
 @ObjectType('CategoryRes')
-export class CategoryRes {
-  @Field(() => ID, { nullable: true })
-  id: string;
-
+export class CategoryRes extends DefaultRes {
   @Field({ nullable: true })
   name: string;
 
   @Field({ nullable: true })
   tabName: string;
 
-  @Field({ nullable: true })
-  createdAt?: Date;
-
-  @Field({ nullable: true })
-  isDisabled?: boolean;
-
   @Field(() => [SubCategoryRes], { nullable: true })
-  subCategories?: SubCategoryRes[]
+  subCategories?: SubCategoryRes[];
 }
 
 @ObjectType('CategoriesRes')

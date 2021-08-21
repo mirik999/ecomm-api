@@ -11,9 +11,7 @@ import { CreateProductReq } from './request/create.req';
 import { UpdateProductReq } from './request/update.req';
 import { ProductRes, ProductsRes } from './response/product.res';
 import { GetReq } from '../../common/request/get.req';
-import {
-  GetByIdsReq
-} from '../../common/request/get-by-ids.req';
+import { GetByIdsReq } from '../../common/request/get-by-ids.req';
 import { ProductStatistic } from '../statistic/response/cpu.res';
 import { UserRes } from '../user/response/user.res';
 import { GetByIdsRes } from '../../common/response/get-by-ids.res';
@@ -45,7 +43,10 @@ export class ProductService {
       {
         $match: {
           $or: [{ name: { $regex: keyword, $options: 'i' } }],
-          createdAt: { $gte: from || new Date(952273033000), $lte: to || new Date() }
+          createdAt: {
+            $gte: from || new Date(952273033000),
+            $lte: to || new Date(),
+          },
         },
       },
       {
@@ -71,21 +72,26 @@ export class ProductService {
     if (!products[0]) {
       return {
         count: 0,
-        payload: []
-      }
+        payload: [],
+      };
     }
     return products[0];
   }
 
   async getProductsByCategoryId(id: string): Promise<ProductRes[]> {
     try {
-      return this.productRepository.find({ category: id })
+      return this.productRepository.find({ category: id });
     } catch (err) {
-      throw new ConflictException(`Cant get products. [Error] => ${err.message}`);
+      throw new ConflictException(
+        `Cant get products. [Error] => ${err.message}`,
+      );
     }
   }
 
-  async createProduct(newProduct: CreateProductReq, user: Partial<UserRes>): Promise<ProductRes> {
+  async createProduct(
+    newProduct: CreateProductReq,
+    user: Partial<UserRes>,
+  ): Promise<ProductRes> {
     try {
       return this.productRepository.create({
         id: uuid(),
@@ -96,9 +102,6 @@ export class ProductService {
         color: newProduct.color,
         sold: newProduct.sold,
         description: newProduct.description,
-        createdAt: newProduct.createdAt,
-        createdBy: user.email,
-        modifiedBy: newProduct.modifiedBy,
         stars: newProduct.stars,
         price: newProduct.price,
         viewCount: newProduct.viewCount,
@@ -112,10 +115,13 @@ export class ProductService {
         best: false,
         freeDelivery: newProduct.freeDelivery,
         guarantee: newProduct.guarantee,
-        isDisabled: newProduct.isDisabled,
         category: newProduct.category,
         brand: newProduct.brand,
-        coupon: newProduct.coupon
+        coupon: newProduct.coupon,
+        createdAt: newProduct.createdAt,
+        createdBy: user.email,
+        modifiedBy: newProduct.modifiedBy,
+        isDisabled: newProduct.isDisabled,
       });
     } catch (err) {
       throw new ConflictException(
@@ -124,7 +130,10 @@ export class ProductService {
     }
   }
 
-  async updateProduct(updatedProduct: UpdateProductReq, user: Partial<UserRes>): Promise<ProductRes> {
+  async updateProduct(
+    updatedProduct: UpdateProductReq,
+    user: Partial<UserRes>,
+  ): Promise<ProductRes> {
     try {
       const product = await this.productRepository.findOne({
         id: updatedProduct.id,
@@ -145,12 +154,12 @@ export class ProductService {
 
   async disableProducts(
     disabledProducts: GetByIdsReq,
-    user: Partial<UserRes>
+    user: Partial<UserRes>,
   ): Promise<GetByIdsRes> {
     try {
       await this.productRepository.updateMany(
         { id: { $in: disabledProducts.ids } },
-        { $set: { isDisabled: true, modifiedBy: user.email, } },
+        { $set: { isDisabled: true, modifiedBy: user.email } },
       );
       return disabledProducts;
     } catch (err) {
@@ -160,12 +169,12 @@ export class ProductService {
 
   async activateProducts(
     activateProducts: GetByIdsReq,
-    user: Partial<UserRes>
+    user: Partial<UserRes>,
   ): Promise<GetByIdsRes> {
     try {
       await this.productRepository.updateMany(
         { id: { $in: activateProducts.ids } },
-        { $set: { isDisabled: false, modifiedBy: user.email, } },
+        { $set: { isDisabled: false, modifiedBy: user.email } },
       );
       return activateProducts;
     } catch (err) {
@@ -173,13 +182,11 @@ export class ProductService {
     }
   }
 
-  async deleteProducts(
-    deleteProducts: GetByIdsReq,
-  ): Promise<GetByIdsRes> {
+  async deleteProducts(deleteProducts: GetByIdsReq): Promise<GetByIdsRes> {
     try {
-      await this.productRepository.deleteMany(
-        { id: { $in: deleteProducts.ids } }
-      );
+      await this.productRepository.deleteMany({
+        id: { $in: deleteProducts.ids },
+      });
       return deleteProducts;
     } catch (err) {
       throw new ConflictException(`Cant delete products => ${err.message}`);
@@ -192,8 +199,11 @@ export class ProductService {
     const statistics = await this.productRepository.aggregate([
       {
         $match: {
-          createdAt: { $gte: from || new Date(952273033000), $lte: to || new Date() }
-        }
+          createdAt: {
+            $gte: from || new Date(952273033000),
+            $lte: to || new Date(),
+          },
+        },
       },
       {
         $group: {
@@ -212,7 +222,7 @@ export class ProductService {
           },
           defective: {
             $sum: { $cond: ['$defective', 1, 0] },
-          }
+          },
         },
       },
       {
@@ -222,7 +232,7 @@ export class ProductService {
           sale: 1,
           new: 1,
           used: 1,
-          defective: 1
+          defective: 1,
         },
       },
     ]);
@@ -233,8 +243,8 @@ export class ProductService {
         sale: 0,
         new: 0,
         used: 0,
-        defective: 0
-      }
+        defective: 0,
+      };
     }
     return statistics[0];
   }

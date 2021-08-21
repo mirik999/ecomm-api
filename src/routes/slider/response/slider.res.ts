@@ -1,27 +1,19 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
+import { DefaultRes, ImageRes } from '../../../common/response/common.res';
 
 @ObjectType('SliderRes')
-export class SliderRes {
-  @Field(() => ID, { nullable: true })
-  id: string;
-
+export class SliderRes extends DefaultRes {
   @Field({ nullable: true })
   name: string;
 
-  @Field(() => [String], { nullable: true })
-  images: string[];
+  @Field(() => [ImageRes], { nullable: true })
+  images: ImageRes[];
 
   @Field({ nullable: true })
   fade: boolean;
 
   @Field({ nullable: true })
   vertical: boolean;
-
-  @Field({ nullable: true })
-  createdAt: Date;
-
-  @Field({ nullable: true })
-  isDisabled: boolean;
 }
 
 @ObjectType('SlidersRes')

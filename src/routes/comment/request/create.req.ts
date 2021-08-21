@@ -1,8 +1,9 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { IsNotEmpty, IsString, IsUUID, MaxLength } from 'class-validator';
+import { DefaultReq } from '../../../common/request/common.req';
 
 @InputType()
-export class CreateCommentReq {
+export class CreateCommentReq extends DefaultReq {
   @IsUUID()
   @Field()
   productId: string;
@@ -12,10 +13,13 @@ export class CreateCommentReq {
   @MaxLength(150)
   @Field()
   message: string;
+
+  @Field(() => [String], { nullable: true })
+  reply: string[];
 }
 
 @InputType()
-export class CreateReplyReq {
+export class CreateReplyReq extends DefaultReq {
   @IsUUID()
   @Field()
   commentId: string;

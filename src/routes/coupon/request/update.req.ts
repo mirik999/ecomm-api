@@ -1,15 +1,16 @@
 import { Field, InputType } from '@nestjs/graphql';
 import {
   IsArray,
-  IsBoolean, IsDate,
+  IsBoolean,
+  IsDate,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
-  IsUUID,
   MaxLength,
   MinLength,
 } from 'class-validator';
+import { DefaultReq } from '../../../common/request/common.req';
 
 @InputType('UpdateCouponKeyReq')
 export class UpdateCouponKeyReq {
@@ -23,11 +24,7 @@ export class UpdateCouponKeyReq {
 }
 
 @InputType('UpdateCouponReq')
-export class UpdateCouponReq {
-  @IsUUID()
-  @Field()
-  id: string;
-
+export class UpdateCouponReq extends DefaultReq {
   @IsOptional()
   @IsString()
   @IsNotEmpty()
@@ -65,25 +62,5 @@ export class UpdateCouponReq {
   @IsOptional()
   @IsDate()
   @Field({ nullable: true })
-  createdAt: Date;
-
-  @IsOptional()
-  @IsDate()
-  @Field({ nullable: true })
   endDate: Date;
-
-  @IsOptional()
-  @IsString()
-  @Field({ nullable: true })
-  createdBy: string;
-
-  @IsOptional()
-  @IsString()
-  @Field({ nullable: true })
-  modifiedBy: string;
-
-  @IsOptional()
-  @IsBoolean()
-  @Field({ nullable: true })
-  isDisabled: boolean;
 }

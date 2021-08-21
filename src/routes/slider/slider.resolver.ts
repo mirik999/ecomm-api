@@ -10,9 +10,7 @@ import { GetByIdsReq } from '../../common/request/get-by-ids.req';
 
 @Resolver(() => SliderRes)
 export class SliderResolver {
-  constructor(
-    private slidersService: SliderService
-  ) {}
+  constructor(private slidersService: SliderService) {}
 
   @Query(() => SliderRes)
   async getSliderById(@Args('id') id: string) {
@@ -27,16 +25,16 @@ export class SliderResolver {
   @Mutation(() => SliderRes)
   createSlider(
     @User() user: Partial<UserRes>,
-    @Args('newSlider') newSlider: CreateSliderReq
+    @Args('newSlider') newSlider: CreateSliderReq,
   ) {
-    return this.slidersService.createSlider(newSlider)
+    return this.slidersService.createSlider(user, newSlider);
   }
 
   @Mutation(() => SliderRes)
   updateSlider(
     @User() user: Partial<UserRes>,
     @Args('updatedSlider')
-      updatedSlider: UpdateSliderReq,
+    updatedSlider: UpdateSliderReq,
   ) {
     return this.slidersService.updateSlider(updatedSlider);
   }
@@ -45,7 +43,7 @@ export class SliderResolver {
   disableSliders(
     @User() user: Partial<UserRes>,
     @Args('disabledSliders')
-      disabledSliders: GetByIdsReq,
+    disabledSliders: GetByIdsReq,
   ) {
     return this.slidersService.disableSliders(disabledSliders);
   }
@@ -54,7 +52,7 @@ export class SliderResolver {
   activateSliders(
     @User() user: Partial<UserRes>,
     @Args('activateSliders')
-      activateSliders: GetByIdsReq,
+    activateSliders: GetByIdsReq,
   ) {
     return this.slidersService.activateSliders(activateSliders);
   }
