@@ -5,6 +5,12 @@ Package manager (preferable to use ```yarn```)
 ```yarn``` installation packages  
 ```yarn start:dev``` start development
 
+#### Export keys from (src/config/personal.data.ts)
+```bash
+ export const JWT_SECRET_KEY = '';
+ export const DATABASE_NAME = '';
+```
+
 Project also required to run [MongoDB](https://www.mongodb.com/)
 and [Redis](https://redis.io/)
 

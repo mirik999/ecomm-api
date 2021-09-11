@@ -16,10 +16,11 @@ import { BiographyModule } from './routes/biography/biography.module';
 import { GalleryModule } from './routes/gallery/gallery.module';
 import { SettingModule } from './routes/setting/setting.module';
 import { TranslationModule } from './routes/translation/translation.module';
+import { DATABASE_NAME } from './config/personal.data';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://localhost/electroshop', {
+    MongooseModule.forRoot(`mongodb://localhost/${DATABASE_NAME}`, {
       useCreateIndex: true,
     }),
     GraphQLModule.forRoot({

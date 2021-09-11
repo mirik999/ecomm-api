@@ -14,7 +14,7 @@ export class TranslationResolver {
   constructor(private translationService: TranslationService) {}
 
   @Query(() => TranslationRes)
-  getTranslationById(@Args('id') id: string): Promise<TranslationRes> {
+  getTranslationById(@Args('id') id: string): Promise<TranslationRes[]> {
     return this.translationService.getTranslationById(id);
   }
 

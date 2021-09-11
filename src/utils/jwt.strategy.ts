@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Strategy, ExtractJwt } from 'passport-jwt';
 import { UserDocument } from '../routes/user/user.schema';
+import { JWT_SECRET_KEY } from '../config/personal.data';
 
 export interface JwtPayload {
   email: string;
@@ -18,7 +19,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: 'top-secret-2020',
+      secretOrKey: JWT_SECRET_KEY,
     });
   }
 }

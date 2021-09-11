@@ -21,8 +21,15 @@ export class TranslationService {
     private translationRepository: Model<TranslationDocument>,
   ) {}
 
-  async getTranslationById(id: string): Promise<TranslationRes> {
-    const translation = await this.translationRepository.findOne({ id });
+  async getTranslationById(id: string): Promise<TranslationRes[]> {
+    const payload = await this.translationRepository.find();
+    const translation = payload.map((pl) => {
+      return {
+        ...pl,
+        translation: pl.translation[id],
+      };
+    });
+    console.log(translation);
     if (translation) {
       return translation;
     } else {

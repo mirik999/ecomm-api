@@ -6,14 +6,15 @@ import {
 } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import * as jwt from 'jsonwebtoken';
+import { JWT_SECRET_KEY } from '../config/personal.data';
 
 export type UserDataType = {
-  id: string
-  email: string
-  roles: string[]
-  iat: number
-  exp: number
-}
+  id: string;
+  email: string;
+  roles: string[];
+  iat: number;
+  exp: number;
+};
 
 export const User = createParamDecorator(
   async (data: unknown, ctx: ExecutionContext) => {
@@ -23,7 +24,7 @@ export const User = createParamDecorator(
 
     try {
       return await verifyToken(token, gqlMethod);
-    } catch(errObj) {
+    } catch (errObj) {
       if (errObj.status === 401) {
         throw new UnauthorizedException(errObj.msg);
       }
@@ -34,15 +35,14 @@ export const User = createParamDecorator(
   },
 );
 
-
 async function verifyToken(token: string, method: string): Promise<any> {
   return new Promise((res, rej) => {
-    jwt.verify(token, 'top-secret-2020', (err, data: UserDataType) => {
+    jwt.verify(token, JWT_SECRET_KEY, (err, data: UserDataType) => {
       if (err) {
         rej({
           status: 401,
-          msg: 'Unauthorized'
-        })
+          msg: 'Unauthorized',
+        });
       }
       const isGuest = getUserRole(data.roles, 'guest');
       const isAdmin = getUserRole(data.roles, 'admin');
@@ -51,27 +51,29 @@ async function verifyToken(token: string, method: string): Promise<any> {
       if (isSudo) {
         delete data.iat;
         delete data.exp;
-        res(data)
+        res(data);
       } else if (
-        (isAdmin && (
-          method.includes('Delete')) ||
-          method.includes('Update'))
+        (isAdmin && method.includes('Delete')) ||
+        method.includes('Update')
       ) {
         rej({
           status: 403,
-          msg: 'Forbidden, only Sudo has access'
-        })
+          msg: 'Forbidden, only Sudo has access',
+        });
       } else if (isGuest && !method.includes('Get')) {
         rej({
           status: 403,
-          msg: 'Forbidden, Guest has not access'
-        })
+          msg: 'Forbidden, Guest has not access',
+        });
       }
     });
-  })
+  });
 }
 
-export function getUserRole(roles: string[], expect: 'guest' | 'admin' | 'sudo') {
+export function getUserRole(
+  roles: string[],
+  expect: 'guest' | 'admin' | 'sudo',
+) {
   const isGuest = !roles.includes('admin') && !roles.includes('sudo');
   const isAdmin = roles.includes('admin') && !roles.includes('sudo');
   const isSudo = roles.includes('sudo');
