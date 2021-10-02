@@ -1,7 +1,11 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { TranslationService } from './translation.service';
 import { UpdateTranslationReq } from './request/update.req';
-import { TranslationRes, TranslationsRes } from './response/translation.res';
+import {
+  TranslationForUIRes,
+  TranslationRes,
+  TranslationsRes,
+} from './response/translation.res';
 import { User } from '../../utils/user.decorator';
 import { GetReq } from '../../common/request/get.req';
 import { GetByIdsReq } from '../../common/request/get-by-ids.req';
@@ -21,6 +25,11 @@ export class TranslationResolver {
   @Query(() => TranslationsRes)
   getTranslations(@Args('controls') controls: GetReq) {
     return this.translationService.getTranslations(controls);
+  }
+
+  @Query(() => [TranslationForUIRes])
+  getTranslationsForUI(@Args('langCode') langCode: string) {
+    return this.translationService.getTranslationsForUI(langCode);
   }
 
   @Mutation(() => TranslationRes)

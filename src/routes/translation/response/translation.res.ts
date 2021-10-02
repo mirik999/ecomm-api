@@ -19,3 +19,13 @@ export class TranslationsRes {
   @Field(() => [TranslationRes])
   payload: TranslationRes[];
 }
+
+//The simple version just for UI
+@ObjectType('TranslationForUIRes')
+export class TranslationForUIRes extends DefaultRes {
+  @Field({ nullable: true })
+  keyword: string;
+
+  @Field({ nullable: true })
+  translation: string;
+}

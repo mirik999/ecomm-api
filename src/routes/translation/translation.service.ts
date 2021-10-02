@@ -7,7 +7,11 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { v4 as uuid } from 'uuid';
 import { Translation, TranslationDocument } from './translation.schema';
-import { TranslationRes, TranslationsRes } from './response/translation.res';
+import {
+  TranslationForUIRes,
+  TranslationRes,
+  TranslationsRes,
+} from './response/translation.res';
 import { UpdateTranslationReq } from './request/update.req';
 import { GetReq } from '../../common/request/get.req';
 import { GetByIdsReq } from '../../common/request/get-by-ids.req';
@@ -74,6 +78,21 @@ export class TranslationService {
     return categories[0];
   }
 
+  async getTranslationsForUI(langCode: string): Promise<TranslationForUIRes[]> {
+    const allTranslations = await this.translationRepository.find();
+    return allTranslations.map((atr) => {
+      return {
+        keyword: atr.keyword,
+        translation: atr.translation[langCode],
+      };
+    }) as TranslationForUIRes[];
+
+    // const allTranslations = await this.translationRepository.find();
+    // return allTranslations.reduce((acc: any, cur: any) => {
+    //   return Object.assign(acc, { [cur.keyword]: cur.translation[langCode] });
+    // }, {});
+  }
+
   async createTranslation(
     newTranslation: CreateTranslationReq,
   ): Promise<TranslationRes> {
@@ -84,18 +103,19 @@ export class TranslationService {
       throw new ConflictException({
         key: 'keyword',
         message: 'Translation already exists',
+        statusCode: 403,
       });
-    }
-
-    try {
-      const translation = new Translation();
-      translation.id = uuid();
-      translation.keyword = newTranslation.keyword;
-      translation.translation = newTranslation.translation;
-      translation.createdAt = new Date();
-      return this.translationRepository.create(translation);
-    } catch (err) {
-      throw new ConflictException('Cant create a translation');
+    } else {
+      try {
+        const translation = new Translation();
+        translation.id = uuid();
+        translation.keyword = newTranslation.keyword;
+        translation.translation = newTranslation.translation;
+        translation.createdAt = new Date();
+        return this.translationRepository.create(translation);
+      } catch (err) {
+        throw new ConflictException('Cant create a translation');
+      }
     }
   }
 
