@@ -74,6 +74,13 @@ export class TranslationService {
     return categories[0];
   }
 
+  async getAllTranslationForUi(langCode: string) {
+    const allTranslations = await this.translationRepository.find();
+    return allTranslations.reduce((acc: any, cur: any) => {
+      return Object.assign(acc, { [cur.keyword]: cur.translation[langCode.toUpperCase()] });
+    }, {});
+  }
+
   async createTranslation(
     newTranslation: CreateTranslationReq,
   ): Promise<TranslationRes> {

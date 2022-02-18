@@ -4,6 +4,7 @@ import { TranslationService } from './translation.service';
 import { TranslationResolver } from './translation.resolver';
 import { Translation, TranslationSchema } from './translation.schema';
 import { IsKeyValueValidate } from '../../utils/iskeyvalue.validator';
+import { TranslationController } from './translation.controller';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { IsKeyValueValidate } from '../../utils/iskeyvalue.validator';
       },
     ]),
   ],
+  controllers: [TranslationController],
   providers: [TranslationService, TranslationResolver, IsKeyValueValidate],
   exports: [TranslationService],
 })
